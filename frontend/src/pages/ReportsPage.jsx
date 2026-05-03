@@ -1,0 +1,584 @@
+import React, { useState, useEffect, useCallback } from 'react';
+import { 
+  ClipboardList, 
+  Search, 
+  Filter, 
+  Download, 
+  Printer, 
+  Plus, 
+  Eye, 
+  Trash2, 
+  X,
+  Calendar,
+  Warehouse as WarehouseIcon,
+  CheckCircle,
+  FileText,
+  TrendingUp,
+  BarChart3,
+  ChevronLeft,
+  ChevronRight,
+  Package
+} from 'lucide-react';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import { Bar } from 'react-chartjs-2';
+import api from '../services/api';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
+const ReportsPage = () => {
+  const [activeTab, setActiveTab] = useState('audits'); // 'audits', 'inventory', 'analytics'
+  const [audits, setAudits] = useState([]);
+  const [inventoryReport, setInventoryReport] = useState([]);
+  const [chartData, setChartData] = useState(null);
+  const [warehouses, setWarehouses] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  
+  // Filters
+  const [searchTerm, setSearchTerm] = useState('');
+  const [warehouseFilter, setWarehouseFilter] = useState('');
+  const [dateRange, setDateRange] = useState({ start: '', end: '' });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const limit = 10;
+
+  // Modal states
+  const [isAuditModalOpen, setIsAuditModalOpen] = useState(false);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [selectedAudit, setSelectedAudit] = useState(null);
+  
+  // Audit Form state
+  const [auditForm, setAuditForm] = useState({
+    code: '',
+    date: new Date().toISOString().split('T')[0],
+    warehouse_id: '',
+    checker: '',
+    notes: '',
+    items: []
+  });
+
+  const fetchWarehousesAndProducts = useCallback(async () => {
+    try {
+      const [whRes, prodRes] = await Promise.all([
+        api.get('/warehouses'),
+        api.get('/products')
+      ]);
+      setWarehouses(whRes.data);
+      setProducts(prodRes.data.products || []);
+    } catch (error) {
+      console.error('Error fetching base data:', error);
+    }
+  }, []);
+
+  const fetchAudits = useCallback(async () => {
+    setLoading(true);
+    try {
+      const params = {
+        page: currentPage,
+        limit,
+        search: searchTerm,
+        warehouse: warehouseFilter,
+        startDate: dateRange.start,
+        endDate: dateRange.end
+      };
+      const response = await api.get('/reports/audits', { params });
+      setAudits(response.data.audits);
+      setTotalPages(response.data.totalPages);
+    } catch (error) {
+      console.error('Error fetching audits:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [currentPage, searchTerm, warehouseFilter, dateRange]);
+
+  const fetchInventoryReport = useCallback(async () => {
+    setLoading(true);
+    try {
+      const params = { warehouse: warehouseFilter };
+      const response = await api.get('/reports/inventory', { params });
+      setInventoryReport(response.data);
+    } catch (error) {
+      console.error('Error fetching inventory report:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [warehouseFilter]);
+
+  const fetchAnalytics = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await api.get('/inventory/transactions', { params: { limit: 100 } });
+      const transactions = response.data.transactions || [];
+      
+      const monthlyData = transactions.reduce((acc, t) => {
+        const month = new Date(t.transaction_date).getMonth();
+        acc[month] = acc[month] || { imports: 0, exports: 0 };
+        if (t.type === 'nhap') acc[month].imports += t.quantity;
+        else acc[month].exports += t.quantity;
+        return acc;
+      }, {});
+
+      const labels = ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'T11', 'T12'];
+      setChartData({
+        labels,
+        datasets: [
+          {
+            label: 'Nhập kho',
+            data: labels.map((_, i) => monthlyData[i]?.imports || 0),
+            backgroundColor: 'rgba(59, 130, 246, 0.6)',
+            borderColor: 'rgb(59, 130, 246)',
+            borderWidth: 1,
+          },
+          {
+            label: 'Xuất kho',
+            data: labels.map((_, i) => monthlyData[i]?.exports || 0),
+            backgroundColor: 'rgba(239, 68, 68, 0.6)',
+            borderColor: 'rgb(239, 68, 68)',
+            borderWidth: 1,
+          },
+        ],
+      });
+    } catch (error) {
+      console.error('Error fetching analytics:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchWarehousesAndProducts();
+  }, [fetchWarehousesAndProducts]);
+
+  useEffect(() => {
+    if (activeTab === 'audits') fetchAudits();
+    else if (activeTab === 'inventory') fetchInventoryReport();
+    else if (activeTab === 'analytics') fetchAnalytics();
+  }, [activeTab, fetchAudits, fetchInventoryReport, fetchAnalytics]);
+
+  const generateAuditCode = () => {
+    const date = new Date();
+    return `KK${date.getFullYear()}${(date.getMonth() + 1).toString().padStart(2, '0')}${date.getDate().toString().padStart(2, '0')}${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`;
+  };
+
+  const openAddAudit = () => {
+    setAuditForm({
+      code: generateAuditCode(),
+      date: new Date().toISOString().split('T')[0],
+      warehouse_id: '',
+      checker: '',
+      notes: '',
+      items: []
+    });
+    setIsAuditModalOpen(true);
+  };
+
+  const handleAuditSubmit = async (e) => {
+    e.preventDefault();
+    if (auditForm.items.length === 0) return alert('Vui lòng thêm ít nhất một sản phẩm');
+    try {
+      await api.post('/inventory/audits', auditForm);
+      setIsAuditModalOpen(false);
+      fetchAudits();
+      alert('Tạo phiếu kiểm kê thành công');
+    } catch (error) {
+      alert('Lỗi: ' + (error.response?.data?.error || error.message));
+    }
+  };
+
+  const addAuditItem = (productId) => {
+    if (!productId) return;
+    if (auditForm.items.find(item => item.product_id === productId)) return alert('Sản phẩm đã có trong danh sách');
+    
+    const product = products.find(p => p.custom_id === productId);
+    const newItem = {
+      product_id: productId,
+      product_name: product.name,
+      system_quantity: product.quantity,
+      actual_quantity: product.quantity,
+      discrepancy: 0
+    };
+    setAuditForm({ ...auditForm, items: [...auditForm.items, newItem] });
+  };
+
+  const updateAuditItem = (idx, actual) => {
+    const newItems = [...auditForm.items];
+    newItems[idx].actual_quantity = parseInt(actual) || 0;
+    newItems[idx].discrepancy = newItems[idx].system_quantity - newItems[idx].actual_quantity;
+    setAuditForm({ ...auditForm, items: newItems });
+  };
+
+  const removeAuditItem = (idx) => {
+    setAuditForm({ ...auditForm, items: auditForm.items.filter((_, i) => i !== idx) });
+  };
+
+  const deleteAudit = async (id) => {
+    if (window.confirm('Xác nhận xóa phiếu kiểm kê này?')) {
+      try {
+        await api.delete(`/inventory/audits/${id}`);
+        fetchAudits();
+      } catch (error) {
+        alert('Lỗi xóa phiếu');
+      }
+    }
+  };
+
+  const downloadAuditPDF = async (id) => {
+    try {
+      const response = await api.get(`/reports/audits/${id}/export`, { responseType: 'blob' });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `phieu-kiem-ke-${id}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      alert('Lỗi tải file');
+    }
+  };
+
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('vi-VN').format(amount) + ' ₫';
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Tab Switcher */}
+      <div className="flex bg-white p-1 rounded-xl border border-gray-200 w-fit shadow-sm">
+        <button 
+          onClick={() => setActiveTab('audits')}
+          className={`px-6 py-2.5 rounded-lg text-sm font-bold flex items-center gap-2 transition-all ${activeTab === 'audits' ? 'bg-blue-600 text-white shadow-md' : 'text-gray-600 hover:bg-gray-50'}`}
+        >
+          <ClipboardList size={18} /> Phiếu kiểm kê
+        </button>
+        <button 
+          onClick={() => setActiveTab('inventory')}
+          className={`px-6 py-2.5 rounded-lg text-sm font-bold flex items-center gap-2 transition-all ${activeTab === 'inventory' ? 'bg-blue-600 text-white shadow-md' : 'text-gray-600 hover:bg-gray-50'}`}
+        >
+          <FileText size={18} /> Báo cáo tồn kho
+        </button>
+        <button 
+          onClick={() => setActiveTab('analytics')}
+          className={`px-6 py-2.5 rounded-lg text-sm font-bold flex items-center gap-2 transition-all ${activeTab === 'analytics' ? 'bg-blue-600 text-white shadow-md' : 'text-gray-600 hover:bg-gray-50'}`}
+        >
+          <BarChart3 size={18} /> Phân tích nhập/xuất
+        </button>
+      </div>
+
+      {/* Filters (only for audits and inventory) */}
+      {activeTab !== 'analytics' && (
+        <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-wrap gap-4 items-end">
+          <div className="flex-1 min-w-[200px] space-y-1">
+            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Tìm kiếm</label>
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+              <input 
+                type="text" 
+                placeholder="Mã phiếu, người tạo..."
+                className="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                value={searchTerm}
+                onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
+              />
+            </div>
+          </div>
+          
+          <div className="space-y-1">
+            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Kho bãi</label>
+            <select 
+              className="border border-gray-200 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white min-w-[150px]"
+              value={warehouseFilter}
+              onChange={(e) => { setWarehouseFilter(e.target.value); setCurrentPage(1); }}
+            >
+              <option value="">Tất cả kho</option>
+              {warehouses.map(w => <option key={w.custom_id} value={w.custom_id}>{w.name}</option>)}
+            </select>
+          </div>
+
+          {activeTab === 'audits' && (
+            <div className="space-y-1">
+              <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Khoảng ngày</label>
+              <div className="flex items-center gap-2">
+                <input 
+                  type="date" 
+                  className="border border-gray-200 rounded-lg px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                  value={dateRange.start}
+                  onChange={(e) => setDateRange({...dateRange, start: e.target.value})}
+                />
+                <span className="text-gray-400">→</span>
+                <input 
+                  type="date" 
+                  className="border border-gray-200 rounded-lg px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                  value={dateRange.end}
+                  onChange={(e) => setDateRange({...dateRange, end: e.target.value})}
+                />
+              </div>
+            </div>
+          )}
+
+          <div className="flex gap-2 ml-auto">
+            {activeTab === 'audits' && (
+              <button onClick={openAddAudit} className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 font-bold text-sm flex items-center gap-2 shadow-md shadow-blue-100">
+                <Plus size={18} /> Lập phiếu kiểm
+              </button>
+            )}
+            <button className="border border-gray-200 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-50 font-bold text-sm flex items-center gap-2">
+              <Download size={18} /> Xuất CSV
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Main Content Area */}
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden min-h-[400px]">
+        {loading ? (
+          <div className="flex items-center justify-center h-64 text-gray-400 italic">Đang tải báo cáo...</div>
+        ) : activeTab === 'audits' ? (
+          <div className="flex flex-col h-full">
+            <div className="overflow-x-auto flex-1">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-gray-50 border-b border-gray-100">
+                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Mã phiếu</th>
+                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Ngày kiểm</th>
+                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Kho bãi</th>
+                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Người thực hiện</th>
+                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">Chênh lệch</th>
+                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-center">Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {audits.length === 0 ? (
+                    <tr><td colSpan="6" className="px-6 py-10 text-center text-gray-400 italic">Không có phiếu kiểm kê nào</td></tr>
+                  ) : (
+                    audits.map(audit => (
+                      <tr key={audit.id} className="hover:bg-gray-50 transition-colors group">
+                        <td className="px-6 py-4 text-sm font-bold text-blue-600">{audit.code}</td>
+                        <td className="px-6 py-4 text-sm text-gray-500">{new Date(audit.date).toLocaleDateString('vi-VN')}</td>
+                        <td className="px-6 py-4 text-sm text-gray-700 font-medium">{audit.warehouse_name}</td>
+                        <td className="px-6 py-4 text-sm text-gray-600">{audit.created_by_username}</td>
+                        <td className={`px-6 py-4 text-sm text-right font-bold ${audit.discrepancy === 0 ? 'text-gray-400' : (audit.discrepancy > 0 ? 'text-green-600' : 'text-red-600')}`}>
+                          {audit.discrepancy > 0 ? '+' : ''}{audit.discrepancy}
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button onClick={() => downloadAuditPDF(audit.id)} className="p-1.5 text-blue-600 hover:bg-blue-50 rounded" title="Tải PDF"><Download size={16} /></button>
+                            <button onClick={() => deleteAudit(audit.id)} className="p-1.5 text-red-600 hover:bg-red-50 rounded" title="Xóa"><Trash2 size={16} /></button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+            
+            {/* Pagination */}
+            <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-between bg-gray-50/30">
+              <span className="text-xs text-gray-500 font-medium">Trang {currentPage} trên {totalPages}</span>
+              <div className="flex gap-2">
+                <button disabled={currentPage === 1} onClick={() => setCurrentPage(prev => prev - 1)} className="p-2 border rounded-lg bg-white hover:bg-gray-50 disabled:opacity-50"><ChevronLeft size={16} /></button>
+                <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(prev => prev + 1)} className="p-2 border rounded-lg bg-white hover:bg-gray-50 disabled:opacity-50"><ChevronRight size={16} /></button>
+              </div>
+            </div>
+          </div>
+        ) : activeTab === 'inventory' ? (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-gray-50 border-b border-gray-100">
+                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Mã SP</th>
+                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Tên sản phẩm</th>
+                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">Số lượng</th>
+                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">Đơn giá</th>
+                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">Thành tiền</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {inventoryReport.length === 0 ? (
+                  <tr><td colSpan="5" className="px-6 py-10 text-center text-gray-400 italic">Không có dữ liệu tồn kho</td></tr>
+                ) : (
+                  inventoryReport.map(item => (
+                    <tr key={item.product_id} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-6 py-4 text-sm font-medium text-gray-500">{item.product_id}</td>
+                      <td className="px-6 py-4 text-sm font-bold text-gray-900">{item.name}</td>
+                      <td className="px-6 py-4 text-sm text-right font-bold text-blue-600">{item.quantity}</td>
+                      <td className="px-6 py-4 text-sm text-right text-gray-600">{formatCurrency(item.price)}</td>
+                      <td className="px-6 py-4 text-sm text-right text-gray-900 font-bold">{formatCurrency(item.quantity * item.price)}</td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="p-8">
+            <div className="flex items-center justify-between mb-8">
+              <div>
+                <h3 className="text-xl font-bold text-gray-800">Xu hướng Nhập & Xuất kho</h3>
+                <p className="text-sm text-gray-500">Thống kê số lượng hàng hóa lưu thông theo tháng</p>
+              </div>
+              <div className="flex items-center gap-6">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                  <span className="text-sm font-bold text-gray-600">Nhập</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                  <span className="text-sm font-bold text-gray-600">Xuất</span>
+                </div>
+              </div>
+            </div>
+            <div className="h-[400px] w-full">
+              {chartData && (
+                <Bar 
+                  data={chartData} 
+                  options={{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                      y: { beginAtZero: true, grid: { borderDash: [5, 5] } },
+                      x: { grid: { display: false } }
+                    }
+                  }} 
+                />
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Add Audit Modal */}
+      {isAuditModalOpen && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col animate-in fade-in zoom-in duration-200">
+            <div className="flex items-center justify-between p-6 border-b bg-blue-50/50">
+              <h3 className="text-xl font-bold text-blue-800 flex items-center gap-2">
+                <ClipboardList size={24} /> Lập phiếu kiểm kê hàng hóa
+              </h3>
+              <button onClick={() => setIsAuditModalOpen(false)} className="text-gray-400 hover:text-gray-600 transition-colors">
+                <X size={24} />
+              </button>
+            </div>
+            
+            <form onSubmit={handleAuditSubmit} className="flex-1 overflow-hidden flex flex-col">
+              <div className="p-6 overflow-y-auto space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-gray-500 uppercase ml-1">Mã phiếu</label>
+                    <input type="text" readOnly className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-gray-500 font-bold" value={auditForm.code} />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-gray-500 uppercase ml-1">Ngày lập *</label>
+                    <input type="date" required className="w-full px-4 py-2.5 border border-gray-300 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" value={auditForm.date} onChange={e => setAuditForm({...auditForm, date: e.target.value})} />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-gray-500 uppercase ml-1">Kho kiểm kê *</label>
+                    <select required className="w-full px-4 py-2.5 border border-gray-300 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 bg-white" value={auditForm.warehouse_id} onChange={e => setAuditForm({...auditForm, warehouse_id: e.target.value})}>
+                      <option value="">-- Chọn kho --</option>
+                      {warehouses.map(w => <option key={w.custom_id} value={w.custom_id}>{w.name}</option>)}
+                    </select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-gray-500 uppercase ml-1">Người kiểm kê *</label>
+                    <input type="text" required placeholder="Nhập tên người kiểm" className="w-full px-4 py-2.5 border border-gray-300 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" value={auditForm.checker} onChange={e => setAuditForm({...auditForm, checker: e.target.value})} />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-gray-500 uppercase ml-1">Ghi chú</label>
+                    <input type="text" placeholder="Ghi chú thêm (nếu có)" className="w-full px-4 py-2.5 border border-gray-300 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" value={auditForm.notes} onChange={e => setAuditForm({...auditForm, notes: e.target.value})} />
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between border-b pb-2">
+                    <h4 className="font-bold text-gray-800 flex items-center gap-2"><Package size={18} className="text-blue-600" /> Chi tiết hàng hóa</h4>
+                    <div className="flex gap-2">
+                      <select 
+                        className="text-sm border border-gray-300 rounded-lg px-3 py-1.5 outline-none focus:ring-2 focus:ring-blue-500 bg-white min-w-[200px]"
+                        onChange={(e) => { addAuditItem(e.target.value); e.target.value = ''; }}
+                        value=""
+                      >
+                        <option value="">+ Thêm sản phẩm kiểm</option>
+                        {products.map(p => <option key={p.id} value={p.custom_id}>{p.custom_id} - {p.name}</option>)}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="border border-gray-100 rounded-2xl overflow-hidden shadow-sm">
+                    <table className="w-full text-left text-sm">
+                      <thead className="bg-gray-50 border-b">
+                        <tr>
+                          <th className="px-4 py-3 font-bold text-gray-600">Sản phẩm</th>
+                          <th className="px-4 py-3 font-bold text-gray-600 text-center">Hệ thống</th>
+                          <th className="px-4 py-3 font-bold text-gray-600 text-center">Thực tế</th>
+                          <th className="px-4 py-3 font-bold text-gray-600 text-center">Chênh lệch</th>
+                          <th className="px-4 py-3 text-center"></th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-100">
+                        {auditForm.items.length === 0 ? (
+                          <tr><td colSpan="5" className="px-4 py-8 text-center text-gray-400 italic">Chưa có sản phẩm nào được chọn</td></tr>
+                        ) : (
+                          auditForm.items.map((item, idx) => (
+                            <tr key={item.product_id} className="hover:bg-gray-50/50 transition-colors">
+                              <td className="px-4 py-3">
+                                <p className="font-bold text-gray-800">{item.product_name}</p>
+                                <p className="text-[10px] text-gray-500 uppercase tracking-wider">{item.product_id}</p>
+                              </td>
+                              <td className="px-4 py-3 text-center font-bold text-gray-500">{item.system_quantity}</td>
+                              <td className="px-4 py-3 text-center">
+                                <input 
+                                  type="number" min="0"
+                                  className="w-20 px-2 py-1.5 border border-gray-300 rounded-lg text-center font-bold focus:ring-2 focus:ring-blue-500 outline-none"
+                                  value={item.actual_quantity}
+                                  onChange={(e) => updateAuditItem(idx, e.target.value)}
+                                />
+                              </td>
+                              <td className={`px-4 py-3 text-center font-bold ${item.discrepancy === 0 ? 'text-gray-400' : (item.discrepancy > 0 ? 'text-green-600' : 'text-red-600')}`}>
+                                {item.discrepancy > 0 ? '+' : ''}{item.discrepancy}
+                              </td>
+                              <td className="px-4 py-3 text-center">
+                                <button type="button" onClick={() => removeAuditItem(idx)} className="p-1.5 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg"><Trash2 size={18} /></button>
+                              </td>
+                            </tr>
+                          ))
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-6 border-t bg-gray-50 flex justify-end gap-3">
+                <button type="button" onClick={() => setIsAuditModalOpen(false)} className="px-6 py-2.5 text-gray-600 hover:bg-gray-100 rounded-xl font-bold">Đóng</button>
+                <button type="submit" className="px-10 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-bold shadow-lg shadow-blue-100 transition-all active:scale-95 flex items-center gap-2">
+                  <CheckCircle size={20} /> Hoàn tất & Cân bằng kho
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default ReportsPage;
