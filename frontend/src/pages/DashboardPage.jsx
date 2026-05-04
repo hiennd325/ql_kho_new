@@ -80,32 +80,44 @@ const DashboardPage = () => {
   return (
     <div className="space-y-6">
       {/* Stats Cards */}
-      <div className="grid grid-cols-4 gap-2 sm:gap-4 lg:gap-6">
-        <div className="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition-all group">
-          <div className="flex items-baseline gap-1 sm:gap-2 justify-center h-full">
-            <p className="text-[8px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap">Sản phẩm</p>
-            <h3 className="text-xs sm:text-xl font-black text-slate-900">{stats.totalProducts}</h3>
+      <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-wrap items-center justify-between gap-4">
+        <div className="flex items-center gap-4 px-4 border-r border-slate-100 last:border-0 flex-1">
+          <div className="bg-blue-50 p-2 rounded-lg text-blue-600">
+            <Package size={20} />
+          </div>
+          <div>
+            <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">Sản phẩm</p>
+            <h3 className="text-xl font-black text-slate-900 leading-none">{stats.totalProducts}</h3>
           </div>
         </div>
 
-        <div className="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition-all group">
-          <div className="flex items-baseline gap-1 sm:gap-2 justify-center h-full">
-            <p className="text-[8px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap">Nhập kho</p>
-            <h3 className="text-xs sm:text-xl font-black text-emerald-600">+{stats.monthlyImports}</h3>
+        <div className="flex items-center gap-4 px-4 border-r border-slate-100 last:border-0 flex-1">
+          <div className="bg-emerald-50 p-2 rounded-lg text-emerald-600">
+            <TrendingUp size={20} />
+          </div>
+          <div>
+            <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">Tổng nhập</p>
+            <h3 className="text-xl font-black text-emerald-600 leading-none">+{stats.monthlyImports} <span className="text-[10px] text-slate-400">SP</span></h3>
           </div>
         </div>
 
-        <div className="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition-all group">
-          <div className="flex items-baseline gap-1 sm:gap-2 justify-center h-full">
-            <p className="text-[8px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap">Xuất kho</p>
-            <h3 className="text-xs sm:text-xl font-black text-rose-600">-{stats.monthlyExports}</h3>
+        <div className="flex items-center gap-4 px-4 border-r border-slate-100 last:border-0 flex-1">
+          <div className="bg-rose-50 p-2 rounded-lg text-rose-600">
+            <TrendingDown size={20} />
+          </div>
+          <div>
+            <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">Tổng xuất</p>
+            <h3 className="text-xl font-black text-rose-600 leading-none">-{stats.monthlyExports} <span className="text-[10px] text-slate-400">SP</span></h3>
           </div>
         </div>
 
-        <div className="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition-all group">
-          <div className="flex items-baseline gap-1 sm:gap-2 justify-center h-full overflow-hidden">
-            <p className="text-[8px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap">Giá trị</p>
-            <h3 className="text-xs sm:text-xl font-black text-slate-900 truncate">{formatCurrency(stats.totalValue)}</h3>
+        <div className="flex items-center gap-4 px-4 border-r border-slate-100 last:border-0 flex-1">
+          <div className="bg-amber-50 p-2 rounded-lg text-amber-600">
+            <DollarSign size={20} />
+          </div>
+          <div className="overflow-hidden">
+            <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">Giá trị tồn</p>
+            <h3 className="text-xl font-black text-slate-900 leading-none truncate">{formatCurrency(stats.totalValue)}</h3>
           </div>
         </div>
       </div>

@@ -1,12 +1,6 @@
-const sqlite3 = require('sqlite3').verbose();
+const db = require('./db');
 const path = require('path');
 const fs = require('fs').promises;
-
-const db = new sqlite3.Database(path.join(__dirname, 'database.db'), (err) => {
-    if (err) {
-        console.error('Could not connect to database:', err.message);
-    }
-});
 
 // System health check function
 async function checkSystemHealth() {

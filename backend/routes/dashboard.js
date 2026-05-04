@@ -7,17 +7,8 @@
 // Import các module cần thiết
 const express = require('express'); // Framework web để xây dựng API
 const router = express.Router(); // Tạo instance router để định nghĩa routes
-const sqlite3 = require('sqlite3').verbose(); // Thư viện SQLite3 để tương tác với cơ sở dữ liệu
+const db = require('../db');
 const path = require('path'); // Module để xử lý đường dẫn file
-
-// Khởi tạo kết nối đến cơ sở dữ liệu SQLite
-// Đường dẫn đến file database.db nằm ở thư mục cha của thư mục hiện tại
-const db = new sqlite3.Database(path.join(__dirname, '../database.db'), (err) => {
-    if (err) {
-        // Ghi log lỗi nếu không thể kết nối database
-        console.error('Could not connect to database:', err.message);
-    }
-});
 
 /**
  * Hàm kiểm tra sức khỏe tổng thể của hệ thống

@@ -36,18 +36,9 @@ app.use((req, res, next) => {
 // Serve static files từ thư mục frontend
 app.use(express.static(path.join(__dirname, '../frontend')));
 
-// Kiểm tra xem tệp cơ sở dữ liệu đã tồn tại chưa
-const dbPath = './database.db';
-const dbExists = fs.existsSync(dbPath);
-
 // Kết nối đến cơ sở dữ liệu SQLite
-const db = new sqlite3.Database(dbPath, (err) => {
-    if (err) {
-        console.error('Could not connect to database:', err.message);
-    } else {
-        console.log('Connected to SQLite database.');
-    }
-});
+const db = require('./db');
+const dbExists = fs.existsSync(path.join(__dirname, 'database.db'));
 
 // Nếu tệp cơ sở dữ liệu chưa tồn tại, đọc và thực thi schema từ file schema.sql
 if (!dbExists) {

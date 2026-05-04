@@ -153,32 +153,34 @@ const WarehousesPage = () => {
   return (
     <div className="space-y-6">
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition-all group">
-          <p className="text-xs text-slate-500 font-black uppercase tracking-widest mb-2">Tổng số kho</p>
-          <div className="flex items-end justify-between">
-            <h3 className="text-4xl font-black text-slate-900 leading-none">{stats.total}</h3>
-            <div className="bg-blue-50 p-2 rounded-lg text-blue-600 group-hover:scale-110 transition-transform">
-               <Warehouse size={24} />
-            </div>
+      <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-wrap items-center justify-between gap-4">
+        <div className="flex items-center gap-4 px-4 border-r border-slate-100 last:border-0 flex-1">
+          <div className="bg-blue-50 p-2 rounded-lg text-blue-600">
+            <Warehouse size={20} />
+          </div>
+          <div>
+            <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">Tổng số kho</p>
+            <h3 className="text-xl font-black text-slate-900 leading-none">{stats.total}</h3>
           </div>
         </div>
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition-all group">
-          <p className="text-xs text-slate-500 font-black uppercase tracking-widest mb-2">Sức chứa hệ thống</p>
-          <div className="flex items-end justify-between">
-            <h3 className="text-4xl font-black text-blue-600 leading-none">{stats.capacity.toLocaleString()} <span className="text-sm font-bold text-slate-400">SP</span></h3>
-            <div className="bg-indigo-50 p-2 rounded-lg text-indigo-600 group-hover:scale-110 transition-transform">
-               <LayoutGrid size={24} />
-            </div>
+
+        <div className="flex items-center gap-4 px-4 border-r border-slate-100 last:border-0 flex-1">
+          <div className="bg-indigo-50 p-2 rounded-lg text-indigo-600">
+            <LayoutGrid size={20} />
+          </div>
+          <div>
+            <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">Sức chứa hệ thống</p>
+            <h3 className="text-xl font-black text-blue-600 leading-none">{stats.capacity.toLocaleString()} <span className="text-[10px] font-bold text-slate-400">SP</span></h3>
           </div>
         </div>
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition-all group">
-          <p className="text-xs text-slate-500 font-black uppercase tracking-widest mb-2">Mức độ lấp đầy</p>
-          <div className="flex items-end justify-between">
-            <h3 className="text-4xl font-black text-emerald-600 leading-none">{stats.usage.toLocaleString()} <span className="text-sm font-bold text-slate-400">({stats.capacity > 0 ? Math.round((stats.usage/stats.capacity)*100) : 0}%)</span></h3>
-            <div className="bg-emerald-50 p-2 rounded-lg text-emerald-600 group-hover:scale-110 transition-transform">
-               <Activity size={24} />
-            </div>
+
+        <div className="flex items-center gap-4 px-4 border-r border-slate-100 last:border-0 flex-1">
+          <div className="bg-emerald-50 p-2 rounded-lg text-emerald-600">
+            <Activity size={20} />
+          </div>
+          <div>
+            <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">Mức độ lấp đầy</p>
+            <h3 className="text-xl font-black text-emerald-600 leading-none">{stats.usage.toLocaleString()} <span className="text-[10px] font-bold text-slate-400">({stats.capacity > 0 ? Math.round((stats.usage/stats.capacity)*100) : 0}%)</span></h3>
           </div>
         </div>
       </div>
@@ -221,57 +223,75 @@ const WarehousesPage = () => {
       </div>
 
       {activeTab === 'list' ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredWarehouses.map((wh, idx) => (
-            <div key={wh.custom_id || idx} className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
-              <div className="h-32 bg-gradient-to-br from-slate-900 to-slate-800 p-8 flex flex-col justify-end relative overflow-hidden">
-                <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:rotate-12 transition-transform">
-                   <Warehouse size={120} className="text-white" />
-                </div>
-                <h4 className="text-white font-black text-xl relative z-10 group-hover:text-blue-400 transition-colors">{wh.name}</h4>
-                <div className="flex items-center gap-2 text-slate-400 text-xs font-bold uppercase tracking-widest mt-1 relative z-10">
-                   <MapPin size={12} /> {wh.location || 'Chưa xác định'}
-                </div>
-              </div>
-              <div className="p-8 space-y-6">
-                <div className="grid grid-cols-2 gap-6">
-                  <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                    <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest mb-1">Sức chứa</p>
-                    <p className="text-lg font-black text-slate-900">{wh.capacity.toLocaleString()} <span className="text-[10px] text-slate-400 font-bold uppercase">SP</span></p>
-                  </div>
-                  <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                    <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest mb-1">Hiện có</p>
-                    <p className="text-lg font-black text-emerald-600">{wh.current_usage.toLocaleString()} <span className="text-[10px] text-slate-400 font-bold uppercase">SP</span></p>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center px-1">
-                    <span className="text-xs font-black text-slate-500 uppercase tracking-wider">Tỷ lệ lấp đầy</span>
-                    <span className={`text-xs font-black px-2 py-0.5 rounded-md ${wh.current_usage/wh.capacity > 0.9 ? 'bg-rose-100 text-rose-700' : 'bg-blue-100 text-blue-700'}`}>{Math.round((wh.current_usage / wh.capacity) * 100)}%</span>
-                  </div>
-                  <div className="w-full bg-slate-100 rounded-full h-3.5 p-1 border border-slate-200">
-                    <div
-                      className={`h-full rounded-full transition-all duration-1000 ${wh.current_usage/wh.capacity > 0.9 ? 'bg-rose-500 shadow-sm shadow-rose-200' : 'bg-blue-600 shadow-sm shadow-blue-200'}`}
-                      style={{ width: `${Math.min((wh.current_usage / wh.capacity) * 100, 100)}%` }}
-                    />
-                  </div>
-                </div>
-
-                <div className="flex gap-3 pt-4">
-                  <button onClick={() => openDetail(wh)} className="flex-1 flex justify-center items-center gap-2 bg-blue-50 text-blue-700 py-3 rounded-2xl text-xs font-black hover:bg-blue-600 hover:text-white hover:shadow-lg hover:shadow-blue-100 transition-all active:scale-95">
-                    <Eye size={16} strokeWidth={3} /> CHI TIẾT
-                  </button>
-                  <button onClick={() => openEditModal(wh)} className="flex-1 flex justify-center items-center gap-2 bg-amber-50 text-amber-700 py-3 rounded-2xl text-xs font-black hover:bg-amber-600 hover:text-white hover:shadow-lg hover:shadow-amber-100 transition-all active:scale-95">
-                    <Edit size={16} strokeWidth={3} /> SỬA
-                  </button>
-                  <button onClick={() => handleDelete(wh.custom_id)} className="flex-1 flex justify-center items-center gap-2 bg-rose-50 text-rose-700 py-3 rounded-2xl text-xs font-black hover:bg-rose-600 hover:text-white hover:shadow-lg hover:shadow-rose-100 transition-all active:scale-95">
-                    <Trash2 size={16} strokeWidth={3} /> XÓA
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-slate-50/80 border-b border-slate-100">
+                  <th className="px-8 py-5 text-[11px] font-black text-slate-500 uppercase tracking-widest">Kho</th>
+                  <th className="px-8 py-5 text-[11px] font-black text-slate-500 uppercase tracking-widest">Vị trí</th>
+                  <th className="px-8 py-5 text-[11px] font-black text-slate-500 uppercase tracking-widest text-right">Sức chứa</th>
+                  <th className="px-8 py-5 text-[11px] font-black text-slate-500 uppercase tracking-widest text-right">Hiện có</th>
+                  <th className="px-8 py-5 text-[11px] font-black text-slate-500 uppercase tracking-widest">Tỷ lệ lấp đầy</th>
+                  <th className="px-8 py-5 text-[11px] font-black text-slate-500 uppercase tracking-widest text-center">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {filteredWarehouses.map((wh, idx) => (
+                  <tr key={wh.custom_id || idx} className="hover:bg-slate-50/50 transition-colors group">
+                    <td className="px-8 py-5">
+                      <div className="flex items-center gap-3">
+                        <div className="bg-blue-50 p-2 rounded-lg text-blue-600">
+                          <Warehouse size={18} />
+                        </div>
+                        <div>
+                          <p className="text-sm font-black text-slate-900">{wh.name}</p>
+                          <p className="text-[10px] font-bold text-blue-600 uppercase">{wh.custom_id}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-8 py-5">
+                      <div className="flex items-center gap-2 text-sm text-slate-500 font-bold">
+                        <MapPin size={14} className="text-slate-400" /> {wh.location || 'Chưa xác định'}
+                      </div>
+                    </td>
+                    <td className="px-8 py-5 text-sm font-black text-slate-900 text-right">
+                      {wh.capacity.toLocaleString()} <span className="text-[10px] text-slate-400">SP</span>
+                    </td>
+                    <td className="px-8 py-5 text-sm font-black text-emerald-600 text-right">
+                      {wh.current_usage.toLocaleString()} <span className="text-[10px] text-slate-400">SP</span>
+                    </td>
+                    <td className="px-8 py-5">
+                      <div className="flex items-center gap-3 min-w-[120px]">
+                        <div className="flex-1 bg-slate-100 rounded-full h-2 overflow-hidden border border-slate-200">
+                          <div
+                            className={`h-full rounded-full transition-all duration-1000 ${wh.current_usage/wh.capacity > 0.9 ? 'bg-rose-500' : 'bg-blue-600'}`}
+                            style={{ width: `${Math.min((wh.current_usage / wh.capacity) * 100, 100)}%` }}
+                          />
+                        </div>
+                        <span className={`text-[10px] font-black px-1.5 py-0.5 rounded ${wh.current_usage/wh.capacity > 0.9 ? 'bg-rose-100 text-rose-700' : 'bg-blue-100 text-blue-700'}`}>
+                          {Math.round((wh.current_usage / wh.capacity) * 100)}%
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-8 py-5">
+                      <div className="flex justify-center gap-2">
+                        <button onClick={() => openDetail(wh)} className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-all" title="Chi tiết">
+                          <Eye size={18} />
+                        </button>
+                        <button onClick={() => openEditModal(wh)} className="p-2 text-amber-600 hover:bg-amber-50 rounded-lg transition-all" title="Sửa">
+                          <Edit size={18} />
+                        </button>
+                        <button onClick={() => handleDelete(wh.custom_id)} className="p-2 text-rose-600 hover:bg-rose-50 rounded-lg transition-all" title="Xóa">
+                          <Trash2 size={18} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       ) : (
         <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
