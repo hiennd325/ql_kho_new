@@ -524,8 +524,82 @@ router.get('/audits/:id', async (req, res) => {
 
 });
 
+/**
+ * Route xuất phiếu kiểm kê ra file CSV
+ * Phương thức: GET
+ * Đường dẫn: /inventory/audits/:id/export
+ */
+router.get('/audits/:id/export', async (req, res) => {
+    try {
+        const { id } = req.params;
 
+        // Lấy thông tin phiếu kiểm kê
+        const audit = await new Promise((resolve, reject) => {
+            const query = `
+                SELECT a.code, a.date, a.discrepancy, a.status, a.notes,
+                       w.name as warehouse_name, u.username as created_by_username
+                FROM audits a
+                JOIN warehouses w ON a.warehouse_id = w.custom_id
+                JOIN users u ON a.created_by_user_id = u.id
+                WHERE a.id = ?
+            `;
+            db.get(query, [id], (err, row) => {
+                if (err) reject(err);
+                else resolve(row);
+            });
+        });
 
+        if (!audit) {
+            return res.status(404).json({ error: 'Audit not found' });
+        }
+
+        // Lấy chi tiết phiếu kiểm kê
+        const items = await new Promise((resolve, reject) => {
+            const query = `
+                SELECT ai.product_id, p.name as product_name,
+                       ai.system_quantity, ai.actual_quantity, ai.discrepancy, ai.notes
+                FROM audit_items ai
+                JOIN products p ON ai.product_id = p.custom_id
+                WHERE ai.audit_id = ?
+            `;
+            db.all(query, [id], (err, rows) => {
+                if (err) reject(err);
+                else resolve(rows || []);
+            });
+        });
+
+        // Tạo nội dung CSV
+        const headers = ['Mã sản phẩm', 'Tên sản phẩm', 'SL hệ thống', 'SL thực tế', 'Chênh lệch', 'Ghi chú'];
+        let csvContent = `Phiếu kiểm kê: ${audit.code}\n`;
+        csvContent += `Kho: ${audit.warehouse_name}\n`;
+        csvContent += `Ngày: ${new Date(audit.date).toLocaleString()}\n`;
+        csvContent += `Người lập: ${audit.created_by_username}\n`;
+        csvContent += `Ghi chú: ${audit.notes || ''}\n\n`;
+        csvContent += headers.join(',') + '\n';
+
+        items.forEach(item => {
+            const row = [
+                item.product_id,
+                `"${item.product_name}"`,
+                item.system_quantity,
+                item.actual_quantity,
+                item.discrepancy,
+                `"${item.notes || ''}"`
+            ];
+            csvContent += row.join(',') + '\n';
+        });
+
+        // Thiết lập headers trả về file
+        res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+        res.setHeader('Content-Disposition', `attachment; filename="audit_${audit.code}.csv"`);
+
+        // Gửi nội dung với BOM để Excel nhận diện UTF-8
+        res.send('﻿' + csvContent);
+    } catch (err) {
+        console.error('Error exporting audit:', err);
+        res.status(500).json({ error: 'Failed to export audit' });
+    }
+});
 
 
 // DELETE inventory audit
@@ -596,6 +670,74 @@ router.delete('/audits/:id', async (req, res) => {
 
 
 
+
+/**
+ * Route tạo phiếu kiểm kê mới
+ * Phương thức: POST
+ * Đường dẫn: /inventory/audits
+ * Body: { warehouse_id, date, notes, items: [{product_id, system_quantity, actual_quantity, notes}] }
+ */
+router.post('/audits', async (req, res) => {
+    try {
+        const { warehouse_id, date, notes, items } = req.body;
+        const created_by_user_id = req.user.id;
+
+        if (!warehouse_id || !date || !items || !Array.isArray(items) || items.length === 0) {
+            return res.status(400).json({ error: 'Missing required fields' });
+        }
+
+        // Bắt đầu transaction
+        await new Promise((resolve, reject) => {
+            db.run('BEGIN TRANSACTION', err => err ? reject(err) : resolve());
+        });
+
+        const code = `AUDIT${Date.now()}`;
+        let totalDiscrepancy = 0;
+
+        // Tính tổng chênh lệch (giá trị tuyệt đối của hiệu số lượng)
+        items.forEach(item => {
+            totalDiscrepancy += Math.abs(item.actual_quantity - item.system_quantity);
+        });
+
+        // Tạo phiếu kiểm kê
+        const auditId = await new Promise((resolve, reject) => {
+            const query = `
+                INSERT INTO audits (code, date, warehouse_id, created_by_user_id, discrepancy, status, notes)
+                VALUES (?, ?, ?, ?, ?, 'pending', ?)
+            `;
+            db.run(query, [code, date, warehouse_id, created_by_user_id, totalDiscrepancy, notes], function(err) {
+                if (err) reject(err);
+                else resolve(this.lastID);
+            });
+        });
+
+        // Thêm chi tiết phiếu kiểm kê
+        for (const item of items) {
+            await new Promise((resolve, reject) => {
+                const query = `
+                    INSERT INTO audit_items (audit_id, product_id, system_quantity, actual_quantity, discrepancy, notes)
+                    VALUES (?, ?, ?, ?, ?, ?)
+                `;
+                const discrepancy = item.actual_quantity - item.system_quantity;
+                db.run(query, [auditId, item.product_id, item.system_quantity, item.actual_quantity, discrepancy, item.notes], err => {
+                    if (err) reject(err);
+                    else resolve();
+                });
+            });
+        }
+
+        // Commit transaction
+        await new Promise((resolve, reject) => {
+            db.run('COMMIT', err => err ? reject(err) : resolve());
+        });
+
+        res.status(201).json({ id: auditId, code, message: 'Audit created successfully' });
+    } catch (err) {
+        await new Promise(resolve => db.run('ROLLBACK', () => resolve()));
+        console.error('Error creating inventory audit:', err);
+        res.status(500).json({ error: 'Failed to create inventory audit' });
+    }
+});
 
 // Xuất router để sử dụng trong ứng dụng chính
 module.exports = router;

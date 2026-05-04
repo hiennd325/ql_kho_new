@@ -37,6 +37,7 @@ router.get('/', async (req, res) => {
         res.status(500).json({ error: 'Failed to get products' });
     }
 });
+
 /**
  * Route lấy tổng số lượng sản phẩm
  * Phương thức: GET
@@ -54,10 +55,58 @@ router.get('/count', async (req, res) => {
 });
 
 /**
+ * Route xuất danh sách sản phẩm ra file CSV
+ * Phương thức: GET
+ * Đường dẫn: /products/export
+ * Query parameters: search, category, brand, supplier
+ * Lưu ý: Route này phải được định nghĩa trước /:id
+ */
+router.get('/export', async (req, res) => {
+    try {
+        // Lấy tham số bộ lọc từ query
+        const { search, category, brand, supplier } = req.query;
+        // Lấy tất cả sản phẩm (tối đa 1000) với bộ lọc
+        const products = await productModel.getProducts(search, category, brand, supplier, 1, 1000);
+
+        // Tạo header cho CSV với tiếng Việt
+        const csvHeaders = ['ID', 'Tên sản phẩm', 'Mô tả', 'Giá', 'Danh mục', 'Thương hiệu', 'Nhà cung cấp', 'Số lượng', 'Ngày tạo'];
+        let csvContent = csvHeaders.join(',') + '\n';
+
+        // Thêm từng dòng dữ liệu sản phẩm
+        products.products.forEach(product => {
+            const row = [
+                product.id,
+                `"${product.name}"`,  // Bao bọc bằng dấu ngoặc để tránh lỗi với dấu phẩy
+                `"${product.description || ''}"`,
+                product.price,
+                `"${product.category || ''}"`,
+                `"${product.brand || ''}"`,
+                `"${product.supplier_name || ''}"`,
+                product.quantity || 0,
+                product.created_at
+            ];
+            csvContent += row.join(',') + '\n';
+        });
+
+        // Thiết lập headers cho download CSV
+        res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+        res.setHeader('Content-Disposition', 'attachment; filename="products.csv"');
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+        res.setHeader('Pragma', 'no-cache');
+        res.setHeader('Expires', '0');
+
+        // Gửi file CSV với BOM để đảm bảo encoding UTF-8
+        res.send('﻿' + csvContent);
+    } catch (err) {
+        console.error('Export error:', err);
+        res.status(500).json({ error: 'Failed to export products' });
+    }
+});
+
+/**
  * Route lấy danh sách thương hiệu duy nhất
  * Phương thức: GET
  * Đường dẫn: /products/brands
- * Trong production cần xác thực
  */
 router.get('/brands', async (req, res) => {
     try {
@@ -143,66 +192,6 @@ router.delete('/:id', async (req, res) => {
         }
     }
 });
-
-/**
- * Route xuất danh sách sản phẩm ra file CSV
- * Phương thức: GET
- * Đường dẫn: /products/export
- * Query parameters: search, category, brand, supplier
- */
-router.get('/export', async (req, res) => {
-    try {
-        // Lấy tham số bộ lọc từ query
-        const { search, category, brand, supplier } = req.query;
-        // Lấy tất cả sản phẩm (tối đa 1000) với bộ lọc
-        const products = await productModel.getProducts(search, category, brand, supplier, 1, 1000);
-
-        // Tạo header cho CSV với tiếng Việt
-        const csvHeaders = ['ID', 'Tên sản phẩm', 'Mô tả', 'Giá', 'Danh mục', 'Thương hiệu', 'Nhà cung cấp', 'Số lượng', 'Ngày tạo'];
-        let csvContent = csvHeaders.join(',') + '\n';
-
-        // Thêm từng dòng dữ liệu sản phẩm
-        products.products.forEach(product => {
-            const row = [
-                product.id,
-                `"${product.name}"`,  // Bao bọc bằng dấu ngoặc để tránh lỗi với dấu phẩy
-                `"${product.description || ''}"`,
-                product.price,
-                `"${product.category || ''}"`,
-                `"${product.brand || ''}"`,
-                `"${product.supplier_name || ''}"`,
-                product.quantity || 0,
-                product.created_at
-            ];
-            csvContent += row.join(',') + '\n';
-        });
-
-        // Thiết lập headers cho download CSV
-        res.setHeader('Content-Type', 'text/csv; charset=utf-8');
-        res.setHeader('Content-Disposition', 'attachment; filename="products.csv"');
-        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-        res.setHeader('Pragma', 'no-cache');
-        res.setHeader('Expires', '0');
-
-        // Gửi file CSV với BOM để đảm bảo encoding UTF-8
-        res.send('\ufeff' + csvContent);
-    } catch (err) {
-        console.error('Export error:', err);
-        res.status(500).json({ error: 'Failed to export products' });
-    }
-});
-
-// Route count trùng lặp - có thể xóa
-router.get('/count', async (req, res) => {
-    try {
-        const count = await productModel.getProductsCount();
-        res.json({ count });
-    } catch (err) {
-        res.status(500).json({ error: 'Failed to get products count' });
-    }
-});
-
-// Lưu ý: '/brands' đã được định nghĩa trước '/:id' ở trên
 
 // Xuất router
 module.exports = router;
