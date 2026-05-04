@@ -12,7 +12,8 @@ import {
   ChevronRight,
   MoreHorizontal,
   X,
-  Box
+  Box,
+  Users
 } from 'lucide-react';
 import api from '../services/api';
 
@@ -204,118 +205,122 @@ const ProductsPage = () => {
   return (
     <div className="space-y-6">
       {/* Stats & Actions */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <div className="bg-blue-100 p-3 rounded-lg text-blue-600">
-            <Box size={24} />
+      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-6 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+        <div className="flex items-center gap-5">
+          <div className="bg-blue-600 p-4 rounded-2xl text-white shadow-lg shadow-blue-200">
+            <Box size={32} strokeWidth={2.5} />
           </div>
           <div>
-            <p className="text-sm text-gray-500">Tổng sản phẩm</p>
-            <h3 className="text-xl font-bold">{totalCount}</h3>
+            <p className="text-xs text-slate-500 font-black uppercase tracking-widest mb-1">Kho hàng</p>
+            <h3 className="text-3xl font-black text-slate-900 leading-none">{totalCount} <span className="text-sm font-bold text-slate-400">SẢN PHẨM</span></h3>
           </div>
         </div>
-        
-        <div className="flex flex-wrap gap-2">
-          <button 
+
+        <div className="flex flex-wrap items-center gap-3">
+          <button
             onClick={() => { resetForm(); setIsAddModalOpen(true); }}
-            className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+            className="flex items-center gap-3 bg-blue-600 text-white px-6 py-3.5 rounded-xl hover:bg-blue-700 transition-all font-black shadow-lg shadow-blue-100 active:scale-95"
           >
-            <Plus size={18} />
-            Thêm sản phẩm
+            <Plus size={20} strokeWidth={3} />
+            THÊM SẢN PHẨM
           </button>
-          <button onClick={exportToCSV} className="flex items-center gap-2 border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors">
+          <div className="h-10 w-px bg-slate-200 mx-2 hidden md:block"></div>
+          <button onClick={exportToCSV} className="flex items-center gap-2 bg-slate-50 border border-slate-200 text-slate-700 px-5 py-3.5 rounded-xl hover:bg-white hover:shadow-md transition-all font-bold">
             <Download size={18} />
             Xuất CSV
           </button>
-          <button onClick={() => window.print()} className="flex items-center gap-2 border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors">
+          <button onClick={() => window.print()} className="flex items-center gap-2 bg-slate-50 border border-slate-200 text-slate-700 px-5 py-3.5 rounded-xl hover:bg-white hover:shadow-md transition-all font-bold">
             <Printer size={18} />
-            In
+            In trang
           </button>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-wrap gap-4 items-center">
-        <div className="relative flex-1 min-w-[200px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-          <input 
-            type="text" 
-            placeholder="Tìm kiếm theo tên, mã sản phẩm..."
-            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+      <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-wrap gap-5 items-center">
+        <div className="relative group flex-1 min-w-[280px]">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors" size={20} />
+          <input
+            type="text"
+            placeholder="Tìm theo tên, mã sản phẩm, thương hiệu..."
+            className="w-full pl-12 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all font-medium"
             value={searchTerm}
             onChange={handleSearch}
           />
         </div>
-        
-        <div className="flex items-center gap-2">
-          <Filter size={18} className="text-gray-400" />
-          <select 
-            value={brandFilter}
-            onChange={(e) => { setBrandFilter(e.target.value); setCurrentPage(1); }}
-            className="border border-gray-200 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="all">Tất cả nhãn hiệu</option>
-            {brands.map(brand => <option key={brand} value={brand}>{brand}</option>)}
-          </select>
-          
-          <select 
-            value={supplierFilter}
-            onChange={(e) => { setSupplierFilter(e.target.value); setCurrentPage(1); }}
-            className="border border-gray-200 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="all">Tất cả NCC</option>
-            {suppliers.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
-          </select>
+
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-xl px-4 py-1">
+            <Filter size={18} className="text-slate-400" />
+            <select
+              value={brandFilter}
+              onChange={(e) => { setBrandFilter(e.target.value); setCurrentPage(1); }}
+              className="bg-transparent py-2.5 outline-none text-sm font-bold text-slate-700 min-w-[140px]"
+            >
+              <option value="all">Tất cả nhãn hiệu</option>
+              {brands.map(brand => <option key={brand} value={brand}>{brand}</option>)}
+            </select>
+          </div>
+
+          <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-xl px-4 py-1">
+            <Users size={18} className="text-slate-400" />
+            <select
+              value={supplierFilter}
+              onChange={(e) => { setSupplierFilter(e.target.value); setCurrentPage(1); }}
+              className="bg-transparent py-2.5 outline-none text-sm font-bold text-slate-700 min-w-[140px]"
+            >
+              <option value="all">Tất cả NCC</option>
+              {suppliers.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+            </select>
+          </div>
         </div>
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-gray-50 border-b border-gray-100">
-                <th className="px-6 py-4 text-sm font-semibold text-gray-600">Mã SP</th>
-                <th className="px-6 py-4 text-sm font-semibold text-gray-600">Tên sản phẩm</th>
-                <th className="px-6 py-4 text-sm font-semibold text-gray-600">Giá</th>
-                <th className="px-6 py-4 text-sm font-semibold text-gray-600">Nhãn hiệu</th>
-                <th className="px-6 py-4 text-sm font-semibold text-gray-600">Tồn kho</th>
-                <th className="px-6 py-4 text-sm font-semibold text-gray-600">Ngày tạo</th>
-                <th className="px-6 py-4 text-sm font-semibold text-gray-600 text-center">Thao tác</th>
+              <tr className="bg-slate-50/80 border-b border-slate-100">
+                <th className="px-8 py-5 text-[11px] font-black text-slate-500 uppercase tracking-widest">Mã SP</th>
+                <th className="px-8 py-5 text-[11px] font-black text-slate-500 uppercase tracking-widest">Tên sản phẩm</th>
+                <th className="px-8 py-5 text-[11px] font-black text-slate-500 uppercase tracking-widest text-right">Giá niêm yết</th>
+                <th className="px-8 py-5 text-[11px] font-black text-slate-500 uppercase tracking-widest">Thương hiệu</th>
+                <th className="px-8 py-5 text-[11px] font-black text-slate-500 uppercase tracking-widest text-center">Tồn kho</th>
+                <th className="px-8 py-5 text-[11px] font-black text-slate-500 uppercase tracking-widest">Ngày nhập</th>
+                <th className="px-8 py-5 text-[11px] font-black text-slate-500 uppercase tracking-widest text-center">Thao tác</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-slate-100">
               {loading ? (
-                <tr>
-                  <td colSpan="7" className="px-6 py-10 text-center text-gray-500">Đang tải dữ liệu...</td>
-                </tr>
+                <tr><td colSpan="7" className="px-8 py-24 text-center"><div className="flex flex-col items-center gap-3"><div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div><p className="text-slate-400 font-bold italic">Đang cập nhật danh sách...</p></div></td></tr>
               ) : products.length === 0 ? (
-                <tr>
-                  <td colSpan="7" className="px-6 py-10 text-center text-gray-500">Không tìm thấy sản phẩm nào</td>
-                </tr>
+                <tr><td colSpan="7" className="px-8 py-24 text-center"><div className="bg-slate-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-200"><Box size={40} /></div><p className="text-slate-400 font-bold">Không tìm thấy sản phẩm nào phù hợp</p></td></tr>
               ) : (
                 products.map((product) => (
-                  <tr key={product.id} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-4 text-sm font-medium text-gray-900">{product.custom_id || product.id}</td>
-                    <td className="px-6 py-4 text-sm text-gray-700">{product.name}</td>
-                    <td className="px-6 py-4 text-sm text-gray-900 font-medium">{formatCurrency(product.price)}</td>
-                    <td className="px-6 py-4 text-sm text-gray-600">{product.brand || 'N/A'}</td>
-                    <td className="px-6 py-4 text-sm">
-                      <span className={`px-2 py-1 rounded-full text-xs font-semibold ${product.quantity > 10 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                        {product.quantity || 0}
+                  <tr key={product.id} className="hover:bg-slate-50/50 transition-colors group">
+                    <td className="px-8 py-5 text-sm font-black text-slate-900">
+                       <div className="bg-slate-100 px-3 py-1 rounded-lg w-fit border border-slate-200 text-xs">{product.custom_id || product.id}</div>
+                    </td>
+                    <td className="px-8 py-5 text-sm text-slate-700 font-bold group-hover:text-blue-600 transition-colors">{product.name}</td>
+                    <td className="px-8 py-5 text-sm text-right font-black text-slate-900">{formatCurrency(product.price)}</td>
+                    <td className="px-8 py-5 text-sm text-slate-600 font-medium italic">{product.brand || '—'}</td>
+                    <td className="px-8 py-5 text-center">
+                      <span className={`px-4 py-1.5 rounded-xl text-[10px] font-black shadow-sm border ${product.quantity > 10 ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 'bg-rose-50 text-rose-700 border-rose-100'}`}>
+                        {product.quantity || 0} SP
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-500">{formatDate(product.created_at)}</td>
-                    <td className="px-6 py-4 text-sm font-medium">
-                      <div className="flex justify-center space-x-2">
-                        <button onClick={() => openDetailModal(product)} className="p-1 text-green-600 hover:bg-green-50 rounded" title="Xem chi tiết">
-                          <Eye size={18} />
+                    <td className="px-8 py-5 text-sm text-slate-400 font-medium">{formatDate(product.created_at)}</td>
+                    <td className="px-8 py-5">
+                      <div className="flex justify-center items-center gap-2">
+                        <button onClick={() => openDetailModal(product)} className="p-2.5 text-blue-600 bg-blue-50 hover:bg-blue-600 hover:text-white rounded-xl transition-all shadow-sm active:scale-90" title="Chi tiết">
+                          <Eye size={18} strokeWidth={2.5} />
                         </button>
-                        <button onClick={() => openEditModal(product)} className="p-1 text-blue-600 hover:bg-blue-50 rounded" title="Chỉnh sửa">
-                          <Edit size={18} />
+                        <button onClick={() => openEditModal(product)} className="p-2.5 text-amber-600 bg-amber-50 hover:bg-amber-600 hover:text-white rounded-xl transition-all shadow-sm active:scale-90" title="Sửa">
+                          <Edit size={18} strokeWidth={2.5} />
                         </button>
-                        <button onClick={() => handleDelete(product.id)} className="p-1 text-red-600 hover:bg-red-50 rounded" title="Xóa">
-                          <Trash2 size={18} />
+                        <button onClick={() => handleDelete(product.id)} className="p-2.5 text-rose-600 bg-rose-50 hover:bg-rose-600 hover:text-white rounded-xl transition-all shadow-sm active:scale-90" title="Xóa">
+                          <Trash2 size={18} strokeWidth={2.5} />
                         </button>
                       </div>
                     </td>
@@ -327,25 +332,27 @@ const ProductsPage = () => {
         </div>
 
         {/* Pagination */}
-        <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-between">
-          <p className="text-sm text-gray-500">
-            Hiển thị <span className="font-medium">{(currentPage - 1) * limit + 1}</span> - <span className="font-medium">{Math.min(currentPage * limit, totalCount)}</span> trong <span className="font-medium">{totalCount}</span> kết quả
+        <div className="px-8 py-6 border-t border-slate-100 flex items-center justify-between bg-slate-50/30">
+          <p className="text-sm text-slate-500 font-medium">
+            Hiển thị <span className="font-black text-slate-900">{(currentPage - 1) * limit + 1}</span> - <span className="font-black text-slate-900">{Math.min(currentPage * limit, totalCount)}</span> của <span className="font-black text-slate-900">{totalCount}</span> sản phẩm
           </p>
-          <div className="flex items-center gap-2">
-            <button 
+          <div className="flex items-center gap-3">
+            <button
               disabled={currentPage === 1}
               onClick={() => setCurrentPage(prev => prev - 1)}
-              className="p-2 border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="p-2.5 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 text-slate-600 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm active:scale-90"
             >
-              <ChevronLeft size={18} />
+              <ChevronLeft size={20} strokeWidth={2.5} />
             </button>
-            <span className="text-sm font-medium px-4">Trang {currentPage} / {totalPages}</span>
-            <button 
+            <div className="bg-white border border-slate-200 px-5 py-2 rounded-xl text-sm font-black text-slate-700 shadow-sm">
+               Trang {currentPage} / {totalPages}
+            </div>
+            <button
               disabled={currentPage === totalPages}
               onClick={() => setCurrentPage(prev => prev + 1)}
-              className="p-2 border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="p-2.5 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 text-slate-600 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm active:scale-90"
             >
-              <ChevronRight size={18} />
+              <ChevronRight size={20} strokeWidth={2.5} />
             </button>
           </div>
         </div>
