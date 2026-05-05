@@ -30,6 +30,7 @@ import {
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import api from '../services/api';
+import { useTheme } from '../context/ThemeContext';
 
 ChartJS.register(
   CategoryScale,
@@ -41,6 +42,7 @@ ChartJS.register(
 );
 
 const ReportsPage = () => {
+  const { isDarkMode } = useTheme();
   const [activeTab, setActiveTab] = useState('audits'); // 'audits', 'inventory', 'analytics'
   const [audits, setAudits] = useState([]);
   const [inventoryReport, setInventoryReport] = useState([]);
@@ -259,22 +261,22 @@ const ReportsPage = () => {
   return (
     <div className="space-y-6">
       {/* Tab Switcher */}
-      <div className="flex bg-white p-1 rounded-xl border border-gray-200 w-fit shadow-sm">
-        <button 
+      <div className="flex bg-white dark:bg-slate-900 p-1 rounded-xl border border-gray-200 dark:border-slate-800 w-fit shadow-sm">
+        <button
           onClick={() => setActiveTab('audits')}
-          className={`px-6 py-2.5 rounded-lg text-sm font-bold flex items-center gap-2 transition-all ${activeTab === 'audits' ? 'bg-blue-600 text-white shadow-md' : 'text-gray-600 hover:bg-gray-50'}`}
+          className={`px-6 py-2.5 rounded-lg text-sm font-bold flex items-center gap-2 transition-all ${activeTab === 'audits' ? 'bg-blue-600 text-white shadow-md shadow-blue-900/20' : 'text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800'}`}
         >
           <ClipboardList size={18} /> Phiếu kiểm kê
         </button>
-        <button 
+        <button
           onClick={() => setActiveTab('inventory')}
-          className={`px-6 py-2.5 rounded-lg text-sm font-bold flex items-center gap-2 transition-all ${activeTab === 'inventory' ? 'bg-blue-600 text-white shadow-md' : 'text-gray-600 hover:bg-gray-50'}`}
+          className={`px-6 py-2.5 rounded-lg text-sm font-bold flex items-center gap-2 transition-all ${activeTab === 'inventory' ? 'bg-blue-600 text-white shadow-md shadow-blue-900/20' : 'text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800'}`}
         >
           <FileText size={18} /> Báo cáo tồn kho
         </button>
-        <button 
+        <button
           onClick={() => setActiveTab('analytics')}
-          className={`px-6 py-2.5 rounded-lg text-sm font-bold flex items-center gap-2 transition-all ${activeTab === 'analytics' ? 'bg-blue-600 text-white shadow-md' : 'text-gray-600 hover:bg-gray-50'}`}
+          className={`px-6 py-2.5 rounded-lg text-sm font-bold flex items-center gap-2 transition-all ${activeTab === 'analytics' ? 'bg-blue-600 text-white shadow-md shadow-blue-900/20' : 'text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800'}`}
         >
           <BarChart3 size={18} /> Phân tích nhập/xuất
         </button>
@@ -282,47 +284,47 @@ const ReportsPage = () => {
 
       {/* Filters (only for audits and inventory) */}
       {activeTab !== 'analytics' && (
-        <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-wrap gap-4 items-end">
+        <div className="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-slate-800 flex flex-wrap gap-4 items-end">
           <div className="flex-1 min-w-[200px] space-y-1">
-            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Tìm kiếm</label>
+            <label className="text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest ml-1">Tìm kiếm</label>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
-              <input 
-                type="text" 
+              <input
+                type="text"
                 placeholder="Mã phiếu, người tạo..."
-                className="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                className="w-full pl-9 pr-4 py-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 text-sm text-slate-900 dark:text-slate-100 transition-all"
                 value={searchTerm}
                 onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
               />
             </div>
           </div>
-          
+
           <div className="space-y-1">
-            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Kho bãi</label>
-            <select 
-              className="border border-gray-200 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white min-w-[150px]"
+            <label className="text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest ml-1">Kho bãi</label>
+            <select
+              className="border border-gray-200 dark:border-slate-700 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 min-w-[150px] transition-all"
               value={warehouseFilter}
               onChange={(e) => { setWarehouseFilter(e.target.value); setCurrentPage(1); }}
             >
-              <option value="">Tất cả kho</option>
-              {warehouses.map(w => <option key={w.custom_id} value={w.custom_id}>{w.name}</option>)}
+              <option value="" className="dark:bg-slate-800">Tất cả kho</option>
+              {warehouses.map(w => <option key={w.custom_id} value={w.custom_id} className="dark:bg-slate-800">{w.name}</option>)}
             </select>
           </div>
 
           {activeTab === 'audits' && (
             <div className="space-y-1">
-              <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Khoảng ngày</label>
+              <label className="text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest ml-1">Khoảng ngày</label>
               <div className="flex items-center gap-2">
-                <input 
-                  type="date" 
-                  className="border border-gray-200 rounded-lg px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                <input
+                  type="date"
+                  className="border border-gray-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 transition-all"
                   value={dateRange.start}
                   onChange={(e) => setDateRange({...dateRange, start: e.target.value})}
                 />
                 <span className="text-gray-400">→</span>
-                <input 
-                  type="date" 
-                  className="border border-gray-200 rounded-lg px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                <input
+                  type="date"
+                  className="border border-gray-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 transition-all"
                   value={dateRange.end}
                   onChange={(e) => setDateRange({...dateRange, end: e.target.value})}
                 />
@@ -332,11 +334,11 @@ const ReportsPage = () => {
 
           <div className="flex gap-2 ml-auto">
             {activeTab === 'audits' && (
-              <button onClick={openAddAudit} className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 font-bold text-sm flex items-center gap-2 shadow-md shadow-blue-100">
+              <button onClick={openAddAudit} className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 font-bold text-sm flex items-center gap-2 shadow-md shadow-blue-100 dark:shadow-blue-900/20 active:scale-95 transition-all">
                 <Plus size={18} /> Lập phiếu kiểm
               </button>
             )}
-            <button className="border border-gray-200 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-50 font-bold text-sm flex items-center gap-2">
+            <button className="border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-300 px-4 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800 font-bold text-sm flex items-center gap-2 transition-all">
               <Download size={18} /> Xuất CSV
             </button>
           </div>
@@ -344,40 +346,40 @@ const ReportsPage = () => {
       )}
 
       {/* Main Content Area */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden min-h-[400px]">
+      <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 overflow-hidden min-h-[400px]">
         {loading ? (
-          <div className="flex items-center justify-center h-64 text-gray-400 italic">Đang tải báo cáo...</div>
+          <div className="flex items-center justify-center h-64 text-gray-400 italic dark:text-slate-500">Đang tải báo cáo...</div>
         ) : activeTab === 'audits' ? (
           <div className="flex flex-col h-full">
             <div className="overflow-x-auto flex-1">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-gray-50 border-b border-gray-100">
-                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Mã phiếu</th>
-                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Ngày kiểm</th>
-                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Kho bãi</th>
-                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Người thực hiện</th>
-                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">Chênh lệch</th>
-                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-center">Thao tác</th>
+                  <tr className="bg-gray-50/80 dark:bg-slate-800/50 border-b border-gray-100 dark:border-slate-800">
+                    <th className="px-6 py-4 text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider">Mã phiếu</th>
+                    <th className="px-6 py-4 text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider">Ngày kiểm</th>
+                    <th className="px-6 py-4 text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider">Kho bãi</th>
+                    <th className="px-6 py-4 text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider">Người thực hiện</th>
+                    <th className="px-6 py-4 text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider text-right">Chênh lệch</th>
+                    <th className="px-6 py-4 text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider text-center">Thao tác</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-gray-100 dark:divide-slate-800">
                   {audits.length === 0 ? (
-                    <tr><td colSpan="6" className="px-6 py-10 text-center text-gray-400 italic">Không có phiếu kiểm kê nào</td></tr>
+                    <tr><td colSpan="6" className="px-6 py-10 text-center text-gray-400 dark:text-slate-500 italic">Không có phiếu kiểm kê nào</td></tr>
                   ) : (
                     audits.map(audit => (
-                      <tr key={audit.id} className="hover:bg-gray-50 transition-colors group">
-                        <td className="px-6 py-4 text-sm font-bold text-blue-600">{audit.code}</td>
-                        <td className="px-6 py-4 text-sm text-gray-500">{new Date(audit.date).toLocaleDateString('vi-VN')}</td>
-                        <td className="px-6 py-4 text-sm text-gray-700 font-medium">{audit.warehouse_name}</td>
-                        <td className="px-6 py-4 text-sm text-gray-600">{audit.created_by_username}</td>
-                        <td className={`px-6 py-4 text-sm text-right font-bold ${audit.discrepancy === 0 ? 'text-gray-400' : (audit.discrepancy > 0 ? 'text-green-600' : 'text-red-600')}`}>
+                      <tr key={audit.id} className="hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors group">
+                        <td className="px-6 py-4 text-sm font-bold text-blue-600 dark:text-blue-400">{audit.code}</td>
+                        <td className="px-6 py-4 text-sm text-gray-500 dark:text-slate-400">{new Date(audit.date).toLocaleDateString('vi-VN')}</td>
+                        <td className="px-6 py-4 text-sm text-gray-700 dark:text-slate-300 font-medium">{audit.warehouse_name}</td>
+                        <td className="px-6 py-4 text-sm text-gray-600 dark:text-slate-400">{audit.created_by_username}</td>
+                        <td className={`px-6 py-4 text-sm text-right font-bold ${audit.discrepancy === 0 ? 'text-gray-400 dark:text-slate-500' : (audit.discrepancy > 0 ? 'text-green-600 dark:text-emerald-500' : 'text-red-600 dark:text-rose-500')}`}>
                           {audit.discrepancy > 0 ? '+' : ''}{audit.discrepancy}
                         </td>
                         <td className="px-6 py-4">
                           <div className="flex justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <button onClick={() => downloadAuditPDF(audit.id)} className="p-1.5 text-blue-600 hover:bg-blue-50 rounded" title="Tải PDF"><Download size={16} /></button>
-                            <button onClick={() => deleteAudit(audit.id)} className="p-1.5 text-red-600 hover:bg-red-50 rounded" title="Xóa"><Trash2 size={16} /></button>
+                            <button onClick={() => downloadAuditPDF(audit.id)} className="p-1.5 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded transition-all" title="Tải PDF"><Download size={16} /></button>
+                            <button onClick={() => deleteAudit(audit.id)} className="p-1.5 text-red-600 dark:text-rose-400 hover:bg-red-50 dark:hover:bg-rose-900/20 rounded transition-all" title="Xóa"><Trash2 size={16} /></button>
                           </div>
                         </td>
                       </tr>
@@ -386,13 +388,13 @@ const ReportsPage = () => {
                 </tbody>
               </table>
             </div>
-            
+
             {/* Pagination */}
-            <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-between bg-gray-50/30">
-              <span className="text-xs text-gray-500 font-medium">Trang {currentPage} trên {totalPages}</span>
+            <div className="px-6 py-4 border-t border-gray-100 dark:border-slate-800 flex items-center justify-between bg-gray-50/30 dark:bg-slate-800/30">
+              <span className="text-xs text-gray-500 dark:text-slate-400 font-medium">Trang {currentPage} trên {totalPages}</span>
               <div className="flex gap-2">
-                <button disabled={currentPage === 1} onClick={() => setCurrentPage(prev => prev - 1)} className="p-2 border rounded-lg bg-white hover:bg-gray-50 disabled:opacity-50"><ChevronLeft size={16} /></button>
-                <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(prev => prev + 1)} className="p-2 border rounded-lg bg-white hover:bg-gray-50 disabled:opacity-50"><ChevronRight size={16} /></button>
+                <button disabled={currentPage === 1} onClick={() => setCurrentPage(prev => prev - 1)} className="p-2 border dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 disabled:opacity-50 shadow-sm transition-all"><ChevronLeft size={16} /></button>
+                <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(prev => prev + 1)} className="p-2 border dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 disabled:opacity-50 shadow-sm transition-all"><ChevronRight size={16} /></button>
               </div>
             </div>
           </div>
@@ -400,25 +402,25 @@ const ReportsPage = () => {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-gray-50 border-b border-gray-100">
-                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Mã SP</th>
-                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Tên sản phẩm</th>
-                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">Số lượng</th>
-                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">Đơn giá</th>
-                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">Thành tiền</th>
+                <tr className="bg-gray-50/80 dark:bg-slate-800/50 border-b border-gray-100 dark:border-slate-800">
+                  <th className="px-6 py-4 text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider">Mã SP</th>
+                  <th className="px-6 py-4 text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider">Tên sản phẩm</th>
+                  <th className="px-6 py-4 text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider text-right">Số lượng</th>
+                  <th className="px-6 py-4 text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider text-right">Đơn giá</th>
+                  <th className="px-6 py-4 text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider text-right">Thành tiền</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-gray-100 dark:divide-slate-800">
                 {inventoryReport.length === 0 ? (
-                  <tr><td colSpan="5" className="px-6 py-10 text-center text-gray-400 italic">Không có dữ liệu tồn kho</td></tr>
+                  <tr><td colSpan="5" className="px-6 py-10 text-center text-gray-400 dark:text-slate-500 italic">Không có dữ liệu tồn kho</td></tr>
                 ) : (
                   inventoryReport.map(item => (
-                    <tr key={item.product_id} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-6 py-4 text-sm font-medium text-gray-500">{item.product_id}</td>
-                      <td className="px-6 py-4 text-sm font-bold text-gray-900">{item.name}</td>
-                      <td className="px-6 py-4 text-sm text-right font-bold text-blue-600">{item.quantity}</td>
-                      <td className="px-6 py-4 text-sm text-right text-gray-600">{formatCurrency(item.price)}</td>
-                      <td className="px-6 py-4 text-sm text-right text-gray-900 font-bold">{formatCurrency(item.quantity * item.price)}</td>
+                    <tr key={item.product_id} className="hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors">
+                      <td className="px-6 py-4 text-sm font-medium text-gray-500 dark:text-slate-400">{item.product_id}</td>
+                      <td className="px-6 py-4 text-sm font-bold text-gray-900 dark:text-slate-100">{item.name}</td>
+                      <td className="px-6 py-4 text-sm text-right font-bold text-blue-600 dark:text-blue-400">{item.quantity}</td>
+                      <td className="px-6 py-4 text-sm text-right text-gray-600 dark:text-slate-400">{formatCurrency(item.price)}</td>
+                      <td className="px-6 py-4 text-sm text-right text-gray-900 dark:text-slate-100 font-bold">{formatCurrency(item.quantity * item.price)}</td>
                     </tr>
                   ))
                 )}
@@ -426,36 +428,59 @@ const ReportsPage = () => {
             </table>
           </div>
         ) : (
-          <div className="p-8">
+          <div className="p-8 bg-white dark:bg-slate-900">
             <div className="flex items-center justify-between mb-8">
               <div>
-                <h3 className="text-xl font-bold text-gray-800">Xu hướng Nhập & Xuất kho</h3>
-                <p className="text-sm text-gray-500">Thống kê số lượng hàng hóa lưu thông theo tháng</p>
+                <h3 className="text-xl font-bold text-gray-800 dark:text-slate-100">Xu hướng Nhập & Xuất kho</h3>
+                <p className="text-sm text-gray-500 dark:text-slate-400">Thống kê số lượng hàng hóa lưu thông theo tháng</p>
               </div>
               <div className="flex items-center gap-6">
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                  <span className="text-sm font-bold text-gray-600">Nhập</span>
+                  <span className="text-sm font-bold text-gray-600 dark:text-slate-300">Nhập</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                  <span className="text-sm font-bold text-gray-600">Xuất</span>
+                  <span className="text-sm font-bold text-gray-600 dark:text-slate-300">Xuất</span>
                 </div>
               </div>
             </div>
             <div className="h-[400px] w-full">
               {chartData && (
-                <Bar 
-                  data={chartData} 
+                <Bar
+                  data={chartData}
                   options={{
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
+                    plugins: {
+                      legend: { display: false },
+                      tooltip: {
+                        backgroundColor: isDarkMode ? '#1e293b' : '#fff',
+                        titleColor: isDarkMode ? '#f1f5f9' : '#1e293b',
+                        bodyColor: isDarkMode ? '#f1f5f9' : '#1e293b',
+                        borderColor: isDarkMode ? '#334155' : '#e2e8f0',
+                        borderWidth: 1
+                      }
+                    },
                     scales: {
-                      y: { beginAtZero: true, grid: { borderDash: [5, 5] } },
-                      x: { grid: { display: false } }
+                      y: {
+                        beginAtZero: true,
+                        grid: {
+                          borderDash: [5, 5],
+                          color: isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)'
+                        },
+                        ticks: {
+                          color: isDarkMode ? '#94a3b8' : '#64748b'
+                        }
+                      },
+                      x: {
+                        grid: { display: false },
+                        ticks: {
+                          color: isDarkMode ? '#94a3b8' : '#64748b'
+                        }
+                      }
                     }
-                  }} 
+                  }}
                 />
               )}
             </div>
@@ -466,97 +491,97 @@ const ReportsPage = () => {
       {/* Add Audit Modal */}
       {isAuditModalOpen && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col animate-in fade-in zoom-in duration-200">
-            <div className="flex items-center justify-between p-6 border-b bg-blue-50/50">
-              <h3 className="text-xl font-bold text-blue-800 flex items-center gap-2">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col animate-in fade-in zoom-in duration-200 border dark:border-slate-800">
+            <div className="flex items-center justify-between p-6 border-b dark:border-slate-800 bg-blue-50/50 dark:bg-blue-900/20">
+              <h3 className="text-xl font-bold text-blue-800 dark:text-blue-400 flex items-center gap-2">
                 <ClipboardList size={24} /> Lập phiếu kiểm kê hàng hóa
               </h3>
-              <button onClick={() => setIsAuditModalOpen(false)} className="text-gray-400 hover:text-gray-600 transition-colors">
+              <button onClick={() => setIsAuditModalOpen(false)} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
                 <X size={24} />
               </button>
             </div>
-            
+
             <form onSubmit={handleAuditSubmit} className="flex-1 overflow-hidden flex flex-col">
-              <div className="p-6 overflow-y-auto space-y-6">
+              <div className="p-6 overflow-y-auto space-y-6 bg-white dark:bg-slate-900">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="space-y-1">
-                    <label className="text-xs font-bold text-gray-500 uppercase ml-1">Mã phiếu</label>
-                    <input type="text" readOnly className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-gray-500 font-bold" value={auditForm.code} />
+                    <label className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase ml-1">Mã phiếu</label>
+                    <input type="text" readOnly className="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-gray-500 dark:text-slate-400 font-bold" value={auditForm.code} />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-xs font-bold text-gray-500 uppercase ml-1">Ngày lập *</label>
-                    <input type="date" required className="w-full px-4 py-2.5 border border-gray-300 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" value={auditForm.date} onChange={e => setAuditForm({...auditForm, date: e.target.value})} />
+                    <label className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase ml-1">Ngày lập *</label>
+                    <input type="date" required className="w-full px-4 py-2.5 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-slate-100 transition-all" value={auditForm.date} onChange={e => setAuditForm({...auditForm, date: e.target.value})} />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-xs font-bold text-gray-500 uppercase ml-1">Kho kiểm kê *</label>
-                    <select required className="w-full px-4 py-2.5 border border-gray-300 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 bg-white" value={auditForm.warehouse_id} onChange={e => setAuditForm({...auditForm, warehouse_id: e.target.value})}>
-                      <option value="">-- Chọn kho --</option>
-                      {warehouses.map(w => <option key={w.custom_id} value={w.custom_id}>{w.name}</option>)}
+                    <label className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase ml-1">Kho kiểm kê *</label>
+                    <select required className="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 transition-all" value={auditForm.warehouse_id} onChange={e => setAuditForm({...auditForm, warehouse_id: e.target.value})}>
+                      <option value="" className="dark:bg-slate-800">-- Chọn kho --</option>
+                      {warehouses.map(w => <option key={w.custom_id} value={w.custom_id} className="dark:bg-slate-800">{w.name}</option>)}
                     </select>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-1">
-                    <label className="text-xs font-bold text-gray-500 uppercase ml-1">Người kiểm kê *</label>
-                    <input type="text" required placeholder="Nhập tên người kiểm" className="w-full px-4 py-2.5 border border-gray-300 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" value={auditForm.checker} onChange={e => setAuditForm({...auditForm, checker: e.target.value})} />
+                    <label className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase ml-1">Người kiểm kê *</label>
+                    <input type="text" required placeholder="Nhập tên người kiểm" className="w-full px-4 py-2.5 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-slate-100 transition-all" value={auditForm.checker} onChange={e => setAuditForm({...auditForm, checker: e.target.value})} />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-xs font-bold text-gray-500 uppercase ml-1">Ghi chú</label>
-                    <input type="text" placeholder="Ghi chú thêm (nếu có)" className="w-full px-4 py-2.5 border border-gray-300 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" value={auditForm.notes} onChange={e => setAuditForm({...auditForm, notes: e.target.value})} />
+                    <label className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase ml-1">Ghi chú</label>
+                    <input type="text" placeholder="Ghi chú thêm (nếu có)" className="w-full px-4 py-2.5 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-slate-100 transition-all" value={auditForm.notes} onChange={e => setAuditForm({...auditForm, notes: e.target.value})} />
                   </div>
                 </div>
 
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between border-b pb-2">
-                    <h4 className="font-bold text-gray-800 flex items-center gap-2"><Package size={18} className="text-blue-600" /> Chi tiết hàng hóa</h4>
+                  <div className="flex items-center justify-between border-b dark:border-slate-800 pb-2">
+                    <h4 className="font-bold text-gray-800 dark:text-slate-100 flex items-center gap-2"><Package size={18} className="text-blue-600 dark:text-blue-400" /> Chi tiết hàng hóa</h4>
                     <div className="flex gap-2">
-                      <select 
-                        className="text-sm border border-gray-300 rounded-lg px-3 py-1.5 outline-none focus:ring-2 focus:ring-blue-500 bg-white min-w-[200px]"
+                      <select
+                        className="text-sm border border-gray-300 dark:border-slate-700 rounded-lg px-3 py-1.5 outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 min-w-[200px] transition-all"
                         onChange={(e) => { addAuditItem(e.target.value); e.target.value = ''; }}
                         value=""
                       >
-                        <option value="">+ Thêm sản phẩm kiểm</option>
-                        {products.map(p => <option key={p.id} value={p.custom_id}>{p.custom_id} - {p.name}</option>)}
+                        <option value="" className="dark:bg-slate-800">+ Thêm sản phẩm kiểm</option>
+                        {products.map(p => <option key={p.id} value={p.custom_id} className="dark:bg-slate-800">{p.custom_id} - {p.name}</option>)}
                       </select>
                     </div>
                   </div>
 
-                  <div className="border border-gray-100 rounded-2xl overflow-hidden shadow-sm">
+                  <div className="border border-gray-100 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm">
                     <table className="w-full text-left text-sm">
-                      <thead className="bg-gray-50 border-b">
+                      <thead className="bg-gray-50/80 dark:bg-slate-800 border-b dark:border-slate-800">
                         <tr>
-                          <th className="px-4 py-3 font-bold text-gray-600">Sản phẩm</th>
-                          <th className="px-4 py-3 font-bold text-gray-600 text-center">Hệ thống</th>
-                          <th className="px-4 py-3 font-bold text-gray-600 text-center">Thực tế</th>
-                          <th className="px-4 py-3 font-bold text-gray-600 text-center">Chênh lệch</th>
+                          <th className="px-4 py-3 font-bold text-gray-600 dark:text-slate-400">Sản phẩm</th>
+                          <th className="px-4 py-3 font-bold text-gray-600 dark:text-slate-400 text-center">Hệ thống</th>
+                          <th className="px-4 py-3 font-bold text-gray-600 dark:text-slate-400 text-center">Thực tế</th>
+                          <th className="px-4 py-3 font-bold text-gray-600 dark:text-slate-400 text-center">Chênh lệch</th>
                           <th className="px-4 py-3 text-center"></th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-gray-100">
+                      <tbody className="divide-y divide-gray-100 dark:divide-slate-800">
                         {auditForm.items.length === 0 ? (
-                          <tr><td colSpan="5" className="px-4 py-8 text-center text-gray-400 italic">Chưa có sản phẩm nào được chọn</td></tr>
+                          <tr><td colSpan="5" className="px-4 py-8 text-center text-gray-400 dark:text-slate-500 italic">Chưa có sản phẩm nào được chọn</td></tr>
                         ) : (
                           auditForm.items.map((item, idx) => (
-                            <tr key={item.product_id} className="hover:bg-gray-50/50 transition-colors">
+                            <tr key={item.product_id} className="hover:bg-gray-50/50 dark:hover:bg-slate-800 transition-colors">
                               <td className="px-4 py-3">
-                                <p className="font-bold text-gray-800">{item.product_name}</p>
-                                <p className="text-[10px] text-gray-500 uppercase tracking-wider">{item.product_id}</p>
+                                <p className="font-bold text-gray-800 dark:text-slate-100">{item.product_name}</p>
+                                <p className="text-[10px] text-gray-500 dark:text-slate-500 uppercase tracking-wider">{item.product_id}</p>
                               </td>
-                              <td className="px-4 py-3 text-center font-bold text-gray-500">{item.system_quantity}</td>
+                              <td className="px-4 py-3 text-center font-bold text-gray-500 dark:text-slate-400">{item.system_quantity}</td>
                               <td className="px-4 py-3 text-center">
-                                <input 
+                                <input
                                   type="number" min="0"
-                                  className="w-20 px-2 py-1.5 border border-gray-300 rounded-lg text-center font-bold focus:ring-2 focus:ring-blue-500 outline-none"
+                                  className="w-20 px-2 py-1.5 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-lg text-center font-bold focus:ring-2 focus:ring-blue-500 outline-none text-slate-900 dark:text-slate-100 transition-all"
                                   value={item.actual_quantity}
                                   onChange={(e) => updateAuditItem(idx, e.target.value)}
                                 />
                               </td>
-                              <td className={`px-4 py-3 text-center font-bold ${item.discrepancy === 0 ? 'text-gray-400' : (item.discrepancy > 0 ? 'text-green-600' : 'text-red-600')}`}>
+                              <td className={`px-4 py-3 text-center font-bold ${item.discrepancy === 0 ? 'text-gray-400 dark:text-slate-500' : (item.discrepancy > 0 ? 'text-green-600 dark:text-emerald-500' : 'text-red-600 dark:text-rose-500')}`}>
                                 {item.discrepancy > 0 ? '+' : ''}{item.discrepancy}
                               </td>
                               <td className="px-4 py-3 text-center">
-                                <button type="button" onClick={() => removeAuditItem(idx)} className="p-1.5 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg"><Trash2 size={18} /></button>
+                                <button type="button" onClick={() => removeAuditItem(idx)} className="p-1.5 text-red-400 hover:text-red-600 dark:hover:text-rose-400 hover:bg-red-50 dark:hover:bg-rose-900/20 rounded-lg transition-all"><Trash2 size={18} /></button>
                               </td>
                             </tr>
                           ))
@@ -567,9 +592,9 @@ const ReportsPage = () => {
                 </div>
               </div>
 
-              <div className="p-6 border-t bg-gray-50 flex justify-end gap-3">
-                <button type="button" onClick={() => setIsAuditModalOpen(false)} className="px-6 py-2.5 text-gray-600 hover:bg-gray-100 rounded-xl font-bold">Đóng</button>
-                <button type="submit" className="px-10 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-bold shadow-lg shadow-blue-100 transition-all active:scale-95 flex items-center gap-2">
+              <div className="p-6 border-t dark:border-slate-800 bg-gray-50 dark:bg-slate-800/50 flex justify-end gap-3">
+                <button type="button" onClick={() => setIsAuditModalOpen(false)} className="px-6 py-2.5 text-gray-600 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-xl font-bold transition-all">Đóng</button>
+                <button type="submit" className="px-10 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-bold shadow-lg shadow-blue-100 dark:shadow-blue-900/20 transition-all active:scale-95 flex items-center gap-2">
                   <CheckCircle size={20} /> Hoàn tất & Cân bằng kho
                 </button>
               </div>
