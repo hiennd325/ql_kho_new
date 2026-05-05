@@ -61,24 +61,25 @@ const DashboardPage = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const [statsRes, alertsRes, activitiesRes, chartRes] = await Promise.all([
+      const results = await Promise.allSettled([
         api.get('/dashboard/stats'),
         api.get('/dashboard/alerts'),
         api.get('/dashboard/recent-activities'),
         api.get('/dashboard/chart-data-v2')
       ]);
 
-      setStats(statsRes.data);
-      setAlerts(alertsRes.data);
-      setActivities(activitiesRes.data);
+      if (results[0].status === 'fulfilled') setStats(results[0].value.data);
+      if (results[1].status === 'fulfilled') setAlerts(results[1].value.data);
+      if (results[2].status === 'fulfilled') setActivities(results[2].value.data);
 
-      if (chartRes.data && chartRes.data.length > 0) {
+      if (results[3].status === 'fulfilled' && results[3].value.data && results[3].value.data.length > 0) {
+        const data = results[3].value.data;
         setChartData({
-          labels: chartRes.data.map(d => d.date),
+          labels: data.map(d => d.date),
           datasets: [
             {
               label: 'Nhập kho',
-              data: chartRes.data.map(d => d.nhap),
+              data: data.map(d => d.nhap),
               borderColor: 'rgb(16, 185, 129)',
               backgroundColor: 'rgba(16, 185, 129, 0.1)',
               fill: true,
@@ -86,7 +87,7 @@ const DashboardPage = () => {
             },
             {
               label: 'Xuất kho',
-              data: chartRes.data.map(d => d.xuat),
+              data: data.map(d => d.xuat),
               borderColor: 'rgb(225, 29, 72)',
               backgroundColor: 'rgba(225, 29, 72, 0.1)',
               fill: true,
@@ -94,6 +95,8 @@ const DashboardPage = () => {
             }
           ]
         });
+      } else if (results[3].status === 'fulfilled') {
+        setChartData(null);
       }
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
@@ -102,13 +105,14 @@ const DashboardPage = () => {
     }
   };
 
+  const formatCurrency = (amount) => {
+    const value = typeof amount === 'number' ? amount : parseFloat(amount) || 0;
+    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
+  };
+
   useEffect(() => {
     fetchData();
   }, []);
-
-  const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
-  };
 
   const getHealthBadge = (status) => {
     switch (status) {
@@ -155,8 +159,8 @@ const DashboardPage = () => {
         </div>
       </div>
 
-      {/* Main Grid Layout - Compact 4-column */}
-      <div className="grid grid-cols-4 gap-3">
+      {/* Main Grid Layout - Responsive optimization */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
           { label: 'Sản phẩm', value: stats.totalProducts, icon: Package, color: 'blue', trend: '+2.4%', detail: 'Trong kho' },
           { label: 'Nhập kho', value: stats.monthlyImports, icon: TrendingUp, color: 'emerald', trend: '+12.5%', detail: 'Tháng này' },

@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__gitnexus__impact",
+      "mcp__gitnexus__context",
+      "mcp__gitnexus__detect_changes",
+      "mcp__gitnexus__query",
+      "Bash(mkdir -p /home/nitro/.claude/plans)",
+      "Bash(touch /home/nitro/.claude/plans/virtual-dazzling-waterfall-agent-a3a482835d890738c.md)",
+      "mcp__figma-mcp-go__get_metadata",
+      "mcp__figma-mcp-go__get_design_context",
+      "mcp__figma-mcp-go__get_styles",
+      "mcp__figma-mcp-go__get_nodes_info",
+      "mcp__ruflo__system_status",
+      "mcp__ruflo__guidance_capabilities",
+      "mcp__ruflo__swarm_init",
+      "mcp__ruflo__agent_spawn",
+      "mcp__ruflo__swarm_status",
+      "mcp__ruflo__agent_list",
+      "mcp__ruflo__agent_execute",
+      "mcp__ruflo__hooks_post-task",
+      "mcp__ruflo__swarm_shutdown"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "figma-mcp-go"
+  ]
+}

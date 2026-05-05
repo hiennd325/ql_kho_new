@@ -22,6 +22,7 @@ const ProductsPage = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
@@ -51,7 +52,7 @@ const ProductsPage = () => {
     setLoading(true);
     try {
       const params = {
-        search: searchTerm,
+        search: debouncedSearchTerm,
         page: currentPage,
         limit: limit,
       };
@@ -67,7 +68,14 @@ const ProductsPage = () => {
     } finally {
       setLoading(false);
     }
-  }, [searchTerm, currentPage, brandFilter, supplierFilter]);
+  }, [debouncedSearchTerm, currentPage, brandFilter, supplierFilter]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
 
   const fetchFilters = async () => {
     try {
@@ -200,7 +208,8 @@ const ProductsPage = () => {
   };
 
   const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('vi-VN').format(amount) + ' ₫';
+    const value = typeof amount === 'number' ? amount : parseFloat(amount) || 0;
+    return new Intl.NumberFormat('vi-VN').format(value) + ' ₫';
   };
 
   return (
