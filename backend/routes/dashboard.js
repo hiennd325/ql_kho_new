@@ -328,5 +328,31 @@ router.get('/recent-activities', async (req, res) => {
     }
 });
 
+/**
+ * Route lấy dữ liệu biểu đồ cho dashboard (7 ngày gần nhất)
+ */
+router.get('/chart-data', async (req, res) => {
+    try {
+        const chartData = await new Promise((resolve, reject) => {
+            db.all(`
+                SELECT
+                    date(transaction_date) as date,
+                    SUM(CASE WHEN type = 'nhap' THEN quantity ELSE 0 END) as nhap,
+                    SUM(CASE WHEN type = 'xuat' THEN quantity ELSE 0 END) as xuat
+                FROM inventory_transactions
+                WHERE transaction_date >= date('now', '-7 days')
+                GROUP BY date(transaction_date)
+                ORDER BY date ASC
+            `, (err, rows) => {
+                if (err) reject(err);
+                else resolve(rows);
+            });
+        });
+        res.json(chartData);
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to get chart data' });
+    }
+});
+
 // Xuất router để sử dụng trong ứng dụng chính
 module.exports = router;

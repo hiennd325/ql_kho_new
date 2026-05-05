@@ -64,41 +64,9 @@ if (!dbExists) {
 
 
 
-// Import và sử dụng các routes
-const authRoutes = require('./routes/auth');
-app.use('/auth', authRoutes); // Routes cho authentication (không cần authenticate middleware)
-
-const productRoutes = require('./routes/product');
-app.use('/products', authenticate, productRoutes); // Routes cho quản lý sản phẩm (cần xác thực)
-
-const inventoryRoutes = require('./routes/inventory');
-app.use('/inventory', authenticate, inventoryRoutes); // Routes cho quản lý tồn kho
-
-const userRoutes = require('./routes/user');
-app.use('/users', authenticate, userRoutes); // Routes cho quản lý người dùng
-
-
-
-const reportRoutes = require('./routes/report');
-app.use('/reports', authenticate, reportRoutes); // Routes cho báo cáo
-const dashboardRoutes = require('./routes/dashboard');
-app.use('/dashboard', authenticate, dashboardRoutes); // Routes cho dashboard
-const warehouseRoutes = require('./routes/warehouse');
-app.use('/warehouses', authenticate, warehouseRoutes); // Routes cho quản lý kho
-
-const transferRoutes = require('./routes/transfers');
-app.use('/transfers', authenticate, transferRoutes); // Routes cho điều chuyển hàng
-
-const supplierRoutes = require('./routes/supplier');
-app.use('/suppliers', authenticate, supplierRoutes); // Routes cho quản lý nhà cung cấp
-
-const ordersRoutes = require('./routes/orders');
-app.use('/orders', authenticate, ordersRoutes); // Routes cho đơn hàng (count endpoint)
-
-
-
-const notificationRoutes = require('./routes/notifications');
-app.use('/notifications', authenticate, notificationRoutes); // Routes cho thông báo
+// Import và sử dụng API v1 routes
+const apiV1Routes = require('./routes/api');
+app.use('/api/v1', apiV1Routes);
 
 // Middleware xử lý lỗi toàn cục
 app.use((err, req, res, next) => {
