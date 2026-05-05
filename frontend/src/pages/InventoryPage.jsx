@@ -188,33 +188,33 @@ const InventoryPage = () => {
   return (
     <div className="space-y-6">
       {/* Stats Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-5 hover:shadow-md transition-all">
-          <div className="bg-emerald-50 p-4 rounded-xl text-emerald-600 shadow-inner"><TrendingUp size={28} /></div>
+      <div className="grid grid-cols-4 gap-3">
+        <div className="bg-white p-3 rounded-xl border border-slate-200 flex items-center gap-3 hover:shadow-sm transition-all">
+          <div className="bg-emerald-50 p-2.5 rounded-lg text-emerald-600"><TrendingUp size={22} /></div>
           <div>
-            <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">Tổng nhập</p>
-            <h3 className="text-2xl font-black text-slate-900">{stats.total_import || 0} <span className="text-sm font-medium text-slate-400">SP</span></h3>
+            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Tổng nhập</p>
+            <h3 className="text-xl font-black text-slate-900">{stats.total_import || 0} <span className="text-xs font-medium text-slate-400">SP</span></h3>
           </div>
         </div>
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-5 hover:shadow-md transition-all">
-          <div className="bg-rose-50 p-4 rounded-xl text-rose-600 shadow-inner"><TrendingDown size={28} /></div>
+        <div className="bg-white p-3 rounded-xl border border-slate-200 flex items-center gap-3 hover:shadow-sm transition-all">
+          <div className="bg-rose-50 p-2.5 rounded-lg text-rose-600"><TrendingDown size={22} /></div>
           <div>
-            <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">Tổng xuất</p>
-            <h3 className="text-2xl font-black text-slate-900">{stats.total_export || 0} <span className="text-sm font-medium text-slate-400">SP</span></h3>
+            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Tổng xuất</p>
+            <h3 className="text-xl font-black text-slate-900">{stats.total_export || 0} <span className="text-xs font-medium text-slate-400">SP</span></h3>
           </div>
         </div>
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-5 hover:shadow-md transition-all">
-          <div className="bg-blue-50 p-4 rounded-xl text-blue-600 shadow-inner"><Package size={28} /></div>
+        <div className="bg-white p-3 rounded-xl border border-slate-200 flex items-center gap-3 hover:shadow-sm transition-all">
+          <div className="bg-blue-50 p-2.5 rounded-lg text-blue-600"><Package size={22} /></div>
           <div>
-            <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">Tồn kho</p>
-            <h3 className="text-2xl font-black text-slate-900">{stats.total_inventory || 0} <span className="text-sm font-medium text-slate-400">SP</span></h3>
+            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Tồn kho</p>
+            <h3 className="text-xl font-black text-slate-900">{stats.total_inventory || 0} <span className="text-xs font-medium text-slate-400">SP</span></h3>
           </div>
         </div>
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-5 hover:shadow-md transition-all">
-          <div className="bg-amber-50 p-4 rounded-xl text-amber-600 shadow-inner"><DollarSign size={28} /></div>
+        <div className="bg-white p-3 rounded-xl border border-slate-200 flex items-center gap-3 hover:shadow-sm transition-all">
+          <div className="bg-amber-50 p-2.5 rounded-lg text-amber-600"><DollarSign size={22} /></div>
           <div>
-            <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">Giá trị tồn</p>
-            <h3 className="text-2xl font-black text-slate-900 truncate">{formatCurrency(stats.total_value || 0)}</h3>
+            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Giá trị tồn</p>
+            <h3 className="text-xl font-black text-slate-900 truncate">{formatCurrency(stats.total_value || 0)}</h3>
           </div>
         </div>
       </div>

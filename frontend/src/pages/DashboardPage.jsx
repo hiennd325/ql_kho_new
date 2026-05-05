@@ -155,16 +155,16 @@ const DashboardPage = () => {
         </div>
       </div>
 
-      {/* Main Grid Layout - 4-column desktop optimization */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* Main Grid Layout - Compact 4-column */}
+      <div className="grid grid-cols-4 gap-3">
         {[
           { label: 'Sản phẩm', value: stats.totalProducts, icon: Package, color: 'blue', trend: '+2.4%', detail: 'Trong kho' },
           { label: 'Nhập kho', value: stats.monthlyImports, icon: TrendingUp, color: 'emerald', trend: '+12.5%', detail: 'Tháng này' },
           { label: 'Xuất kho', value: stats.monthlyExports, icon: TrendingDown, color: 'rose', trend: '-8.2%', detail: 'Tháng này' },
-          { label: 'Giá trị', value: formatCurrency(stats.totalValue), icon: DollarSign, color: 'amber', trend: '+0.5%', detail: 'Tổng định giá' },
+          { label: 'Giá trị', value: formatCurrency(stats.totalValue), icon: DollarSign, color: 'amber', trend: '+0.5%', detail: 'Định giá' },
         ].map((stat, idx) => (
-          <motion.div key={idx} variants={item} className="bg-white p-6 rounded-[32px] border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col gap-4 hover:shadow-[0_20px_40px_rgba(0,0,0,0.04)] hover:border-blue-500/10 transition-all group relative overflow-hidden">
-            <div className={`absolute top-0 right-0 w-24 h-24 blur-3xl -mr-12 -mt-12 transition-opacity duration-500 opacity-0 group-hover:opacity-20 ${
+          <motion.div key={idx} variants={item} className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col gap-3 hover:shadow-md transition-all group relative overflow-hidden">
+            <div className={`absolute top-0 right-0 w-20 h-20 blur-2xl -mr-10 -mt-10 transition-opacity duration-500 opacity-0 group-hover:opacity-20 ${
                stat.color === 'blue' ? 'bg-blue-600' :
                stat.color === 'emerald' ? 'bg-emerald-600' :
                stat.color === 'rose' ? 'bg-rose-600' :
@@ -172,25 +172,23 @@ const DashboardPage = () => {
             }`}></div>
 
             <div className="flex justify-between items-start">
-              <div className={`p-4 rounded-2xl shadow-sm ${
+              <div className={`p-3 rounded-xl ${
                 stat.color === 'blue' ? 'bg-blue-50 text-blue-600' :
                 stat.color === 'emerald' ? 'bg-emerald-50 text-emerald-600' :
                 stat.color === 'rose' ? 'bg-rose-50 text-rose-600' :
                 'bg-amber-50 text-amber-600'
               }`}>
-                <stat.icon size={24} strokeWidth={2.5} />
+                <stat.icon size={22} strokeWidth={2.5} />
               </div>
-              <div className="flex flex-col items-end">
-                <div className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-black ${stat.trend.startsWith('+') ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}`}>
-                  {stat.trend.startsWith('+') ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />}
-                  {stat.trend}
-                </div>
+              <div className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-black ${stat.trend.startsWith('+') ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}`}>
+                {stat.trend.startsWith('+') ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />}
+                {stat.trend}
               </div>
             </div>
 
             <div>
               <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">{stat.label}</p>
-              <h3 className="text-2xl font-black text-slate-900 tracking-tighter tabular-nums mb-1">{stat.value}</h3>
+              <h3 className="text-2xl font-black text-slate-900 tracking-tighter tabular-nums truncate">{stat.value}</h3>
               <p className="text-[10px] text-slate-400 font-bold uppercase tracking-tighter italic">{stat.detail}</p>
             </div>
           </motion.div>
