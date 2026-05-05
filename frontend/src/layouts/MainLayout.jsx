@@ -43,14 +43,14 @@ const MainLayout = ({ children }) => {
   }
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] flex font-sans text-slate-900">
+    <div className="min-h-screen bg-[#f8fafc] flex font-sans text-slate-900 selection:bg-blue-100 selection:text-blue-700">
       {/* Sidebar */}
       <motion.aside
-        animate={{ width: isSidebarOpen ? 288 : 88 }}
-        transition={{ type: "spring", stiffness: 300, damping: 30 }}
-        className="bg-white border-r border-slate-200 flex flex-col z-30 shadow-[4px_0_24px_rgba(0,0,0,0.02)]"
+        animate={{ width: isSidebarOpen ? 300 : 96 }}
+        transition={{ type: "spring", stiffness: 300, damping: 35 }}
+        className="bg-white border-r border-slate-200 flex flex-col z-30 shadow-[4px_0_24px_rgba(0,0,0,0.02)] sticky top-0 h-screen"
       >
-        <div className="h-20 flex items-center px-6 justify-between border-b border-slate-50">
+        <div className="h-20 flex items-center px-6 justify-between border-b border-slate-50/50">
           <AnimatePresence mode="wait">
             {isSidebarOpen ? (
               <motion.div
@@ -146,15 +146,15 @@ const MainLayout = ({ children }) => {
       {/* Main Content */}
       <main className="flex-1 flex flex-col h-screen overflow-hidden">
         {/* Navbar */}
-        <header className="bg-white/80 backdrop-blur-xl border-b border-slate-200 h-20 flex justify-between items-center px-8 z-20 sticky top-0">
-          <div className="flex items-center gap-8 flex-1">
+        <header className="bg-white/70 backdrop-blur-md border-b border-slate-200/60 h-20 flex justify-between items-center px-10 z-20 sticky top-0">
+          <div className="flex items-center gap-10 flex-1">
             <div className="flex flex-col">
-              <h1 className="text-xl font-black text-slate-900 tracking-tight leading-none">
+              <h1 className="text-xl font-black text-slate-900 tracking-tight leading-none uppercase">
                 {navItems.find(item => item.path === location.pathname)?.name || 'Trang chủ'}
               </h1>
-              <div className="flex items-center gap-2 mt-1.5">
-                <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
-                <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest">Hệ thống đang trực tuyến</p>
+              <div className="flex items-center gap-2 mt-2">
+                <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]"></span>
+                <p className="text-xs text-slate-400 font-black uppercase tracking-[0.2em]">Hệ thống trực tuyến</p>
               </div>
             </div>
 
@@ -193,14 +193,15 @@ const MainLayout = ({ children }) => {
         </header>
 
         {/* Page Content */}
-        <div className="flex-1 overflow-auto p-8 custom-scrollbar">
+        <div className="flex-1 overflow-auto p-10 custom-scrollbar">
           <AnimatePresence mode="wait">
             <motion.div
               key={location.pathname}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 1.02 }}
+              transition={{ duration: 0.2, ease: "circOut" }}
+              className="max-w-[1500px] mx-auto"
             >
               {children}
             </motion.div>

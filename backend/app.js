@@ -24,6 +24,11 @@ app.use(cors({
 // Middleware để parse JSON body từ requests
 app.use(bodyParser.json());
 
+app.use((req, res, next) => {
+    console.log(`${req.method} ${req.url}`);
+    next();
+});
+
 // Middleware để xử lý routes
 app.use((req, res, next) => {
     // Chuyển hướng root path đến login.html
@@ -33,40 +38,13 @@ app.use((req, res, next) => {
     next();
 });
 
-// Serve static files từ thư mục frontend
-app.use(express.static(path.join(__dirname, '../frontend')));
-
-// Kết nối đến cơ sở dữ liệu SQLite
-const db = require('./db');
-const dbExists = fs.existsSync(path.join(__dirname, 'database.db'));
-
-// Nếu tệp cơ sở dữ liệu chưa tồn tại, đọc và thực thi schema từ file schema.sql
-if (!dbExists) {
-    const schemaPath = path.join(__dirname, 'schema.sql');
-    fs.readFile(schemaPath, 'utf8', (err, data) => {
-        if (err) {
-            console.error('Error reading schema.sql:', err);
-            return;
-        }
-        db.exec(data, (err) => {
-            if (err) {
-                console.error('Error executing schema:', err.message);
-            } else {
-                console.log('Database schema applied.');
-            }
-        });
-    });
-} else {
-    console.log('Using existing database file.');
-}
-
-
-
-
-
 // Import và sử dụng API v1 routes
 const apiV1Routes = require('./routes/api');
 app.use('/api/v1', apiV1Routes);
+
+// Serve static files từ thư mục frontend
+app.use(express.static(path.join(__dirname, '../frontend')));
+
 
 // Middleware xử lý lỗi toàn cục
 app.use((err, req, res, next) => {

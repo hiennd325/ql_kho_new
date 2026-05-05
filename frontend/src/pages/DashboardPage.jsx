@@ -65,7 +65,7 @@ const DashboardPage = () => {
         api.get('/dashboard/stats'),
         api.get('/dashboard/alerts'),
         api.get('/dashboard/recent-activities'),
-        api.get('/dashboard/chart-data')
+        api.get('/dashboard/chart-data-v2')
       ]);
 
       setStats(statsRes.data);
@@ -134,40 +134,64 @@ const DashboardPage = () => {
   return (
     <motion.div variants={container} initial="hidden" animate="show" className="space-y-6 max-w-[1600px] mx-auto pb-10">
       {/* Top Header Section */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
         <div>
-          <h2 className="text-2xl font-black text-slate-900 tracking-tight">Tổng quan vận hành</h2>
-          <p className="text-slate-400 text-xs font-bold uppercase tracking-widest mt-1">Cập nhật thời gian thực: {new Date().toLocaleTimeString()}</p>
+          <h2 className="text-3xl font-black text-slate-900 tracking-tighter">Tổng quan vận hành</h2>
+          <p className="text-slate-400 text-xs font-black uppercase tracking-[0.2em] mt-2 bg-white px-3 py-1 rounded-full border border-slate-100 w-fit shadow-sm">
+            Cập nhật thời gian thực: {new Date().toLocaleTimeString()}
+          </p>
         </div>
-        <button onClick={fetchData} className="flex items-center gap-2 bg-white border border-slate-200 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest text-slate-600 hover:bg-slate-50 transition-all shadow-sm">
-          <RefreshCw size={14} className={loading ? 'animate-spin' : ''} /> Làm mới
-        </button>
+        <div className="flex items-center gap-3">
+          <div className="bg-white border border-slate-200 p-1 rounded-xl flex shadow-sm">
+            {['Hôm nay', 'Tuần này', 'Tháng này'].map((tab) => (
+              <button key={tab} className={`px-4 py-2 rounded-lg text-xs font-black uppercase tracking-widest transition-all ${tab === 'Tháng này' ? 'bg-slate-900 text-white shadow-md' : 'text-slate-400 hover:text-slate-900'}`}>
+                {tab}
+              </button>
+            ))}
+          </div>
+          <button onClick={fetchData} className="flex items-center gap-2 bg-blue-600 px-5 py-3 rounded-xl text-xs font-black uppercase tracking-widest text-white hover:bg-blue-700 transition-all shadow-lg shadow-blue-200">
+            <RefreshCw size={14} className={loading ? 'animate-spin' : ''} /> Đồng bộ
+          </button>
+        </div>
       </div>
 
       {/* Main Grid Layout - 4-column desktop optimization */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
-          { label: 'Sản phẩm', value: stats.totalProducts, icon: Package, color: 'blue', trend: '+2.4%' },
-          { label: 'Nhập kho', value: stats.monthlyImports, icon: TrendingUp, color: 'emerald', trend: '+12.5%' },
-          { label: 'Xuất kho', value: stats.monthlyExports, icon: TrendingDown, color: 'rose', trend: '-8.2%' },
-          { label: 'Giá trị', value: formatCurrency(stats.totalValue), icon: DollarSign, color: 'amber', trend: '+0.5%' },
+          { label: 'Sản phẩm', value: stats.totalProducts, icon: Package, color: 'blue', trend: '+2.4%', detail: 'Trong kho' },
+          { label: 'Nhập kho', value: stats.monthlyImports, icon: TrendingUp, color: 'emerald', trend: '+12.5%', detail: 'Tháng này' },
+          { label: 'Xuất kho', value: stats.monthlyExports, icon: TrendingDown, color: 'rose', trend: '-8.2%', detail: 'Tháng này' },
+          { label: 'Giá trị', value: formatCurrency(stats.totalValue), icon: DollarSign, color: 'amber', trend: '+0.5%', detail: 'Tổng định giá' },
         ].map((stat, idx) => (
-          <motion.div key={idx} variants={item} className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-5 hover:border-blue-500/20 transition-all group">
-            <div className={`p-4 rounded-2xl ${
-              stat.color === 'blue' ? 'bg-blue-50 text-blue-600' :
-              stat.color === 'emerald' ? 'bg-emerald-50 text-emerald-600' :
-              stat.color === 'rose' ? 'bg-rose-50 text-rose-600' :
-              'bg-amber-50 text-amber-600'
-            }`}>
-              <stat.icon size={22} strokeWidth={2.5} />
-            </div>
-            <div className="min-w-0">
-              <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-0.5">{stat.label}</p>
-              <h3 className="text-xl font-black text-slate-900 tracking-tighter truncate">{stat.value}</h3>
-              <div className="flex items-center gap-1.5 mt-0.5">
-                <span className={`text-[10px] font-black ${stat.trend.startsWith('+') ? 'text-emerald-600' : 'text-rose-600'}`}>{stat.trend}</span>
-                <span className="text-[10px] text-slate-300 font-bold uppercase whitespace-nowrap">vs tháng trước</span>
+          <motion.div key={idx} variants={item} className="bg-white p-6 rounded-[32px] border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col gap-4 hover:shadow-[0_20px_40px_rgba(0,0,0,0.04)] hover:border-blue-500/10 transition-all group relative overflow-hidden">
+            <div className={`absolute top-0 right-0 w-24 h-24 blur-3xl -mr-12 -mt-12 transition-opacity duration-500 opacity-0 group-hover:opacity-20 ${
+               stat.color === 'blue' ? 'bg-blue-600' :
+               stat.color === 'emerald' ? 'bg-emerald-600' :
+               stat.color === 'rose' ? 'bg-rose-600' :
+               'bg-amber-600'
+            }`}></div>
+
+            <div className="flex justify-between items-start">
+              <div className={`p-4 rounded-2xl shadow-sm ${
+                stat.color === 'blue' ? 'bg-blue-50 text-blue-600' :
+                stat.color === 'emerald' ? 'bg-emerald-50 text-emerald-600' :
+                stat.color === 'rose' ? 'bg-rose-50 text-rose-600' :
+                'bg-amber-50 text-amber-600'
+              }`}>
+                <stat.icon size={24} strokeWidth={2.5} />
               </div>
+              <div className="flex flex-col items-end">
+                <div className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-black ${stat.trend.startsWith('+') ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}`}>
+                  {stat.trend.startsWith('+') ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />}
+                  {stat.trend}
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">{stat.label}</p>
+              <h3 className="text-2xl font-black text-slate-900 tracking-tighter tabular-nums mb-1">{stat.value}</h3>
+              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-tighter italic">{stat.detail}</p>
             </div>
           </motion.div>
         ))}
@@ -209,18 +233,18 @@ const DashboardPage = () => {
           </motion.div>
 
           {/* Recent Activity Section - Desktop Table Optimization */}
-          <motion.div variants={item} className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
-            <div className="p-6 border-b border-slate-50 flex justify-between items-center">
-              <h3 className="font-black text-slate-900 flex items-center gap-2 text-base">
-                <Clock size={18} className="text-blue-600" />
-                Lịch sử hoạt động chi tiết
+          <motion.div variants={item} className="bg-white rounded-[32px] border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] overflow-hidden">
+            <div className="p-8 border-b border-slate-50/50 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+              <h3 className="font-black text-slate-900 flex items-center gap-3 text-lg tracking-tighter uppercase">
+                <div className="bg-blue-50 p-2 rounded-xl text-blue-600"><Clock size={20} strokeWidth={2.5} /></div>
+                Hoạt động gần đây
               </h3>
-              <div className="flex items-center gap-2">
-                <div className="relative">
-                  <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                  <input type="text" placeholder="Tìm nhanh..." className="bg-slate-50 border-none text-[10px] font-bold pl-9 pr-4 py-1.5 rounded-lg outline-none focus:ring-2 focus:ring-blue-500/20 w-40" />
+              <div className="flex items-center gap-3 w-full md:w-auto">
+                <div className="relative flex-1 md:w-64">
+                  <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <input type="text" placeholder="Tìm nhanh..." className="w-full bg-slate-50/50 border border-transparent text-[10px] font-bold pl-10 pr-4 py-2.5 rounded-xl outline-none focus:bg-white focus:ring-4 focus:ring-blue-500/5 transition-all" />
                 </div>
-                <button className="text-blue-600 text-[10px] font-black uppercase tracking-widest bg-blue-50 px-3 py-1.5 rounded-lg hover:bg-blue-100 transition-colors">Xem tất cả</button>
+                <button className="text-blue-600 text-[10px] font-black uppercase tracking-widest bg-blue-50/50 px-4 py-2.5 rounded-xl hover:bg-blue-600 hover:text-white transition-all">Tất cả</button>
               </div>
             </div>
 

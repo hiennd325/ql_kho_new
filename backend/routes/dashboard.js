@@ -11,6 +11,32 @@ const db = require('../db');
 const path = require('path'); // Module để xử lý đường dẫn file
 
 /**
+ * Route lấy dữ liệu biểu đồ cho dashboard (7 ngày gần nhất)
+ */
+router.get('/chart-data-v2', async (req, res) => {
+    try {
+        const chartData = await new Promise((resolve, reject) => {
+            db.all(`
+                SELECT
+                    date(transaction_date) as date,
+                    SUM(CASE WHEN type = 'nhap' THEN quantity ELSE 0 END) as nhap,
+                    SUM(CASE WHEN type = 'xuat' THEN quantity ELSE 0 END) as xuat
+                FROM inventory_transactions
+                WHERE transaction_date >= date('now', '-7 days')
+                GROUP BY date(transaction_date)
+                ORDER BY date ASC
+            `, (err, rows) => {
+                if (err) reject(err);
+                else resolve(rows);
+            });
+        });
+        res.json(chartData);
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to get chart data' });
+    }
+});
+
+/**
  * Hàm kiểm tra sức khỏe tổng thể của hệ thống
  * Thực hiện các kiểm tra về database, logs, tồn kho, và đơn hàng
  * Trả về object chứa trạng thái và chi tiết các vấn đề phát hiện
@@ -325,32 +351,6 @@ router.get('/recent-activities', async (req, res) => {
     } catch (err) {
         // Trả về lỗi 500 nếu có lỗi trong quá trình truy vấn
         res.status(500).json({ error: 'Failed to get recent activities' });
-    }
-});
-
-/**
- * Route lấy dữ liệu biểu đồ cho dashboard (7 ngày gần nhất)
- */
-router.get('/chart-data', async (req, res) => {
-    try {
-        const chartData = await new Promise((resolve, reject) => {
-            db.all(`
-                SELECT
-                    date(transaction_date) as date,
-                    SUM(CASE WHEN type = 'nhap' THEN quantity ELSE 0 END) as nhap,
-                    SUM(CASE WHEN type = 'xuat' THEN quantity ELSE 0 END) as xuat
-                FROM inventory_transactions
-                WHERE transaction_date >= date('now', '-7 days')
-                GROUP BY date(transaction_date)
-                ORDER BY date ASC
-            `, (err, rows) => {
-                if (err) reject(err);
-                else resolve(rows);
-            });
-        });
-        res.json(chartData);
-    } catch (err) {
-        res.status(500).json({ error: 'Failed to get chart data' });
     }
 });
 
