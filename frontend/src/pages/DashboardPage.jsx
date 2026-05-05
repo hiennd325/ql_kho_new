@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useTheme } from '../context/ThemeContext';
 import {
   Package,
   TrendingUp,
@@ -42,6 +43,7 @@ ChartJS.register(
 );
 
 const DashboardPage = () => {
+  const { isDarkMode } = useTheme();
   const [stats, setStats] = useState({
     totalProducts: 0,
     monthlyImports: 0,
@@ -140,15 +142,15 @@ const DashboardPage = () => {
       {/* Top Header Section */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
         <div>
-          <h2 className="text-3xl font-black text-slate-900 tracking-tighter">Tổng quan vận hành</h2>
-          <p className="text-slate-400 text-xs font-black uppercase tracking-[0.2em] mt-2 bg-white px-3 py-1 rounded-full border border-slate-100 w-fit shadow-sm">
+          <h2 className={`text-3xl font-black tracking-tighter ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Tổng quan vận hành</h2>
+          <p className={`text-xs font-black uppercase tracking-[0.2em] mt-2 px-3 py-1 rounded-full border w-fit shadow-sm ${isDarkMode ? 'bg-slate-900 text-slate-400 border-slate-800' : 'bg-white text-slate-400 border-slate-100'}`}>
             Cập nhật thời gian thực: {new Date().toLocaleTimeString()}
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <div className="bg-white border border-slate-200 p-1 rounded-xl flex shadow-sm">
+          <div className={`border p-1 rounded-xl flex shadow-sm ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`}>
             {['Hôm nay', 'Tuần này', 'Tháng này'].map((tab) => (
-              <button key={tab} className={`px-4 py-2 rounded-lg text-xs font-black uppercase tracking-widest transition-all ${tab === 'Tháng này' ? 'bg-slate-900 text-white shadow-md' : 'text-slate-400 hover:text-slate-900'}`}>
+              <button key={tab} className={`px-4 py-2 rounded-lg text-xs font-black uppercase tracking-widest transition-all ${tab === 'Tháng này' ? 'bg-slate-900 dark:bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}>
                 {tab}
               </button>
             ))}
@@ -167,7 +169,7 @@ const DashboardPage = () => {
           { label: 'Xuất kho', value: stats.monthlyExports, icon: TrendingDown, color: 'rose', trend: '-8.2%', detail: 'Tháng này' },
           { label: 'Giá trị', value: formatCurrency(stats.totalValue), icon: DollarSign, color: 'amber', trend: '+0.5%', detail: 'Định giá' },
         ].map((stat, idx) => (
-          <motion.div key={idx} variants={item} className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col gap-3 hover:shadow-md transition-all group relative overflow-hidden">
+          <motion.div key={idx} variants={item} className={`p-5 rounded-2xl border shadow-sm flex flex-col gap-3 hover:shadow-md transition-all group relative overflow-hidden ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
             <div className={`absolute top-0 right-0 w-20 h-20 blur-2xl -mr-10 -mt-10 transition-opacity duration-500 opacity-0 group-hover:opacity-20 ${
                stat.color === 'blue' ? 'bg-blue-600' :
                stat.color === 'emerald' ? 'bg-emerald-600' :
@@ -177,14 +179,14 @@ const DashboardPage = () => {
 
             <div className="flex justify-between items-start">
               <div className={`p-3 rounded-xl ${
-                stat.color === 'blue' ? 'bg-blue-50 text-blue-600' :
-                stat.color === 'emerald' ? 'bg-emerald-50 text-emerald-600' :
-                stat.color === 'rose' ? 'bg-rose-50 text-rose-600' :
-                'bg-amber-50 text-amber-600'
+                stat.color === 'blue' ? (isDarkMode ? 'bg-blue-900/20 text-blue-400' : 'bg-blue-50 text-blue-600') :
+                stat.color === 'emerald' ? (isDarkMode ? 'bg-emerald-900/20 text-emerald-400' : 'bg-emerald-50 text-emerald-600') :
+                stat.color === 'rose' ? (isDarkMode ? 'bg-rose-900/20 text-rose-400' : 'bg-rose-50 text-rose-600') :
+                (isDarkMode ? 'bg-amber-900/20 text-amber-400' : 'bg-amber-50 text-amber-600')
               }`}>
                 <stat.icon size={22} strokeWidth={2.5} />
               </div>
-              <div className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-black ${stat.trend.startsWith('+') ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}`}>
+              <div className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-black ${stat.trend.startsWith('+') ? (isDarkMode ? 'bg-emerald-900/20 text-emerald-400' : 'bg-emerald-50 text-emerald-600') : (isDarkMode ? 'bg-rose-900/20 text-rose-400' : 'bg-rose-50 text-rose-600')}`}>
                 {stat.trend.startsWith('+') ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />}
                 {stat.trend}
               </div>
@@ -192,7 +194,7 @@ const DashboardPage = () => {
 
             <div>
               <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">{stat.label}</p>
-              <h3 className="text-2xl font-black text-slate-900 tracking-tighter tabular-nums truncate">{stat.value}</h3>
+              <h3 className={`text-2xl font-black tracking-tighter tabular-nums truncate ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{stat.value}</h3>
               <p className="text-[10px] text-slate-400 font-bold uppercase tracking-tighter italic">{stat.detail}</p>
             </div>
           </motion.div>
@@ -203,9 +205,9 @@ const DashboardPage = () => {
         {/* Left Column: Chart & Recent Activity (Table) */}
         <div className="lg:col-span-8 space-y-6">
           {/* Chart Section */}
-          <motion.div variants={item} className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+          <motion.div variants={item} className={`p-6 rounded-3xl border shadow-sm ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
             <div className="flex justify-between items-center mb-6">
-              <h3 className="font-black text-slate-900 flex items-center gap-2">
+              <h3 className={`font-black flex items-center gap-2 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
                 <Activity size={18} className="text-blue-600" />
                 Biểu đồ luân chuyển hàng hóa (7 ngày)
               </h3>
@@ -221,10 +223,34 @@ const DashboardPage = () => {
                   options={{
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { display: false }, tooltip: { mode: 'index', intersect: false } },
+                    plugins: {
+                      legend: { display: false },
+                      tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                        backgroundColor: isDarkMode ? '#1e293b' : '#ffffff',
+                        titleColor: isDarkMode ? '#f1f5f9' : '#0f172a',
+                        bodyColor: isDarkMode ? '#cbd5e1' : '#475569',
+                        borderColor: isDarkMode ? '#334155' : '#e2e8f0',
+                        borderWidth: 1
+                      }
+                    },
                     scales: {
-                      y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.03)' }, ticks: { font: { size: 10, weight: 'bold' } } },
-                      x: { grid: { display: false }, ticks: { font: { size: 10, weight: 'bold' } } }
+                      y: {
+                        beginAtZero: true,
+                        grid: { color: isDarkMode ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)' },
+                        ticks: {
+                          color: isDarkMode ? '#94a3b8' : '#64748b',
+                          font: { size: 10, weight: 'bold' }
+                        }
+                      },
+                      x: {
+                        grid: { display: false },
+                        ticks: {
+                          color: isDarkMode ? '#94a3b8' : '#64748b',
+                          font: { size: 10, weight: 'bold' }
+                        }
+                      }
                     }
                   }}
                 />
@@ -235,53 +261,54 @@ const DashboardPage = () => {
           </motion.div>
 
           {/* Recent Activity Section - Desktop Table Optimization */}
-          <motion.div variants={item} className="bg-white rounded-[32px] border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] overflow-hidden">
-            <div className="p-8 border-b border-slate-50/50 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-              <h3 className="font-black text-slate-900 flex items-center gap-3 text-lg tracking-tighter uppercase">
-                <div className="bg-blue-50 p-2 rounded-xl text-blue-600"><Clock size={20} strokeWidth={2.5} /></div>
+          <motion.div variants={item} className={`rounded-[32px] border shadow-[0_8px_30px_rgb(0,0,0,0.02)] overflow-hidden ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
+            <div className={`p-8 border-b flex flex-col md:flex-row justify-between items-start md:items-center gap-4 ${isDarkMode ? 'border-slate-800' : 'border-slate-50/50'}`}>
+              <h3 className={`font-black flex items-center gap-3 text-lg tracking-tighter uppercase ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+                <div className={`p-2 rounded-xl ${isDarkMode ? 'bg-blue-900/20 text-blue-400' : 'bg-blue-50 text-blue-600'}`}><Clock size={20} strokeWidth={2.5} /></div>
                 Hoạt động gần đây
               </h3>
               <div className="flex items-center gap-3 w-full md:w-auto">
                 <div className="relative flex-1 md:w-64">
                   <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                  <input type="text" placeholder="Tìm nhanh..." className="w-full bg-slate-50/50 border border-transparent text-[10px] font-bold pl-10 pr-4 py-2.5 rounded-xl outline-none focus:bg-white focus:ring-4 focus:ring-blue-500/5 transition-all" />
+                  <input type="text" placeholder="Tìm nhanh..." className={`w-full border border-transparent text-[10px] font-bold pl-10 pr-4 py-2.5 rounded-xl outline-none focus:ring-4 focus:ring-blue-500/5 transition-all ${isDarkMode ? 'bg-slate-800 text-slate-100 focus:bg-slate-700' : 'bg-slate-50/50 text-slate-900 focus:bg-white'}`} />
                 </div>
-                <button className="text-blue-600 text-[10px] font-black uppercase tracking-widest bg-blue-50/50 px-4 py-2.5 rounded-xl hover:bg-blue-600 hover:text-white transition-all">Tất cả</button>
+                <button className={`text-[10px] font-black uppercase tracking-widest px-4 py-2.5 rounded-xl transition-all ${isDarkMode ? 'bg-blue-900/20 text-blue-400 hover:bg-blue-600 hover:text-white' : 'bg-blue-50/50 text-blue-600 hover:bg-blue-600 hover:text-white'}`}>Tất cả</button>
               </div>
             </div>
 
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-slate-50/50">
+                  <tr className={isDarkMode ? 'bg-slate-800/50' : 'bg-slate-50/50'}>
                     <th className="px-6 py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest">Loại giao dịch</th>
                     <th className="px-6 py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest">Sản phẩm & Chi tiết</th>
                     <th className="px-6 py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Thời gian</th>
                     <th className="px-6 py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Tác vụ</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-50">
+                <tbody className={`divide-y ${isDarkMode ? 'divide-slate-800' : 'divide-slate-50'}`}>
                   {activities.length === 0 ? (
                     <tr><td colSpan="4" className="py-20 text-center text-slate-300 font-bold text-xs uppercase tracking-widest">Dữ liệu trống</td></tr>
                   ) : (
                     activities.map((activity, idx) => (
-                      <tr key={idx} className="hover:bg-slate-50/50 transition-colors group">
+                      <tr key={idx} className={`transition-colors group ${isDarkMode ? 'hover:bg-slate-800/50' : 'hover:bg-slate-50/50'}`}>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center gap-3">
                             <div className={`p-2 rounded-lg ${
-                              activity.color === 'green' ? 'bg-emerald-50 text-emerald-600' :
-                              activity.color === 'red' ? 'bg-rose-50 text-rose-600' : 'bg-blue-50 text-blue-600'
+                              activity.color === 'green' ? (isDarkMode ? 'bg-emerald-900/20 text-emerald-400' : 'bg-emerald-50 text-emerald-600') :
+                              activity.color === 'red' ? (isDarkMode ? 'bg-rose-900/20 text-rose-400' : 'bg-rose-50 text-rose-600') :
+                              (isDarkMode ? 'bg-blue-900/20 text-blue-400' : 'bg-blue-50 text-blue-600')
                             }`}>
                               <Package size={14} strokeWidth={3} />
                             </div>
-                            <span className="text-sm font-black text-slate-900">{activity.title}</span>
+                            <span className={`text-sm font-black ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{activity.title}</span>
                           </div>
                         </td>
                         <td className="px-6 py-4">
-                          <p className="text-sm text-slate-600 font-bold tracking-tight">{activity.description}</p>
+                          <p className={`text-sm font-bold tracking-tight ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>{activity.description}</p>
                         </td>
                         <td className="px-6 py-4 text-right whitespace-nowrap">
-                          <span className="text-[10px] font-black text-slate-400 bg-slate-100 px-2 py-1 rounded-md">{activity.time}</span>
+                          <span className={`text-[10px] font-black px-2 py-1 rounded-md ${isDarkMode ? 'text-slate-400 bg-slate-800' : 'text-slate-400 bg-slate-100'}`}>{activity.time}</span>
                         </td>
                         <td className="px-6 py-4 text-center">
                           <button className="text-slate-300 hover:text-blue-600 transition-colors"><ExternalLink size={14} /></button>
@@ -297,9 +324,9 @@ const DashboardPage = () => {
 
         {/* Right Column: System Status & Alerts */}
         <div className="lg:col-span-4 space-y-6">
-          <motion.div variants={item} className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col h-full">
+          <motion.div variants={item} className={`p-6 rounded-3xl border shadow-sm flex flex-col h-full ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
             <div className="flex justify-between items-start mb-6">
-              <h3 className="font-black text-slate-900 flex items-center gap-2">
+              <h3 className={`font-black flex items-center gap-2 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
                 <Activity size={18} className="text-blue-600" />
                 Vận hành hệ thống
               </h3>
@@ -308,17 +335,17 @@ const DashboardPage = () => {
 
             <div className="space-y-4 flex-1">
               {alerts.systemDetails.map((detail, idx) => (
-                <div key={idx} className="flex items-center justify-between p-3 bg-slate-50/50 rounded-2xl border border-slate-100 group hover:border-blue-500/20 transition-all">
+                <div key={idx} className={`flex items-center justify-between p-3 rounded-2xl border group transition-all ${isDarkMode ? 'bg-slate-800/50 border-slate-700 hover:border-blue-500/20' : 'bg-slate-50/50 border-slate-100 hover:border-blue-500/20'}`}>
                   <div className="flex items-center gap-3">
                     <div className="w-1.5 h-1.5 bg-blue-500 rounded-full shadow-[0_0_8px_rgba(59,130,246,0.5)]"></div>
-                    <span className="text-xs text-slate-600 font-bold tracking-tight">{detail.split(':')[0]}</span>
+                    <span className={`text-xs font-bold tracking-tight ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>{detail.split(':')[0]}</span>
                   </div>
-                  <span className="text-[10px] font-black text-slate-900 bg-white px-2 py-1 rounded-lg border border-slate-100 uppercase">{detail.split(':')[1] || 'Active'}</span>
+                  <span className={`text-[10px] font-black px-2 py-1 rounded-lg border uppercase ${isDarkMode ? 'text-white bg-slate-900 border-slate-700' : 'text-slate-900 bg-white border-slate-100'}`}>{detail.split(':')[1] || 'Active'}</span>
                 </div>
               ))}
             </div>
 
-            <div className="mt-8 p-6 bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl text-white relative overflow-hidden group">
+            <div className="mt-8 p-6 bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl text-white relative overflow-hidden group border border-slate-800">
               <div className="absolute top-0 right-0 -mr-6 -mt-6 w-24 h-24 bg-blue-600/20 rounded-full blur-2xl group-hover:bg-blue-600/40 transition-colors"></div>
               <p className="text-[10px] text-slate-400 font-black uppercase tracking-[0.2em] mb-1">Đơn hàng mới</p>
               <div className="flex items-end justify-between relative z-10">

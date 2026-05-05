@@ -14,12 +14,16 @@ import {
   X,
   Bell,
   Search,
-  ChevronRight
+  ChevronRight,
+  Sun,
+  Moon
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 
 const MainLayout = ({ children }) => {
   const { user, logout } = useAuth();
+  const { isDarkMode, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(true);
@@ -43,14 +47,14 @@ const MainLayout = ({ children }) => {
   }
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] flex font-sans text-slate-900 selection:bg-blue-100 selection:text-blue-700">
+    <div className={`min-h-screen flex font-sans selection:bg-blue-100 selection:text-blue-700 transition-colors duration-300 ${isDarkMode ? 'bg-slate-950 text-slate-100' : 'bg-[#f8fafc] text-slate-900'}`}>
       {/* Sidebar */}
       <motion.aside
         animate={{ width: isSidebarOpen ? 300 : 96 }}
         transition={{ type: "spring", stiffness: 300, damping: 35 }}
-        className="bg-white border-r border-slate-200 flex flex-col z-30 shadow-[4px_0_24px_rgba(0,0,0,0.02)] sticky top-0 h-screen"
+        className={`${isDarkMode ? 'bg-slate-900 border-slate-800 shadow-[4px_0_24px_rgba(0,0,0,0.2)]' : 'bg-white border-slate-200 shadow-[4px_0_24px_rgba(0,0,0,0.02)]'} border-r flex flex-col z-30 sticky top-0 h-screen`}
       >
-        <div className="h-20 flex items-center px-6 justify-between border-b border-slate-50/50">
+        <div className={`h-20 flex items-center px-6 justify-between border-b ${isDarkMode ? 'border-slate-800' : 'border-slate-50/50'}`}>
           <AnimatePresence mode="wait">
             {isSidebarOpen ? (
               <motion.div
@@ -63,7 +67,7 @@ const MainLayout = ({ children }) => {
                 <div className="bg-gradient-to-br from-blue-600 to-indigo-600 p-2 rounded-xl shadow-lg shadow-blue-200">
                   <Package size={20} className="text-white" strokeWidth={2.5} />
                 </div>
-                <span className="font-black text-xl tracking-tighter text-slate-900 whitespace-nowrap">QL KHO <span className="text-blue-600">PRO</span></span>
+                <span className={`font-black text-xl tracking-tighter whitespace-nowrap ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>QL KHO <span className="text-blue-600">PRO</span></span>
               </motion.div>
             ) : (
               <motion.div
@@ -89,7 +93,9 @@ const MainLayout = ({ children }) => {
                 className={`group relative flex items-center rounded-2xl transition-all duration-200 ${
                   isActive
                   ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20 translate-x-1'
-                  : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
+                  : isDarkMode
+                    ? 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                    : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
                 } ${isSidebarOpen ? 'p-3.5 px-4' : 'p-3.5 justify-center'}`}
               >
                 <div className={`${isActive ? 'text-white' : 'text-slate-400 group-hover:text-blue-500 transition-colors'}`}>
@@ -122,10 +128,10 @@ const MainLayout = ({ children }) => {
           })}
         </nav>
 
-        <div className="p-4 border-t border-slate-50">
+        <div className="p-4 border-t border-slate-50 dark:border-slate-800">
           <button
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="flex items-center w-full p-3.5 text-slate-400 hover:bg-slate-50 hover:text-slate-900 rounded-2xl transition-all font-bold group mb-2"
+            className={`flex items-center w-full p-3.5 rounded-2xl transition-all font-bold group mb-2 ${isDarkMode ? 'text-slate-400 hover:bg-slate-800 hover:text-white' : 'text-slate-400 hover:bg-slate-50 hover:text-slate-900'}`}
           >
             <div className="group-hover:rotate-180 transition-transform duration-500">
               {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
@@ -135,7 +141,7 @@ const MainLayout = ({ children }) => {
 
           <button
             onClick={handleLogout}
-            className="flex items-center w-full p-3.5 text-slate-400 hover:bg-rose-50 hover:text-rose-600 rounded-2xl transition-all font-bold group"
+            className={`flex items-center w-full p-3.5 rounded-2xl transition-all font-bold group ${isDarkMode ? 'text-slate-400 hover:bg-rose-900/20 hover:text-rose-400' : 'text-slate-400 hover:bg-rose-50 hover:text-rose-600'}`}
           >
             <LogOut size={20} className="group-hover:-translate-x-1 transition-transform" />
             {isSidebarOpen && <span className="ml-4">Đăng xuất</span>}
@@ -145,11 +151,10 @@ const MainLayout = ({ children }) => {
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col h-screen overflow-hidden">
-        {/* Navbar */}
-        <header className="bg-white/70 backdrop-blur-md border-b border-slate-200/60 h-20 flex justify-between items-center px-10 z-20 sticky top-0">
+        <header className={`${isDarkMode ? 'bg-slate-900/70 border-slate-800' : 'bg-white/70 border-slate-200/60'} backdrop-blur-md border-b h-20 flex justify-between items-center px-10 z-20 sticky top-0 transition-colors duration-300`}>
           <div className="flex items-center gap-10 flex-1">
             <div className="flex flex-col">
-              <h1 className="text-xl font-black text-slate-900 tracking-tight leading-none uppercase">
+              <h1 className={`text-xl font-black tracking-tight leading-none uppercase ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
                 {navItems.find(item => item.path === location.pathname)?.name || 'Trang chủ'}
               </h1>
               <div className="flex items-center gap-2 mt-2">
@@ -163,13 +168,21 @@ const MainLayout = ({ children }) => {
               <input
                 type="text"
                 placeholder="Tìm kiếm sản phẩm, đơn hàng..."
-                className="w-full bg-slate-100/50 border border-transparent focus:bg-white focus:border-blue-500/30 focus:ring-4 focus:ring-blue-500/5 py-2.5 pl-12 pr-4 rounded-2xl outline-none transition-all text-sm font-medium"
+                className={`w-full border border-transparent focus:border-blue-500/30 focus:ring-4 focus:ring-blue-500/5 py-2.5 pl-12 pr-4 rounded-2xl outline-none transition-all text-sm font-medium ${isDarkMode ? 'bg-slate-800 text-slate-100' : 'bg-slate-100/50 text-slate-900'}`}
               />
             </div>
           </div>
 
           <div className="flex items-center gap-5">
-            <button className="p-2.5 bg-slate-100 hover:bg-slate-200 rounded-xl text-slate-500 transition-colors relative">
+            <button
+              onClick={toggleTheme}
+              className={`p-2.5 rounded-xl transition-all duration-300 ${isDarkMode ? 'bg-slate-800 text-yellow-400 hover:bg-slate-700' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}`}
+              title={isDarkMode ? "Chuyển sang chế độ sáng" : "Chuyển sang chế độ tối"}
+            >
+              {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+            </button>
+
+            <button className={`p-2.5 rounded-xl transition-colors relative ${isDarkMode ? 'bg-slate-800 text-slate-400 hover:bg-slate-700' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}`}>
               <Bell size={20} />
               <span className="absolute top-2 right-2 w-2 h-2 bg-rose-500 border-2 border-white rounded-full"></span>
             </button>
@@ -178,8 +191,8 @@ const MainLayout = ({ children }) => {
 
             <div className="flex items-center gap-4 group cursor-pointer pl-2">
               <div className="text-right hidden sm:block">
-                <p className="text-sm font-black text-slate-900 leading-none group-hover:text-blue-600 transition-colors">{user?.username}</p>
-                <p className="text-[10px] text-slate-400 mt-1.5 font-black uppercase tracking-tighter bg-slate-100 px-2 py-0.5 rounded-md inline-block">{user?.role}</p>
+                <p className={`text-sm font-black leading-none group-hover:text-blue-600 transition-colors ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{user?.username}</p>
+                <p className={`text-[10px] mt-1.5 font-black uppercase tracking-tighter px-2 py-0.5 rounded-md inline-block ${isDarkMode ? 'bg-slate-800 text-slate-400' : 'bg-slate-100 text-slate-400'}`}>{user?.role}</p>
               </div>
               <motion.div
                 whileHover={{ scale: 1.05 }}
@@ -192,8 +205,7 @@ const MainLayout = ({ children }) => {
           </div>
         </header>
 
-        {/* Page Content */}
-        <div className="flex-1 overflow-auto p-10 custom-scrollbar">
+        <div className={`flex-1 overflow-auto p-10 custom-scrollbar transition-colors duration-300 ${isDarkMode ? 'bg-slate-950' : 'bg-[#f8fafc]'}`}>
           <AnimatePresence mode="wait">
             <motion.div
               key={location.pathname}

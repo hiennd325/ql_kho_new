@@ -18,9 +18,12 @@ import NotFoundPage from './pages/NotFoundPage';
 
 import './App.css';
 
+import { ThemeProvider } from './context/ThemeContext';
+
 function App() {
   return (
-    <AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
       <Router>
         <Routes>
           {/* Public Routes */}
@@ -48,6 +51,7 @@ function App() {
         </Routes>
       </Router>
     </AuthProvider>
+    </ThemeProvider>
   );
 }
 
