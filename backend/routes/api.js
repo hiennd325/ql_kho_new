@@ -14,6 +14,7 @@ const transferRoutes = require('./transfers');
 const supplierRoutes = require('./supplier');
 const ordersRoutes = require('./orders');
 const notificationRoutes = require('./notifications');
+const aiRoutes = require('./ai');
 
 // Root API v1 route
 router.get('/', (req, res) => {
@@ -34,5 +35,6 @@ router.use('/transfers', authenticate, transferRoutes);
 router.use('/suppliers', authenticate, supplierRoutes);
 router.use('/orders', authenticate, ordersRoutes);
 router.use('/notifications', authenticate, notificationRoutes);
+router.use('/ai', authenticate, aiRoutes);
 
 module.exports = router;

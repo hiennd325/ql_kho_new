@@ -17,7 +17,10 @@ import {
   BarChart3,
   ChevronLeft,
   ChevronRight,
-  Package
+  Package,
+  BrainCircuit,
+  AlertCircle,
+  Sparkles
 } from 'lucide-react';
 import {
   Chart as ChartJS,
@@ -50,7 +53,12 @@ const ReportsPage = () => {
   const [warehouses, setWarehouses] = useState([]);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  
+
+  // AI Analysis states
+  const [aiAnalysis, setAiAnalysis] = useState(null);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiError, setAiError] = useState(null);
+
   // Filters
   const [searchTerm, setSearchTerm] = useState('');
   const [warehouseFilter, setWarehouseFilter] = useState('');
@@ -161,6 +169,20 @@ const ReportsPage = () => {
       setLoading(false);
     }
   }, []);
+
+  const fetchAIAnalysis = async () => {
+    setAiLoading(true);
+    setAiError(null);
+    try {
+      const response = await api.post('/ai/analyze-system');
+      setAiAnalysis(response.data.analysis);
+    } catch (error) {
+      console.error('Error fetching AI analysis:', error);
+      setAiError(error.response?.data?.error || 'Không thể kết nối với AI OpenRouter');
+    } finally {
+      setAiLoading(false);
+    }
+  };
 
   useEffect(() => {
     fetchWarehousesAndProducts();
@@ -429,60 +451,123 @@ const ReportsPage = () => {
           </div>
         ) : (
           <div className="p-8 bg-white dark:bg-slate-900">
-            <div className="flex items-center justify-between mb-8">
-              <div>
-                <h3 className="text-xl font-bold text-gray-800 dark:text-slate-100">Xu hướng Nhập & Xuất kho</h3>
-                <p className="text-sm text-gray-500 dark:text-slate-400">Thống kê số lượng hàng hóa lưu thông theo tháng</p>
-              </div>
-              <div className="flex items-center gap-6">
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                  <span className="text-sm font-bold text-gray-600 dark:text-slate-300">Nhập</span>
+            <div className="flex flex-col lg:flex-row gap-8">
+              {/* Chart Section */}
+              <div className="flex-1">
+                <div className="flex items-center justify-between mb-8">
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-800 dark:text-slate-100">Xu hướng Nhập & Xuất kho</h3>
+                    <p className="text-sm text-gray-500 dark:text-slate-400">Thống kê số lượng hàng hóa lưu thông theo tháng</p>
+                  </div>
+                  <div className="flex items-center gap-6">
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                      <span className="text-sm font-bold text-gray-600 dark:text-slate-300">Nhập</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                      <span className="text-sm font-bold text-gray-600 dark:text-slate-300">Xuất</span>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                  <span className="text-sm font-bold text-gray-600 dark:text-slate-300">Xuất</span>
-                </div>
-              </div>
-            </div>
-            <div className="h-[400px] w-full">
-              {chartData && (
-                <Bar
-                  data={chartData}
-                  options={{
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                      legend: { display: false },
-                      tooltip: {
-                        backgroundColor: isDarkMode ? '#1e293b' : '#fff',
-                        titleColor: isDarkMode ? '#f1f5f9' : '#1e293b',
-                        bodyColor: isDarkMode ? '#f1f5f9' : '#1e293b',
-                        borderColor: isDarkMode ? '#334155' : '#e2e8f0',
-                        borderWidth: 1
-                      }
-                    },
-                    scales: {
-                      y: {
-                        beginAtZero: true,
-                        grid: {
-                          borderDash: [5, 5],
-                          color: isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)'
+                <div className="h-[400px] w-full">
+                  {chartData && (
+                    <Bar
+                      data={chartData}
+                      options={{
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                          legend: { display: false },
+                          tooltip: {
+                            backgroundColor: isDarkMode ? '#1e293b' : '#fff',
+                            titleColor: isDarkMode ? '#f1f5f9' : '#1e293b',
+                            bodyColor: isDarkMode ? '#f1f5f9' : '#1e293b',
+                            borderColor: isDarkMode ? '#334155' : '#e2e8f0',
+                            borderWidth: 1
+                          }
                         },
-                        ticks: {
-                          color: isDarkMode ? '#94a3b8' : '#64748b'
+                        scales: {
+                          y: {
+                            beginAtZero: true,
+                            grid: {
+                              borderDash: [5, 5],
+                              color: isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)'
+                            },
+                            ticks: {
+                              color: isDarkMode ? '#94a3b8' : '#64748b'
+                            }
+                          },
+                          x: {
+                            grid: { display: false },
+                            ticks: {
+                              color: isDarkMode ? '#94a3b8' : '#64748b'
+                            }
+                          }
                         }
-                      },
-                      x: {
-                        grid: { display: false },
-                        ticks: {
-                          color: isDarkMode ? '#94a3b8' : '#64748b'
-                        }
-                      }
-                    }
-                  }}
-                />
-              )}
+                      }}
+                    />
+                  )}
+                </div>
+              </div>
+
+              {/* AI Analysis Sidebar */}
+              <div className="w-full lg:w-96 space-y-4">
+                <div className={`p-6 rounded-2xl border transition-all duration-300 ${isDarkMode ? 'bg-slate-800/50 border-slate-700' : 'bg-blue-50/50 border-blue-100'}`}>
+                  <div className="flex items-center justify-between mb-4">
+                    <h4 className={`font-black text-sm uppercase tracking-wider flex items-center gap-2 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>
+                      <Sparkles size={18} /> Phân tích AI
+                    </h4>
+                    <button
+                      onClick={fetchAIAnalysis}
+                      disabled={aiLoading}
+                      className={`p-2 rounded-xl transition-all active:scale-95 ${aiLoading ? 'bg-gray-200 dark:bg-slate-700' : 'bg-blue-600 text-white shadow-lg shadow-blue-600/20 hover:bg-blue-700'}`}
+                    >
+                      <BrainCircuit size={18} className={aiLoading ? 'animate-pulse' : ''} />
+                    </button>
+                  </div>
+
+                  {aiLoading ? (
+                    <div className="space-y-4 py-4">
+                      <div className="h-4 bg-gray-200 dark:bg-slate-700 rounded-full animate-pulse w-full"></div>
+                      <div className="h-4 bg-gray-200 dark:bg-slate-700 rounded-full animate-pulse w-[90%]"></div>
+                      <div className="h-4 bg-gray-200 dark:bg-slate-700 rounded-full animate-pulse w-[95%]"></div>
+                      <p className="text-center text-xs text-gray-500 dark:text-slate-400 font-medium italic mt-4">AI đang phân tích dữ liệu kho...</p>
+                    </div>
+                  ) : aiError ? (
+                    <div className="p-4 bg-rose-50 dark:bg-rose-900/10 rounded-xl border border-rose-100 dark:border-rose-900/20 flex gap-3 items-start">
+                      <AlertCircle className="text-rose-500 shrink-0" size={18} />
+                      <p className="text-xs text-rose-600 dark:text-rose-400 leading-relaxed font-medium">{aiError}</p>
+                    </div>
+                  ) : aiAnalysis ? (
+                    <div className="prose prose-sm dark:prose-invert max-w-none">
+                      <div className={`text-xs leading-relaxed font-medium whitespace-pre-wrap ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>
+                        {aiAnalysis}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-center py-10 space-y-3">
+                      <div className={`w-12 h-12 rounded-2xl mx-auto flex items-center justify-center ${isDarkMode ? 'bg-slate-700 text-slate-400' : 'bg-blue-100 text-blue-600'}`}>
+                        <BrainCircuit size={24} />
+                      </div>
+                      <p className={`text-xs font-bold ${isDarkMode ? 'text-slate-500' : 'text-slate-400'}`}>Bấm để bắt đầu phân tích hệ thống</p>
+                    </div>
+                  )}
+                </div>
+
+                <div className={`p-6 rounded-2xl border ${isDarkMode ? 'bg-slate-800/30 border-slate-700' : 'bg-white border-slate-100'} shadow-sm`}>
+                  <h4 className="text-xs font-black uppercase tracking-widest text-gray-400 mb-4">Mô hình sử dụng</h4>
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                      <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                    </div>
+                    <div>
+                      <p className="text-xs font-black text-slate-900 dark:text-white leading-none">Tencent HY3 Preview</p>
+                      <p className="text-[10px] text-slate-400 mt-1 uppercase font-bold tracking-tighter">OpenRouter Free Tier</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         )}
