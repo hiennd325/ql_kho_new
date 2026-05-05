@@ -19,7 +19,16 @@
       "mcp__ruflo__agent_list",
       "mcp__ruflo__agent_execute",
       "mcp__ruflo__hooks_post-task",
-      "mcp__ruflo__swarm_shutdown"
+      "mcp__ruflo__swarm_shutdown",
+      "mcp__ruflo__task_list",
+      "mcp__ruflo__memory_search",
+      "mcp__ruflo__progress_summary",
+      "mcp__ruflo__hooks_metrics",
+      "mcp__ruflo__autopilot_status",
+      "mcp__ruflo__autopilot_enable",
+      "mcp__ruflo__autopilot_config",
+      "mcp__ruflo__autopilot_disable",
+      "Bash(npx @claude-flow/cli@latest swarm watch --stream)"
     ]
   },
   "enableAllProjectMcpServers": true,
