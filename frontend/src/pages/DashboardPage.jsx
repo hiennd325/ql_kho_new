@@ -30,6 +30,7 @@ import {
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import api from '../services/api';
+import StatCard from '../components/ui/StatCard';
 
 ChartJS.register(
   CategoryScale,
@@ -161,44 +162,44 @@ const DashboardPage = () => {
         </div>
       </div>
 
-      {/* Main Grid Layout - Responsive optimization */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {[
-          { label: 'Sản phẩm', value: stats.totalProducts, icon: Package, color: 'blue', trend: '+2.4%', detail: 'Trong kho' },
-          { label: 'Nhập kho', value: stats.monthlyImports, icon: TrendingUp, color: 'emerald', trend: '+12.5%', detail: 'Tháng này' },
-          { label: 'Xuất kho', value: stats.monthlyExports, icon: TrendingDown, color: 'rose', trend: '-8.2%', detail: 'Tháng này' },
-          { label: 'Giá trị', value: formatCurrency(stats.totalValue), icon: DollarSign, color: 'amber', trend: '+0.5%', detail: 'Định giá' },
-        ].map((stat, idx) => (
-          <motion.div key={idx} variants={item} className={`p-5 rounded-2xl border shadow-sm flex flex-col gap-3 hover:shadow-md transition-all group relative overflow-hidden ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
-            <div className={`absolute top-0 right-0 w-20 h-20 blur-2xl -mr-10 -mt-10 transition-opacity duration-500 opacity-0 group-hover:opacity-20 ${
-               stat.color === 'blue' ? 'bg-blue-600' :
-               stat.color === 'emerald' ? 'bg-emerald-600' :
-               stat.color === 'rose' ? 'bg-rose-600' :
-               'bg-amber-600'
-            }`}></div>
-
-            <div className="flex justify-between items-start">
-              <div className={`p-3 rounded-xl ${
-                stat.color === 'blue' ? (isDarkMode ? 'bg-blue-900/20 text-blue-400' : 'bg-blue-50 text-blue-600') :
-                stat.color === 'emerald' ? (isDarkMode ? 'bg-emerald-900/20 text-emerald-400' : 'bg-emerald-50 text-emerald-600') :
-                stat.color === 'rose' ? (isDarkMode ? 'bg-rose-900/20 text-rose-400' : 'bg-rose-50 text-rose-600') :
-                (isDarkMode ? 'bg-amber-900/20 text-amber-400' : 'bg-amber-50 text-amber-600')
-              }`}>
-                <stat.icon size={22} strokeWidth={2.5} />
-              </div>
-              <div className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-black ${stat.trend.startsWith('+') ? (isDarkMode ? 'bg-emerald-900/20 text-emerald-400' : 'bg-emerald-50 text-emerald-600') : (isDarkMode ? 'bg-rose-900/20 text-rose-400' : 'bg-rose-50 text-rose-600')}`}>
-                {stat.trend.startsWith('+') ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />}
-                {stat.trend}
-              </div>
-            </div>
-
-            <div>
-              <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">{stat.label}</p>
-              <h3 className={`text-2xl font-black tracking-tighter tabular-nums truncate ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{stat.value}</h3>
-              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-tighter italic">{stat.detail}</p>
-            </div>
-          </motion.div>
-        ))}
+      {/* Main Grid Layout - Strictly Single Row with Expansion effect */}
+      <div className="flex flex-row flex-nowrap gap-4 overflow-x-auto lg:overflow-visible pb-4 lg:pb-0 items-stretch h-32 xl:h-36">
+        <StatCard
+          label="Sản phẩm"
+          value={stats.totalProducts}
+          icon={Package}
+          color="blue"
+          trend="+2.4%"
+          detail="Trong kho"
+          compact={true}
+        />
+        <StatCard
+          label="Nhập kho"
+          value={stats.monthlyImports}
+          icon={TrendingUp}
+          color="emerald"
+          trend="+12.5%"
+          detail="Tháng này"
+          compact={true}
+        />
+        <StatCard
+          label="Xuất kho"
+          value={stats.monthlyExports}
+          icon={TrendingDown}
+          color="rose"
+          trend="-8.2%"
+          detail="Tháng này"
+          compact={true}
+        />
+        <StatCard
+          label="Giá trị"
+          value={formatCurrency(stats.totalValue)}
+          icon={DollarSign}
+          color="amber"
+          trend="+0.5%"
+          detail="Định giá"
+          compact={true}
+        />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
