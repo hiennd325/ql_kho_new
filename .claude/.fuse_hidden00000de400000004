@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__gitnexus__list_repos",
+      "Bash(npx gitnexus *)"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "figma-mcp-go"
+  ]
+}

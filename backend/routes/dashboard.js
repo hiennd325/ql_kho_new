@@ -11,10 +11,19 @@ const db = require('../db');
 const path = require('path'); // Module để xử lý đường dẫn file
 
 /**
- * Route lấy dữ liệu biểu đồ cho dashboard (7 ngày gần nhất)
+ * Route lấy dữ liệu biểu đồ cho dashboard (7 ngày gần nhất hoặc theo kỳ)
  */
 router.get('/chart-data-v2', async (req, res) => {
     try {
+        const { period = 'week' } = req.query;
+        let dateFilter = "transaction_date >= date('now', '-7 days')"; // Mặc định 7 ngày
+
+        if (period === 'today') {
+            dateFilter = "transaction_date >= date('now')";
+        } else if (period === 'month') {
+            dateFilter = "transaction_date >= date('now', '-30 days')";
+        }
+
         const chartData = await new Promise((resolve, reject) => {
             db.all(`
                 SELECT
@@ -22,7 +31,7 @@ router.get('/chart-data-v2', async (req, res) => {
                     SUM(CASE WHEN type = 'nhap' THEN quantity ELSE 0 END) as nhap,
                     SUM(CASE WHEN type = 'xuat' THEN quantity ELSE 0 END) as xuat
                 FROM inventory_transactions
-                WHERE transaction_date >= date('now', '-7 days')
+                WHERE ${dateFilter}
                 GROUP BY date(transaction_date)
                 ORDER BY date ASC
             `, (err, rows) => {
@@ -234,10 +243,26 @@ router.get('/alerts', async (req, res) => {
  * Route lấy dữ liệu thống kê cho dashboard
  * Phương thức: GET
  * Đường dẫn: /dashboard/stats
- * Trả về: Các chỉ số thống kê như tổng sản phẩm, nhập/xuất tháng, giá trị tồn kho
+ * Trả về: Các chỉ số thống kê như tổng sản phẩm, nhập/xuất theo kỳ, giá trị tồn kho
  */
 router.get('/stats', async (req, res) => {
     try {
+        const { period = 'month' } = req.query;
+        let dateFilter = "";
+
+        switch (period) {
+            case 'today':
+                dateFilter = "date(transaction_date) = date('now')";
+                break;
+            case 'week':
+                dateFilter = "transaction_date >= date('now', '-7 days')";
+                break;
+            case 'month':
+            default:
+                dateFilter = "strftime('%Y-%m', transaction_date) = strftime('%Y-%m', 'now')";
+                break;
+        }
+
         // Tổng số loại sản phẩm (đếm số bản ghi trong bảng products)
         const totalProducts = await new Promise((resolve, reject) => {
             db.get('SELECT COUNT(*) as total FROM products', (err, row) => {
@@ -246,24 +271,24 @@ router.get('/stats', async (req, res) => {
             });
         });
 
-        // Nhập hàng tháng: tổng số lượng từ các giao dịch 'nhap' trong tháng hiện tại
+        // Nhập hàng theo kỳ: tổng số lượng từ các giao dịch 'nhap'
         const monthlyImports = await new Promise((resolve, reject) => {
             db.get(`
                 SELECT SUM(quantity) as total
                 FROM inventory_transactions
-                WHERE type = 'nhap' AND strftime('%Y-%m', transaction_date) = strftime('%Y-%m', 'now')
+                WHERE type = 'nhap' AND ${dateFilter}
             `, (err, row) => {
                 if (err) reject(err);
                 else resolve(row.total || 0);
             });
         });
 
-        // Xuất hàng tháng: tổng số lượng từ các giao dịch 'xuat' trong tháng hiện tại
+        // Xuất hàng theo kỳ: tổng số lượng từ các giao dịch 'xuat'
         const monthlyExports = await new Promise((resolve, reject) => {
             db.get(`
                 SELECT SUM(quantity) as total
                 FROM inventory_transactions
-                WHERE type = 'xuat' AND strftime('%Y-%m', transaction_date) = strftime('%Y-%m', 'now')
+                WHERE type = 'xuat' AND ${dateFilter}
             `, (err, row) => {
                 if (err) reject(err);
                 else resolve(row.total || 0);
@@ -286,8 +311,8 @@ router.get('/stats', async (req, res) => {
         // Trả về dữ liệu thống kê
         res.json({
             totalProducts, // Tổng số sản phẩm
-            monthlyImports, // Số lượng nhập tháng này
-            monthlyExports, // Số lượng xuất tháng này
+            monthlyImports, // Số lượng nhập theo kỳ
+            monthlyExports, // Số lượng xuất theo kỳ
             totalValue // Tổng giá trị tồn kho
         });
     } catch (err) {

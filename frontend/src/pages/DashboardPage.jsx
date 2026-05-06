@@ -45,6 +45,7 @@ ChartJS.register(
 
 const DashboardPage = () => {
   const { isDarkMode } = useTheme();
+  const [activeTab, setActiveTab] = useState('month');
   const [stats, setStats] = useState({
     totalProducts: 0,
     monthlyImports: 0,
@@ -61,14 +62,14 @@ const DashboardPage = () => {
   const [chartData, setChartData] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchData = async () => {
+  const fetchData = async (period = activeTab) => {
     setLoading(true);
     try {
       const results = await Promise.allSettled([
-        api.get('/dashboard/stats'),
+        api.get(`/dashboard/stats?period=${period}`),
         api.get('/dashboard/alerts'),
         api.get('/dashboard/recent-activities'),
-        api.get('/dashboard/chart-data-v2')
+        api.get(`/dashboard/chart-data-v2?period=${period}`)
       ]);
 
       if (results[0].status === 'fulfilled') setStats(results[0].value.data);
@@ -117,6 +118,12 @@ const DashboardPage = () => {
     fetchData();
   }, []);
 
+  const periodMap = {
+    'Hôm nay': 'today',
+    'Tuần này': 'week',
+    'Tháng này': 'month'
+  };
+
   const getHealthBadge = (status) => {
     switch (status) {
       case 'healthy': return <span className="bg-emerald-100 text-emerald-700 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider">Hoạt động tốt</span>;
@@ -151,12 +158,20 @@ const DashboardPage = () => {
         <div className="flex items-center gap-3">
           <div className={`border p-1 rounded-xl flex shadow-sm ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`}>
             {['Hôm nay', 'Tuần này', 'Tháng này'].map((tab) => (
-              <button key={tab} className={`px-4 py-2 rounded-lg text-xs font-black uppercase tracking-widest transition-all ${tab === 'Tháng này' ? 'bg-slate-900 dark:bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}>
+              <button
+                key={tab}
+                onClick={() => {
+                  const period = periodMap[tab];
+                  setActiveTab(period);
+                  fetchData(period);
+                }}
+                className={`px-4 py-2 rounded-lg text-xs font-black uppercase tracking-widest transition-all ${activeTab === periodMap[tab] ? 'bg-slate-900 dark:bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
+              >
                 {tab}
               </button>
             ))}
           </div>
-          <button onClick={fetchData} className="flex items-center gap-2 bg-blue-600 px-5 py-3 rounded-xl text-xs font-black uppercase tracking-widest text-white hover:bg-blue-700 transition-all shadow-lg shadow-blue-200">
+          <button onClick={() => fetchData()} className="flex items-center gap-2 bg-blue-600 px-5 py-3 rounded-xl text-xs font-black uppercase tracking-widest text-white hover:bg-blue-700 transition-all shadow-lg shadow-blue-200">
             <RefreshCw size={14} className={loading ? 'animate-spin' : ''} /> Đồng bộ
           </button>
         </div>
