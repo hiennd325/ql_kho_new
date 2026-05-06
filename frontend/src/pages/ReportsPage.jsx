@@ -132,18 +132,22 @@ const ReportsPage = () => {
   const fetchAnalytics = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await api.get('/inventory/transactions', { params: { limit: 100 } });
+      const currentYear = new Date().getFullYear();
+      const response = await api.get('/inventory/transactions', { params: { limit: 1000 } });
       const transactions = response.data.transactions || [];
-      
+
       const monthlyData = transactions.reduce((acc, t) => {
-        const month = new Date(t.transaction_date).getMonth();
+        const date = new Date(t.transaction_date);
+        if (date.getFullYear() !== currentYear) return acc;
+
+        const month = date.getMonth();
         acc[month] = acc[month] || { imports: 0, exports: 0 };
         if (t.type === 'nhap') acc[month].imports += t.quantity;
         else acc[month].exports += t.quantity;
         return acc;
       }, {});
 
-      const labels = ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'T11', 'T12'];
+      const labels = Array.from({ length: 12 }, (_, i) => `T${i + 1}/${currentYear}`);
       setChartData({
         labels,
         datasets: [
@@ -267,7 +271,7 @@ const ReportsPage = () => {
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', `phieu-kiem-ke-${id}.pdf`);
+      link.setAttribute('download', `phieu-kiem-ke-${id}.csv`);
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -339,6 +343,7 @@ const ReportsPage = () => {
               <div className="flex items-center gap-2">
                 <input
                   type="date"
+                  max={dateRange.end || new Date().toISOString().split('T')[0]}
                   className="border border-gray-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 transition-all"
                   value={dateRange.start}
                   onChange={(e) => setDateRange({...dateRange, start: e.target.value})}
@@ -346,10 +351,21 @@ const ReportsPage = () => {
                 <span className="text-gray-400">→</span>
                 <input
                   type="date"
+                  min={dateRange.start}
+                  max={new Date().toISOString().split('T')[0]}
                   className="border border-gray-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 transition-all"
                   value={dateRange.end}
                   onChange={(e) => setDateRange({...dateRange, end: e.target.value})}
                 />
+                {(dateRange.start || dateRange.end) && (
+                  <button
+                    onClick={() => setDateRange({ start: '', end: '' })}
+                    className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-rose-900/20 rounded-lg transition-all"
+                    title="Xóa bộ lọc ngày"
+                  >
+                    <X size={16} />
+                  </button>
+                )}
               </div>
             </div>
           )}
@@ -360,7 +376,17 @@ const ReportsPage = () => {
                 <Plus size={18} /> Lập phiếu kiểm
               </button>
             )}
-            <button className="border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-300 px-4 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800 font-bold text-sm flex items-center gap-2 transition-all">
+            <button
+              onClick={() => {
+                const baseURL = api.defaults.baseURL;
+                if (activeTab === 'audits') {
+                  window.open(`${baseURL}/reports/audits/export?startDate=${dateRange.start}&endDate=${dateRange.end}&warehouse=${warehouseFilter}`, '_blank');
+                } else if (activeTab === 'inventory') {
+                  window.open(`${baseURL}/reports/inventory/export`, '_blank');
+                }
+              }}
+              className="border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-300 px-4 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800 font-bold text-sm flex items-center gap-2 transition-all"
+            >
               <Download size={18} /> Xuất CSV
             </button>
           </div>
@@ -470,8 +496,13 @@ const ReportsPage = () => {
                     </div>
                   </div>
                 </div>
-                <div className="h-[400px] w-full">
-                  {chartData && (
+                <div className="h-[400px] w-full relative">
+                  {!chartData || chartData.datasets[0].data.every(v => v === 0) && chartData.datasets[1].data.every(v => v === 0) ? (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-400 dark:text-slate-500">
+                      <BarChart3 size={48} className="mb-4 opacity-50" />
+                      <p>Không có dữ liệu nhập/xuất trong năm nay</p>
+                    </div>
+                  ) : (
                     <Bar
                       data={chartData}
                       options={{

@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
 import { ArrowUpRight, ArrowDownRight } from 'lucide-react';
 
-const StatCard = ({ label, value, icon: Icon, color = 'blue', trend, detail, compact = false }) => {
+const StatCard = ({ label, value, icon: Icon, color = 'blue', trend, detail, compact = false, isExpanded = false, onExpand }) => {
   const { isDarkMode } = useTheme();
 
   const colors = {
@@ -24,37 +24,38 @@ const StatCard = ({ label, value, icon: Icon, color = 'blue', trend, detail, com
     return (
       <motion.div
         initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        whileHover={{
-          flex: 2,
-          transition: { duration: 0.3, ease: "easeOut" }
+        animate={{
+          opacity: 1,
+          y: 0,
+          flex: isExpanded ? 2 : 1
         }}
-        className={`p-6 rounded-[24px] border-2 shadow-xl flex items-center justify-between gap-6 transition-all group relative overflow-hidden flex-1 min-w-0 ${
+        onClick={onExpand}
+        className={`p-6 rounded-[24px] border-2 shadow-xl flex items-center justify-between gap-6 transition-all group relative overflow-hidden min-w-0 cursor-pointer ${
           isDarkMode
-          ? 'bg-slate-900 border-slate-800 hover:border-blue-500/50 shadow-blue-900/10'
-          : 'bg-white border-slate-100 hover:border-blue-500/30 shadow-slate-200/50'
+          ? `bg-slate-900 ${isExpanded ? 'border-blue-500/50' : 'border-slate-800'} shadow-blue-900/10`
+          : `bg-white ${isExpanded ? 'border-blue-500/30' : 'border-slate-100'} shadow-slate-200/50`
         }`}
       >
         {/* Animated Background Glow */}
-        <div className={`absolute -right-4 -top-4 w-32 h-32 blur-3xl opacity-0 group-hover:opacity-40 transition-opacity duration-500 ${glowColors[color]}`}></div>
+        <div className={`absolute -right-4 -top-4 w-32 h-32 blur-3xl transition-opacity duration-500 ${isExpanded ? 'opacity-40' : 'opacity-0'} ${glowColors[color]}`}></div>
 
         <div className="flex items-center gap-5 relative z-10 min-w-0 flex-1">
           <div className={`p-4 rounded-2xl shadow-inner flex-shrink-0 ${colors[color]}`}>
             <Icon size={24} strokeWidth={2.5} />
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-[10px] text-slate-400 font-black uppercase tracking-[0.2em] mb-1 truncate group-hover:whitespace-normal">{label}</p>
+            <p className="text-[10px] text-slate-400 font-black uppercase tracking-[0.2em] mb-1 truncate">{label}</p>
             <div className="flex flex-col">
               <h3
                 title={value}
                 className={`text-xl xl:text-2xl 2xl:text-3xl font-black tracking-tighter tabular-nums leading-none ${
                   isDarkMode ? 'text-white' : 'text-slate-900'
-                } truncate group-hover:overflow-visible group-hover:whitespace-nowrap`}
+                } truncate ${isExpanded ? 'overflow-visible whitespace-nowrap' : ''}`}
               >
                 {value}
               </h3>
               {detail && (
-                <span className="text-[10px] text-slate-500 font-bold uppercase tracking-tight mt-1 opacity-70 italic truncate group-hover:whitespace-normal">
+                <span className={`text-[10px] text-slate-500 font-bold uppercase tracking-tight mt-1 opacity-70 italic truncate ${isExpanded ? 'whitespace-normal' : ''}`}>
                   {detail}
                 </span>
               )}
@@ -63,7 +64,7 @@ const StatCard = ({ label, value, icon: Icon, color = 'blue', trend, detail, com
         </div>
 
         {trend && (
-          <div className={`flex-shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-black shadow-sm transition-all group-hover:scale-110 ${
+          <div className={`flex-shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-black shadow-sm transition-all ${isExpanded ? 'scale-110' : ''} ${
             trend.startsWith('+')
             ? (isDarkMode ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-emerald-50 text-emerald-600 border border-emerald-100')
             : (isDarkMode ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20' : 'bg-rose-50 text-rose-600 border border-rose-100')

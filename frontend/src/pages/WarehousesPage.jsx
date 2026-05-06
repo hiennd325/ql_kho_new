@@ -15,22 +15,29 @@ import {
   Clock,
   LayoutGrid,
   List,
-  Activity
+  Activity,
+  PlusCircle,
+  Loader2,
+  BoxSelect
 } from 'lucide-react';
 import api from '../services/api';
 import { useTheme } from '../context/ThemeContext';
+import ConfirmationModal from '../components/ui/ConfirmationModal';
 
 const WarehousesPage = () => {
   const { isDarkMode } = useTheme();
   const [warehouses, setWarehouses] = useState([]);
   const [transfers, setTransfers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [activeTab, setActiveTab] = useState('list'); // 'list' or 'transfers'
   const [searchTerm, setSearchTerm] = useState('');
-  
+
   // Modal states
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [warehouseToDelete, setWarehouseToDelete] = useState(null);
   const [selectedWarehouse, setSelectedWarehouse] = useState(null);
   const [warehouseProducts, setWarehouseProducts] = useState([]);
 
@@ -64,6 +71,7 @@ const WarehousesPage = () => {
 
   const handleAddEdit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
     try {
       if (selectedWarehouse) {
         await api.put(`/warehouses/${selectedWarehouse.custom_id}`, formData);
@@ -75,17 +83,23 @@ const WarehousesPage = () => {
       fetchData();
     } catch (error) {
       alert('Lỗi: ' + (error.response?.data?.error || error.message));
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  const handleDelete = async (customId) => {
-    if (window.confirm('Bạn có chắc chắn muốn xóa kho này?')) {
-      try {
-        await api.delete(`/warehouses/${customId}`);
-        fetchData();
-      } catch (error) {
-        alert('Lỗi khi xóa kho: ' + (error.response?.data?.error || error.message));
-      }
+  const confirmDelete = (wh) => {
+    setWarehouseToDelete(wh);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleDelete = async () => {
+    if (!warehouseToDelete) return;
+    try {
+      await api.delete(`/warehouses/${warehouseToDelete.custom_id}`);
+      fetchData();
+    } catch (error) {
+      alert('Lỗi khi xóa kho: ' + (error.response?.data?.error || error.message));
     }
   };
 
@@ -127,10 +141,10 @@ const WarehousesPage = () => {
 
   const getStatusBadge = (status) => {
     const styles = {
-      completed: 'bg-green-100 text-green-700',
-      in_progress: 'bg-yellow-100 text-yellow-700',
-      pending: 'bg-blue-100 text-blue-700',
-      cancelled: 'bg-red-100 text-red-700'
+      completed: isDarkMode ? 'bg-green-900/30 text-green-400' : 'bg-green-100 text-green-700',
+      in_progress: isDarkMode ? 'bg-yellow-900/30 text-yellow-400' : 'bg-yellow-100 text-yellow-700',
+      pending: isDarkMode ? 'bg-blue-900/30 text-blue-400' : 'bg-blue-100 text-blue-700',
+      cancelled: isDarkMode ? 'bg-red-900/30 text-red-400' : 'bg-red-100 text-red-700'
     };
     const labels = {
       completed: 'Hoàn thành',
@@ -147,13 +161,23 @@ const WarehousesPage = () => {
     usage: warehouses.reduce((sum, w) => sum + w.current_usage, 0)
   };
 
-  const filteredWarehouses = warehouses.filter(w => 
-    w.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    w.custom_id.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredWarehouses = warehouses.filter(w =>
+    w.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    w.custom_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (w.location && w.location.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   return (
     <div className="space-y-6">
+      <ConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleDelete}
+        title="Xóa kho hàng"
+        message={`Bạn có chắc chắn muốn xóa kho "${warehouseToDelete?.name}"? Hành động này không thể hoàn tác.`}
+        confirmText="Xóa vĩnh viễn"
+      />
+
       {/* Stats */}
       <div className={`p-4 rounded-xl border shadow-sm flex flex-wrap items-center justify-between gap-4 transition-colors duration-300 ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`}>
         <div className={`flex items-center gap-4 px-4 border-r last:border-0 flex-1 ${isDarkMode ? 'border-slate-800' : 'border-slate-100'}`}>
@@ -204,24 +228,32 @@ const WarehousesPage = () => {
           </button>
         </div>
 
-        <div className="flex flex-wrap items-center gap-4">
-          <div className="relative group min-w-[300px]">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors" size={20} />
-            <input
-              type="text"
-              placeholder="Tìm kiếm tên kho, vị trí, mã kho..."
-              className={`pl-12 pr-4 py-3 border rounded-xl outline-none focus:ring-2 focus:ring-blue-500 w-full transition-all font-medium text-sm ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white focus:bg-slate-700' : 'bg-slate-50 border-slate-200 text-slate-900 focus:bg-white'}`}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+          <div className="flex flex-wrap items-center gap-4">
+            <div className="relative group min-w-[300px]">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors" size={20} />
+              <input
+                type="text"
+                placeholder="Tìm kiếm tên kho, vị trí, mã kho..."
+                className={`pl-12 pr-4 py-3 border rounded-xl outline-none focus:ring-2 focus:ring-blue-500 w-full transition-all font-medium text-sm ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white focus:bg-slate-700' : 'bg-slate-50 border-slate-200 text-slate-900 focus:bg-white'}`}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={() => { resetForm(); setIsModalOpen(true); }}
+                className={`flex items-center gap-3 px-6 py-3 rounded-xl hover:bg-blue-700 transition-all font-black shadow-lg active:scale-95 ${isDarkMode ? 'bg-blue-600 text-white shadow-blue-900/20' : 'bg-blue-600 text-white shadow-blue-100'}`}
+              >
+                <Plus size={20} strokeWidth={3} /> THÊM KHO MỚI
+              </button>
+              <button
+                onClick={() => alert('Chức năng điều chuyển đang được tích hợp...')}
+                className={`flex items-center gap-3 px-6 py-3 rounded-xl hover:bg-emerald-700 transition-all font-black shadow-lg active:scale-95 ${isDarkMode ? 'bg-emerald-600 text-white shadow-emerald-900/20' : 'bg-emerald-600 text-white shadow-emerald-100'}`}
+              >
+                <PlusCircle size={20} strokeWidth={3} /> ĐIỀU CHUYỂN MỚI
+              </button>
+            </div>
           </div>
-          <button
-            onClick={() => { resetForm(); setIsModalOpen(true); }}
-            className={`flex items-center gap-3 px-6 py-3 rounded-xl hover:bg-blue-700 transition-all font-black shadow-lg active:scale-95 ${isDarkMode ? 'bg-blue-600 text-white shadow-blue-900/20' : 'bg-blue-600 text-white shadow-blue-100'}`}
-          >
-            <Plus size={20} strokeWidth={3} /> THÊM KHO MỚI
-          </button>
-        </div>
       </div>
 
       {activeTab === 'list' ? (
@@ -239,7 +271,53 @@ const WarehousesPage = () => {
                 </tr>
               </thead>
               <tbody className={`divide-y ${isDarkMode ? 'divide-slate-800' : 'divide-slate-100'}`}>
-                {filteredWarehouses.map((wh, idx) => (
+                {loading ? (
+                  Array(5).fill(0).map((_, idx) => (
+                    <tr key={idx} className="animate-pulse">
+                      <td className="px-8 py-5">
+                        <div className="flex items-center gap-3">
+                          <div className={`w-10 h-10 rounded-lg ${isDarkMode ? 'bg-slate-800' : 'bg-slate-100'}`}></div>
+                          <div className="space-y-2">
+                            <div className={`h-4 w-24 rounded ${isDarkMode ? 'bg-slate-800' : 'bg-slate-100'}`}></div>
+                            <div className={`h-3 w-12 rounded ${isDarkMode ? 'bg-slate-800' : 'bg-slate-100'}`}></div>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-8 py-5">
+                        <div className={`h-4 w-32 rounded ${isDarkMode ? 'bg-slate-800' : 'bg-slate-100'}`}></div>
+                      </td>
+                      <td className="px-8 py-5">
+                        <div className={`h-4 w-16 rounded ml-auto ${isDarkMode ? 'bg-slate-800' : 'bg-slate-100'}`}></div>
+                      </td>
+                      <td className="px-8 py-5">
+                        <div className={`h-4 w-16 rounded ml-auto ${isDarkMode ? 'bg-slate-800' : 'bg-slate-100'}`}></div>
+                      </td>
+                      <td className="px-8 py-5">
+                        <div className={`h-4 w-24 rounded ${isDarkMode ? 'bg-slate-800' : 'bg-slate-100'}`}></div>
+                      </td>
+                      <td className="px-8 py-5">
+                        <div className="flex justify-center gap-2">
+                          <div className={`w-8 h-8 rounded ${isDarkMode ? 'bg-slate-800' : 'bg-slate-100'}`}></div>
+                          <div className={`w-8 h-8 rounded ${isDarkMode ? 'bg-slate-800' : 'bg-slate-100'}`}></div>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : filteredWarehouses.length === 0 ? (
+                  <tr>
+                    <td colSpan="6" className="px-8 py-20 text-center">
+                      <div className="flex flex-col items-center gap-4">
+                        <div className={`p-6 rounded-3xl ${isDarkMode ? 'bg-slate-800' : 'bg-slate-50'}`}>
+                          <BoxSelect size={48} className="text-slate-300" />
+                        </div>
+                        <div>
+                          <p className={`text-lg font-black ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Không tìm thấy kho hàng</p>
+                          <p className="text-sm text-slate-500 font-medium">Thử thay đổi từ khóa tìm kiếm hoặc thêm kho mới</p>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                ) : filteredWarehouses.map((wh, idx) => (
                   <tr key={wh.custom_id || idx} className={`transition-colors group ${isDarkMode ? 'hover:bg-slate-800/50' : 'hover:bg-slate-50/50'}`}>
                     <td className="px-8 py-5">
                       <div className="flex items-center gap-3">
@@ -284,7 +362,7 @@ const WarehousesPage = () => {
                         <button onClick={() => openEditModal(wh)} className={`p-2 rounded-lg transition-all ${isDarkMode ? 'text-amber-400 hover:bg-amber-900/20' : 'text-amber-600 hover:bg-amber-50'}`} title="Sửa">
                           <Edit size={18} />
                         </button>
-                        <button onClick={() => handleDelete(wh.custom_id)} className={`p-2 rounded-lg transition-all ${isDarkMode ? 'text-rose-400 hover:bg-rose-900/20' : 'text-rose-600 hover:bg-rose-50'}`} title="Xóa">
+                        <button onClick={() => confirmDelete(wh)} className={`p-2 rounded-lg transition-all ${isDarkMode ? 'text-rose-400 hover:bg-rose-900/20' : 'text-rose-600 hover:bg-rose-50'}`} title="Xóa">
                           <Trash2 size={18} />
                         </button>
                       </div>
@@ -323,7 +401,7 @@ const WarehousesPage = () => {
                     <td className={`px-8 py-5 text-sm font-bold ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>
                        <div className="flex items-center gap-2"><div className="w-2 h-2 bg-emerald-400 rounded-full"></div> {t.to_warehouse}</div>
                     </td>
-                    <td className={`px-8 py-5 text-sm font-black text-right ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{t.quantity.toLocaleString()}</td>
+                    <td className={`px-8 py-5 text-sm font-black text-right ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{(t.quantity || 0).toLocaleString()}</td>
                     <td className="px-8 py-5 text-center">
                        <div className="flex justify-center">{getStatusBadge(t.status)}</div>
                     </td>
@@ -382,7 +460,7 @@ const WarehousesPage = () => {
               <div>
                 <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Sức chứa (Đơn vị SP) *</label>
                 <input
-                  type="number" required
+                  type="number" required min="1"
                   className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
                   value={formData.capacity}
                   onChange={(e) => setFormData({...formData, capacity: e.target.value})}
@@ -401,7 +479,14 @@ const WarehousesPage = () => {
               </div>
               <div className="flex justify-end gap-3 mt-8">
                 <button type="button" onClick={() => setIsModalOpen(false)} className={`px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${isDarkMode ? 'text-slate-400 hover:bg-slate-800' : 'text-slate-500 hover:bg-slate-50'}`}>Hủy</button>
-                <button type="submit" className="px-8 py-3 bg-blue-600 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-blue-700 shadow-lg shadow-blue-600/20 transition-all active:scale-95">Lưu thông tin</button>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="px-8 py-3 bg-blue-600 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-blue-700 shadow-lg shadow-blue-600/20 transition-all active:scale-95 disabled:opacity-50 disabled:scale-100 flex items-center gap-2"
+                >
+                  {isSubmitting && <Loader2 size={14} className="animate-spin" />}
+                  Lưu thông tin
+                </button>
               </div>
             </form>
           </div>

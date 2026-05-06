@@ -46,6 +46,7 @@ ChartJS.register(
 const DashboardPage = () => {
   const { isDarkMode } = useTheme();
   const [activeTab, setActiveTab] = useState('month');
+  const [expandedCard, setExpandedCard] = useState(null);
   const [stats, setStats] = useState({
     totalProducts: 0,
     monthlyImports: 0,
@@ -119,9 +120,9 @@ const DashboardPage = () => {
   }, []);
 
   const periodMap = {
-    'Hôm nay': 'today',
-    'Tuần này': 'week',
-    'Tháng này': 'month'
+    'today': 'Hôm nay',
+    'week': 'Tuần này',
+    'month': 'Tháng này'
   };
 
   const getHealthBadge = (status) => {
@@ -157,17 +158,16 @@ const DashboardPage = () => {
         </div>
         <div className="flex items-center gap-3">
           <div className={`border p-1 rounded-xl flex shadow-sm ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`}>
-            {['Hôm nay', 'Tuần này', 'Tháng này'].map((tab) => (
+            {Object.entries(periodMap).map(([key, label]) => (
               <button
-                key={tab}
+                key={key}
                 onClick={() => {
-                  const period = periodMap[tab];
-                  setActiveTab(period);
-                  fetchData(period);
+                  setActiveTab(key);
+                  fetchData(key);
                 }}
-                className={`px-4 py-2 rounded-lg text-xs font-black uppercase tracking-widest transition-all ${activeTab === periodMap[tab] ? 'bg-slate-900 dark:bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
+                className={`px-4 py-2 rounded-lg text-xs font-black uppercase tracking-widest transition-all ${activeTab === key ? 'bg-slate-900 dark:bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
               >
-                {tab}
+                {label}
               </button>
             ))}
           </div>
@@ -187,6 +187,8 @@ const DashboardPage = () => {
           trend="+2.4%"
           detail="Trong kho"
           compact={true}
+          isExpanded={expandedCard === 'products'}
+          onExpand={() => setExpandedCard(expandedCard === 'products' ? null : 'products')}
         />
         <StatCard
           label="Nhập kho"
@@ -196,6 +198,8 @@ const DashboardPage = () => {
           trend="+12.5%"
           detail="Tháng này"
           compact={true}
+          isExpanded={expandedCard === 'imports'}
+          onExpand={() => setExpandedCard(expandedCard === 'imports' ? null : 'imports')}
         />
         <StatCard
           label="Xuất kho"
@@ -205,6 +209,8 @@ const DashboardPage = () => {
           trend="-8.2%"
           detail="Tháng này"
           compact={true}
+          isExpanded={expandedCard === 'exports'}
+          onExpand={() => setExpandedCard(expandedCard === 'exports' ? null : 'exports')}
         />
         <StatCard
           label="Giá trị"
@@ -214,6 +220,8 @@ const DashboardPage = () => {
           trend="+0.5%"
           detail="Định giá"
           compact={true}
+          isExpanded={expandedCard === 'value'}
+          onExpand={() => setExpandedCard(expandedCard === 'value' ? null : 'value')}
         />
       </div>
 
@@ -244,10 +252,10 @@ const DashboardPage = () => {
                       tooltip: {
                         mode: 'index',
                         intersect: false,
-                        backgroundColor: isDarkMode ? '#1e293b' : '#ffffff',
-                        titleColor: isDarkMode ? '#f1f5f9' : '#0f172a',
-                        bodyColor: isDarkMode ? '#cbd5e1' : '#475569',
-                        borderColor: isDarkMode ? '#334155' : '#e2e8f0',
+                        backgroundColor: isDarkMode ? 'var(--slate-800, #1e293b)' : 'var(--white, #ffffff)',
+                        titleColor: isDarkMode ? 'var(--slate-100, #f1f5f9)' : 'var(--slate-900, #0f172a)',
+                        bodyColor: isDarkMode ? 'var(--slate-300, #cbd5e1)' : 'var(--slate-600, #475569)',
+                        borderColor: isDarkMode ? 'var(--slate-700, #334155)' : 'var(--slate-200, #e2e8f0)',
                         borderWidth: 1
                       }
                     },
