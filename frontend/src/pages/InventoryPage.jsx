@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { 
-  Package, 
-  Plus, 
-  Search, 
-  Filter, 
-  Download, 
-  Printer, 
-  ChevronLeft, 
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import {
+  Package,
+  Plus,
+  Search,
+  Filter,
+  Download,
+  Printer,
+  ChevronLeft,
   ChevronRight,
   TrendingUp,
   TrendingDown,
@@ -16,10 +16,13 @@ import {
   X,
   Trash2,
   ChevronDown,
-  Warehouse
+  Warehouse,
+  ChevronRight as ChevronRightIcon,
+  ShoppingBag
 } from 'lucide-react';
 import api from '../services/api';
 import { useTheme } from '../context/ThemeContext';
+import StatCard from '../components/ui/StatCard';
 
 const InventoryPage = () => {
   const { isDarkMode } = useTheme();
@@ -34,16 +37,31 @@ const InventoryPage = () => {
   // Filters
   const [activeTab, setActiveTab] = useState('import'); // 'import', 'export', 'alerts'
   const [searchTerm, setSearchTerm] = useState('');
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [warehouseFilter, setWarehouseFilter] = useState('');
   const limit = 10;
 
+  // Debounce search logic
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+      setCurrentPage(1);
+    }, 500);
+    return () => clearTimeout(handler);
+  }, [searchTerm]);
+
   // Modal states
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [expandedGroups, setExpandedGroups] = useState({});
+
+  const toggleGroup = (refId) => {
+    setExpandedGroups(prev => ({ ...prev, [refId]: !prev[refId] }));
+  };
 
   // Form states
   const [importForm, setImportForm] = useState({
@@ -64,7 +82,7 @@ const InventoryPage = () => {
       const params = {
         page: currentPage,
         limit,
-        search: searchTerm,
+        search: debouncedSearchTerm,
         warehouseId: warehouseFilter,
         type: activeTab === 'import' ? 'nhap' : (activeTab === 'export' ? 'xuat' : '')
       };
@@ -93,7 +111,7 @@ const InventoryPage = () => {
     } finally {
       setLoading(false);
     }
-  }, [currentPage, searchTerm, warehouseFilter, activeTab]);
+  }, [currentPage, debouncedSearchTerm, warehouseFilter, activeTab]);
 
   useEffect(() => {
     fetchData();
@@ -181,44 +199,54 @@ const InventoryPage = () => {
     return new Intl.NumberFormat('vi-VN').format(amount) + ' ₫';
   };
 
-  const groupedTransactions = transactions.reduce((acc, t) => {
-    if (!acc[t.reference_id]) acc[t.reference_id] = [];
-    acc[t.reference_id].push(t);
-    return acc;
-  }, {});
+  const groupedTransactions = useMemo(() => {
+    return transactions.reduce((acc, t) => {
+      if (!acc[t.reference_id]) acc[t.reference_id] = [];
+      acc[t.reference_id].push(t);
+      return acc;
+    }, {});
+  }, [transactions]);
+
+  const handleQuickImport = (product) => {
+    setImportForm({
+      supplier_id: '',
+      warehouse_id: '',
+      items: [{ product_id: product.custom_id, quantity: 10 }]
+    });
+    setIsImportModalOpen(true);
+  };
 
   return (
     <div className="space-y-6">
       {/* Stats Section */}
-      <div className="grid grid-cols-4 gap-3">
-        <div className="bg-white dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center gap-3 hover:shadow-sm transition-all">
-          <div className="bg-emerald-50 dark:bg-emerald-900/20 p-2.5 rounded-lg text-emerald-600 dark:text-emerald-400"><TrendingUp size={22} /></div>
-          <div>
-            <p className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">Tổng nhập</p>
-            <h3 className="text-xl font-black text-slate-900 dark:text-slate-100">{stats.total_import || 0} <span className="text-xs font-medium text-slate-400">SP</span></h3>
-          </div>
-        </div>
-        <div className="bg-white dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center gap-3 hover:shadow-sm transition-all">
-          <div className="bg-rose-50 dark:bg-rose-900/20 p-2.5 rounded-lg text-rose-600 dark:text-rose-400"><TrendingDown size={22} /></div>
-          <div>
-            <p className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">Tổng xuất</p>
-            <h3 className="text-xl font-black text-slate-900 dark:text-slate-100">{stats.total_export || 0} <span className="text-xs font-medium text-slate-400">SP</span></h3>
-          </div>
-        </div>
-        <div className="bg-white dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center gap-3 hover:shadow-sm transition-all">
-          <div className="bg-blue-50 dark:bg-blue-900/20 p-2.5 rounded-lg text-blue-600 dark:text-blue-400"><Package size={22} /></div>
-          <div>
-            <p className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">Tồn kho</p>
-            <h3 className="text-xl font-black text-slate-900 dark:text-slate-100">{stats.total_inventory || 0} <span className="text-xs font-medium text-slate-400">SP</span></h3>
-          </div>
-        </div>
-        <div className="bg-white dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center gap-3 hover:shadow-sm transition-all">
-          <div className="bg-amber-50 dark:bg-amber-900/20 p-2.5 rounded-lg text-amber-600 dark:text-amber-400"><DollarSign size={22} /></div>
-          <div>
-            <p className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">Giá trị tồn</p>
-            <h3 className="text-xl font-black text-slate-900 dark:text-slate-100 truncate">{formatCurrency(stats.total_value || 0)}</h3>
-          </div>
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatCard
+          label="Tổng nhập"
+          value={stats.total_import || 0}
+          detail="Sản phẩm"
+          icon={TrendingUp}
+          color="emerald"
+        />
+        <StatCard
+          label="Tổng xuất"
+          value={stats.total_export || 0}
+          detail="Sản phẩm"
+          icon={TrendingDown}
+          color="rose"
+        />
+        <StatCard
+          label="Tồn kho"
+          value={stats.total_inventory || 0}
+          detail="Sản phẩm"
+          icon={Package}
+          color="blue"
+        />
+        <StatCard
+          label="Giá trị tồn"
+          value={formatCurrency(stats.total_value || 0)}
+          icon={DollarSign}
+          color="amber"
+        />
       </div>
 
       {/* Toolbar */}
@@ -314,6 +342,7 @@ const InventoryPage = () => {
                     <th className="px-8 py-5 text-[11px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest text-right">Tối thiểu</th>
                     <th className="px-8 py-5 text-[11px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Kho</th>
                     <th className="px-8 py-5 text-[11px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest text-center">Trạng thái</th>
+                    <th className="px-8 py-5 text-[11px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest text-center">Thao tác</th>
                   </>
                 ) : (
                   <>
@@ -345,6 +374,14 @@ const InventoryPage = () => {
                       <td className="px-8 py-5 text-center">
                         <span className="px-3 py-1 bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-400 rounded-lg text-[10px] font-black uppercase tracking-wider shadow-sm border border-rose-200 dark:border-rose-800">Sắp hết hàng</span>
                       </td>
+                      <td className="px-8 py-5 text-center">
+                        <button
+                          onClick={() => handleQuickImport(alert)}
+                          className="flex items-center gap-2 mx-auto px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-all text-xs font-black shadow-md shadow-emerald-100 dark:shadow-emerald-900/20 active:scale-95"
+                        >
+                          <Plus size={14} strokeWidth={3} /> NHẬP KHO
+                        </button>
+                      </td>
                     </tr>
                   ))
                 )
@@ -353,33 +390,53 @@ const InventoryPage = () => {
               ) : (
                 Object.entries(groupedTransactions).map(([refId, group]) => (
                   <React.Fragment key={refId}>
-                    {group.map((t, idx) => (
-                      <tr key={idx} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
-                        {idx === 0 && (
-                          <>
-                            <td className="px-8 py-5 text-sm font-black text-blue-600 dark:text-blue-400" rowSpan={group.length}>
-                               <div className="bg-blue-50 dark:bg-blue-900/20 px-3 py-1 rounded-lg w-fit border border-blue-100 dark:border-blue-800">{refId}</div>
-                            </td>
-                            <td className="px-8 py-5 text-sm text-slate-500 dark:text-slate-400 font-bold" rowSpan={group.length}>{new Date(t.transaction_date).toLocaleDateString('vi-VN')}</td>
-                          </>
-                        )}
-                        <td className="px-8 py-5 text-sm text-slate-700 dark:text-slate-300 font-bold">{t.product_name}</td>
-                        <td className="px-8 py-5 text-sm text-right font-black text-slate-900 dark:text-slate-100">{t.quantity}</td>
-                        <td className="px-8 py-5 text-sm text-right text-slate-900 dark:text-slate-100 font-black">{formatCurrency(t.value || (t.price * t.quantity))}</td>
-                        {idx === 0 && (
-                          <>
-                            <td className="px-8 py-5 text-sm text-slate-600 dark:text-slate-400 font-bold" rowSpan={group.length}>
-                               <div className="flex items-center gap-2"><Warehouse size={14} className="text-slate-400" /> {t.warehouse_name}</div>
-                            </td>
-                            <td className="px-8 py-5 text-center" rowSpan={group.length}>
-                              <span className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-sm border ${t.type === 'nhap' ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 border-emerald-100 dark:border-emerald-800' : 'bg-rose-50 dark:bg-rose-900/20 text-rose-700 dark:text-rose-400 border-rose-100 dark:border-rose-800'}`}>
-                                {t.type === 'nhap' ? 'NHẬP KHO' : 'XUẤT KHO'}
-                              </span>
-                            </td>
-                          </>
-                        )}
-                      </tr>
-                    ))}
+                    {group.map((t, idx) => {
+                      // Only show subsequent rows if group is expanded
+                      if (idx > 0 && !expandedGroups[refId]) return null;
+
+                      return (
+                        <tr key={idx} className={`hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors ${idx > 0 ? 'bg-slate-50/20 dark:bg-slate-800/10' : ''}`}>
+                          {idx === 0 && (
+                            <>
+                              <td className="px-8 py-5 text-sm font-black text-blue-600 dark:text-blue-400" rowSpan={expandedGroups[refId] ? group.length : 1}>
+                                 <div className="flex items-center gap-3">
+                                   <div className="bg-blue-50 dark:bg-blue-900/20 px-3 py-1 rounded-lg w-fit border border-blue-100 dark:border-blue-800 font-mono">{refId}</div>
+                                   {group.length > 1 && (
+                                     <button
+                                       onClick={() => toggleGroup(refId)}
+                                       className="p-1 hover:bg-blue-100 dark:hover:bg-blue-900/40 rounded-md transition-colors text-blue-500"
+                                     >
+                                       {expandedGroups[refId] ? <ChevronDown size={16} strokeWidth={3} /> : <ChevronRightIcon size={16} strokeWidth={3} />}
+                                     </button>
+                                   )}
+                                 </div>
+                              </td>
+                              <td className="px-8 py-5 text-sm text-slate-500 dark:text-slate-400 font-bold" rowSpan={expandedGroups[refId] ? group.length : 1}>{new Date(t.transaction_date).toLocaleDateString('vi-VN')}</td>
+                            </>
+                          )}
+                          <td className="px-8 py-5 text-sm text-slate-700 dark:text-slate-300 font-bold">
+                            <div className="flex items-center gap-2">
+                              {idx > 0 && <span className="text-slate-300 dark:text-slate-600">└</span>}
+                              {t.product_name}
+                            </div>
+                          </td>
+                          <td className="px-8 py-5 text-sm text-right font-black text-slate-900 dark:text-slate-100">{t.quantity}</td>
+                          <td className="px-8 py-5 text-sm text-right text-slate-900 dark:text-slate-100 font-black">{formatCurrency(t.value || (t.price * t.quantity))}</td>
+                          {idx === 0 && (
+                            <>
+                              <td className="px-8 py-5 text-sm text-slate-600 dark:text-slate-400 font-bold" rowSpan={expandedGroups[refId] ? group.length : 1}>
+                                 <div className="flex items-center gap-2"><Warehouse size={14} className="text-slate-400" /> {t.warehouse_name}</div>
+                              </td>
+                              <td className="px-8 py-5 text-center" rowSpan={expandedGroups[refId] ? group.length : 1}>
+                                <span className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-sm border ${t.type === 'nhap' ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 border-emerald-100 dark:border-emerald-800' : 'bg-rose-50 dark:bg-rose-900/20 text-rose-700 dark:text-rose-400 border-rose-100 dark:border-rose-800'}`}>
+                                  {t.type === 'nhap' ? 'NHẬP KHO' : 'XUẤT KHO'}
+                                </span>
+                              </td>
+                            </>
+                          )}
+                        </tr>
+                      );
+                    })}
                   </React.Fragment>
                 ))
               )}
@@ -401,9 +458,23 @@ const InventoryPage = () => {
               >
                 <ChevronLeft size={20} strokeWidth={2.5} />
               </button>
-              <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-5 py-2 rounded-xl text-sm font-black text-slate-700 dark:text-slate-200 shadow-sm">
-                {currentPage} / {totalPages}
+
+              <div className="flex items-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-sm overflow-hidden">
+                <input
+                  type="number"
+                  min="1"
+                  max={totalPages}
+                  value={currentPage}
+                  onChange={(e) => {
+                    const page = parseInt(e.target.value);
+                    if (page >= 1 && page <= totalPages) setCurrentPage(page);
+                    else if (e.target.value === '') setCurrentPage('');
+                  }}
+                  className="w-12 py-2 text-center text-sm font-black text-blue-600 dark:text-blue-400 bg-transparent outline-none"
+                />
+                <span className="pr-4 text-sm font-bold text-slate-400">/ {totalPages}</span>
               </div>
+
               <button
                 disabled={currentPage === totalPages}
                 onClick={() => setCurrentPage(prev => prev + 1)}
@@ -465,10 +536,10 @@ const InventoryPage = () => {
                 </div>
                 <div className="space-y-3 max-h-60 overflow-y-auto pr-1">
                   {importForm.items.map((item, idx) => (
-                    <div key={idx} className="flex gap-2 items-start p-3 bg-gray-50 dark:bg-slate-800/50 rounded-xl border border-gray-200 dark:border-slate-700 group">
+                    <div key={idx} className="flex gap-2 items-start p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 group">
                       <select
                         required
-                        className="flex-1 px-3 py-2 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-lg text-sm outline-none focus:ring-2 focus:ring-green-500 text-slate-900 dark:text-slate-100"
+                        className="flex-1 px-3 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-sm outline-none focus:ring-2 focus:ring-green-500 text-slate-900 dark:text-slate-100"
                         value={item.product_id}
                         onChange={(e) => handleImportItemChange(idx, 'product_id', e.target.value)}
                       >
@@ -478,7 +549,7 @@ const InventoryPage = () => {
                       <input
                         type="number" required min="1"
                         placeholder="SL"
-                        className="w-20 px-3 py-2 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-lg text-sm outline-none focus:ring-2 focus:ring-green-500 text-center font-bold text-slate-900 dark:text-slate-100"
+                        className="w-20 px-3 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-sm outline-none focus:ring-2 focus:ring-green-500 text-center font-bold text-slate-900 dark:text-slate-100"
                         value={item.quantity}
                         onChange={(e) => handleImportItemChange(idx, 'quantity', e.target.value)}
                       />
@@ -486,7 +557,7 @@ const InventoryPage = () => {
                         type="button"
                         onClick={() => removeImportItem(idx)}
                         disabled={importForm.items.length === 1}
-                        className="p-2 text-red-400 hover:text-red-600 dark:hover:text-rose-400 hover:bg-red-50 dark:hover:bg-rose-900/20 rounded-lg disabled:opacity-0 transition-all"
+                        className="p-2 text-rose-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-lg disabled:opacity-0 transition-all"
                       >
                         <Trash2 size={18} />
                       </button>
@@ -495,9 +566,9 @@ const InventoryPage = () => {
                 </div>
               </div>
 
-              <div className="flex justify-end gap-3 pt-4">
-                <button type="button" onClick={() => setIsImportModalOpen(false)} className="px-6 py-2.5 text-gray-600 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-xl font-bold transition-all">Hủy bỏ</button>
-                <button type="submit" className="px-8 py-2.5 bg-green-600 dark:bg-emerald-600 text-white rounded-xl hover:bg-green-700 dark:hover:bg-emerald-700 font-bold shadow-lg shadow-green-100 dark:shadow-emerald-900/20 transition-all active:scale-95">Lưu phiếu nhập</button>
+              <div className="flex justify-end gap-3 pt-4 border-t dark:border-slate-800">
+                <button type="button" onClick={() => setIsImportModalOpen(false)} className="px-6 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl font-bold transition-all">Hủy bỏ</button>
+                <button type="submit" className="px-8 py-2.5 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 font-bold shadow-lg shadow-emerald-100 dark:shadow-emerald-900/20 transition-all active:scale-95">Lưu phiếu nhập</button>
               </div>
             </form>
           </div>
@@ -551,10 +622,10 @@ const InventoryPage = () => {
                 </div>
                 <div className="space-y-3 max-h-60 overflow-y-auto pr-1">
                   {exportForm.items.map((item, idx) => (
-                    <div key={idx} className="flex gap-2 items-start p-3 bg-gray-50 dark:bg-slate-800/50 rounded-xl border border-gray-200 dark:border-slate-700 group">
+                    <div key={idx} className="flex gap-2 items-start p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 group">
                       <select
                         required
-                        className="flex-1 px-3 py-2 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-lg text-sm outline-none focus:ring-2 focus:ring-red-500 text-slate-900 dark:text-slate-100"
+                        className="flex-1 px-3 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-sm outline-none focus:ring-2 focus:ring-rose-500 text-slate-900 dark:text-slate-100"
                         value={item.product_id}
                         onChange={(e) => handleExportItemChange(idx, 'product_id', e.target.value)}
                       >
@@ -564,7 +635,7 @@ const InventoryPage = () => {
                       <input
                         type="number" required min="1"
                         placeholder="SL"
-                        className="w-20 px-3 py-2 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-lg text-sm outline-none focus:ring-2 focus:ring-red-500 text-center font-bold text-slate-900 dark:text-slate-100"
+                        className="w-20 px-3 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-sm outline-none focus:ring-2 focus:ring-rose-500 text-center font-bold text-slate-900 dark:text-slate-100"
                         value={item.quantity}
                         onChange={(e) => handleExportItemChange(idx, 'quantity', e.target.value)}
                       />
@@ -572,7 +643,7 @@ const InventoryPage = () => {
                         type="button"
                         onClick={() => removeExportItem(idx)}
                         disabled={exportForm.items.length === 1}
-                        className="p-2 text-red-400 hover:text-red-600 dark:hover:text-rose-400 hover:bg-red-50 dark:hover:bg-rose-900/20 rounded-lg disabled:opacity-0 transition-all"
+                        className="p-2 text-rose-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-lg disabled:opacity-0 transition-all"
                       >
                         <Trash2 size={18} />
                       </button>
@@ -581,9 +652,9 @@ const InventoryPage = () => {
                 </div>
               </div>
 
-              <div className="flex justify-end gap-3 pt-4">
-                <button type="button" onClick={() => setIsExportModalOpen(false)} className="px-6 py-2.5 text-gray-600 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-xl font-bold transition-all">Hủy bỏ</button>
-                <button type="submit" className="px-8 py-2.5 bg-red-600 dark:bg-rose-600 text-white rounded-xl hover:bg-red-700 dark:hover:bg-rose-700 font-bold shadow-lg shadow-red-100 dark:shadow-rose-900/20 transition-all active:scale-95">Lưu phiếu xuất</button>
+              <div className="flex justify-end gap-3 pt-4 border-t dark:border-slate-800">
+                <button type="button" onClick={() => setIsExportModalOpen(false)} className="px-6 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl font-bold transition-all">Hủy bỏ</button>
+                <button type="submit" className="px-8 py-2.5 bg-rose-600 text-white rounded-xl hover:bg-rose-700 font-bold shadow-lg shadow-rose-100 dark:shadow-rose-900/20 transition-all active:scale-95">Lưu phiếu xuất</button>
               </div>
             </form>
           </div>
