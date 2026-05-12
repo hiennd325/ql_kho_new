@@ -42,7 +42,13 @@ router.get('/', async (req, res) => {
             );
         }
 
-        res.json(users);
+        // Remove password field before sending to client
+        const safeUsers = users.map(u => {
+            const { password, ...safeUser } = u;
+            return safeUser;
+        });
+
+        res.json(safeUsers);
     } catch (err) {
         console.error('Error getting users:', err);
         res.status(500).json({ error: 'Failed to get users' });
@@ -74,7 +80,9 @@ router.get('/:id', async (req, res) => {
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
-        res.json(user);
+        // Remove password field before sending
+        const { password, ...safeUser } = user;
+        res.json(safeUser);
     } catch (err) {
         console.error('Error getting user:', err);
         res.status(500).json({ error: 'Failed to get user' });
@@ -91,7 +99,9 @@ router.post('/', authorizeAdmin, async (req, res) => {
     try {
         const { username, password, role, email, status } = req.body;
         const newUser = await userModel.createUser(username, password, role, email, status);
-        res.status(201).json(newUser);
+        // Remove password field
+        const { password: pw, ...safeUser } = newUser;
+        res.status(201).json(safeUser);
     } catch (err) {
         console.error('Error creating user:', err);
         res.status(500).json({ error: 'Failed to create user' });
@@ -135,7 +145,10 @@ router.put('/:id', authorizeAdmin, async (req, res) => {
             email,
             status
         });
-        res.json(updatedUser);
+
+        // Remove password field
+        const { password: pw, ...safeUser } = updatedUser;
+        res.json(safeUser);
     } catch (err) {
         console.error('Error updating user:', err);
         res.status(500).json({ error: 'Failed to update user' });

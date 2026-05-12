@@ -428,64 +428,75 @@ const WarehousesPage = () => {
       {/* Add/Edit Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className={`rounded-3xl shadow-2xl w-full max-w-md overflow-hidden border transition-all ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
+          <div className={`rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden border transition-all ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
             <div className={`flex items-center justify-between p-6 border-b ${isDarkMode ? 'border-slate-800' : 'border-slate-100'}`}>
-              <h3 className={`text-xl font-black tracking-tight ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{selectedWarehouse ? 'Chỉnh sửa kho' : 'Thêm kho mới'}</h3>
+              <div className="flex items-center gap-3">
+                <div className="bg-blue-600 p-2 rounded-xl text-white shadow-lg shadow-blue-600/20">
+                  <Warehouse size={20} strokeWidth={3} />
+                </div>
+                <h3 className={`text-xl font-black tracking-tight ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{selectedWarehouse ? 'Chỉnh sửa kho' : 'Thêm kho mới'}</h3>
+              </div>
               <button onClick={() => setIsModalOpen(false)} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors text-slate-400">
                 <X size={20} strokeWidth={3} />
               </button>
             </div>
-            <form onSubmit={handleAddEdit} className="p-8 space-y-5">
-              <div>
-                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Mã kho *</label>
-                <input
-                  type="text" required
-                  disabled={!!selectedWarehouse}
-                  className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white disabled:opacity-50' : 'bg-slate-50 border-slate-200 text-slate-900 disabled:bg-slate-100 disabled:text-slate-400'}`}
-                  value={formData.custom_id}
-                  onChange={(e) => setFormData({...formData, custom_id: e.target.value})}
-                  placeholder="WH001"
-                />
+            <form onSubmit={handleAddEdit} className="p-8 space-y-6">
+              <div className="grid grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Mã định danh kho *</label>
+                  <input
+                    type="text" required
+                    disabled={!!selectedWarehouse}
+                    className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white disabled:opacity-50' : 'bg-slate-50 border-slate-200 text-slate-900 disabled:bg-slate-100 disabled:text-slate-400'}`}
+                    value={formData.custom_id}
+                    onChange={(e) => setFormData({...formData, custom_id: e.target.value})}
+                    placeholder="Vd: WH-001"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Tên gọi kho hàng *</label>
+                  <input
+                    type="text" required
+                    className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
+                    value={formData.name}
+                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    placeholder="Vd: Kho Tổng Miền Bắc"
+                  />
+                </div>
               </div>
-              <div>
-                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Tên kho *</label>
-                <input
-                  type="text" required
-                  className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
-                  value={formData.name}
-                  onChange={(e) => setFormData({...formData, name: e.target.value})}
-                  placeholder="Tên kho hàng"
-                />
+
+              <div className="grid grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Sức chứa tối đa (SP) *</label>
+                  <input
+                    type="number" required min="1"
+                    className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
+                    value={formData.capacity}
+                    onChange={(e) => setFormData({...formData, capacity: e.target.value})}
+                    placeholder="1000"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Địa điểm / Vị trí</label>
+                  <input
+                    type="text"
+                    className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
+                    value={formData.location}
+                    onChange={(e) => setFormData({...formData, location: e.target.value})}
+                    placeholder="Vd: Hà Nội, KCN Quang Minh..."
+                  />
+                </div>
               </div>
-              <div>
-                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Sức chứa (Đơn vị SP) *</label>
-                <input
-                  type="number" required min="1"
-                  className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
-                  value={formData.capacity}
-                  onChange={(e) => setFormData({...formData, capacity: e.target.value})}
-                  placeholder="1000"
-                />
-              </div>
-              <div>
-                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Vị trí</label>
-                <input
-                  type="text"
-                  className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
-                  value={formData.location}
-                  onChange={(e) => setFormData({...formData, location: e.target.value})}
-                  placeholder="Khu vực A, Tầng 1..."
-                />
-              </div>
-              <div className="flex justify-end gap-3 mt-8">
-                <button type="button" onClick={() => setIsModalOpen(false)} className={`px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${isDarkMode ? 'text-slate-400 hover:bg-slate-800' : 'text-slate-500 hover:bg-slate-50'}`}>Hủy</button>
+
+              <div className="flex justify-end gap-3 pt-4 border-t border-transparent">
+                <button type="button" onClick={() => setIsModalOpen(false)} className={`px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${isDarkMode ? 'text-slate-400 hover:bg-slate-800' : 'text-slate-500 hover:bg-slate-50'}`}>Hủy bỏ</button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-8 py-3 bg-blue-600 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-blue-700 shadow-lg shadow-blue-600/20 transition-all active:scale-95 disabled:opacity-50 disabled:scale-100 flex items-center gap-2"
+                  className="px-10 py-3 bg-blue-600 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-blue-700 shadow-xl shadow-blue-600/20 transition-all active:scale-95 disabled:opacity-50 disabled:scale-100 flex items-center gap-3"
                 >
-                  {isSubmitting && <Loader2 size={14} className="animate-spin" />}
-                  Lưu thông tin
+                  {isSubmitting ? <Loader2 size={16} className="animate-spin" /> : <CheckCircle size={16} strokeWidth={3} />}
+                  Xác nhận lưu
                 </button>
               </div>
             </form>

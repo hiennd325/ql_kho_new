@@ -18,7 +18,8 @@ import {
   ChevronDown,
   Warehouse,
   ChevronRight as ChevronRightIcon,
-  ShoppingBag
+  ShoppingBag,
+  Save
 } from 'lucide-react';
 import api from '../services/api';
 import { useTheme } from '../context/ThemeContext';
@@ -490,85 +491,98 @@ const InventoryPage = () => {
       {/* Import Modal */}
       {isImportModalOpen && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden animate-in fade-in zoom-in duration-200 border dark:border-slate-800">
-            <div className="flex items-center justify-between p-6 border-b dark:border-slate-800 bg-green-50/50 dark:bg-emerald-900/20">
-              <h3 className="text-xl font-bold text-green-800 dark:text-emerald-400 flex items-center gap-2">
-                <TrendingUp size={24} /> Tạo phiếu nhập kho
-              </h3>
-              <button onClick={() => setIsImportModalOpen(false)} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
-                <X size={24} />
+          <div className={`rounded-[32px] shadow-2xl w-full max-w-3xl overflow-hidden animate-in fade-in zoom-in duration-200 border transition-all ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
+            <div className={`flex items-center justify-between p-8 border-b ${isDarkMode ? 'border-slate-800 bg-emerald-950/20' : 'border-slate-100 bg-emerald-50/50'}`}>
+              <div className="flex items-center gap-4">
+                <div className="bg-emerald-600 p-3 rounded-2xl text-white shadow-lg shadow-emerald-600/20">
+                  <TrendingUp size={24} strokeWidth={2.5} />
+                </div>
+                <div>
+                  <h3 className={`text-2xl font-black tracking-tight ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Tạo phiếu nhập kho</h3>
+                  <p className="text-[10px] font-black text-emerald-600 uppercase tracking-[0.2em] mt-1">Ghi nhận hàng hóa vào hệ thống</p>
+                </div>
+              </div>
+              <button onClick={() => setIsImportModalOpen(false)} className="p-2 hover:bg-white dark:hover:bg-slate-800 rounded-xl transition-colors text-slate-400">
+                <X size={24} strokeWidth={3} />
               </button>
             </div>
-            <form onSubmit={handleImportSubmit} className="p-6 space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <form onSubmit={handleImportSubmit} className="p-10 space-y-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 dark:text-slate-300 mb-1.5">Nhà cung cấp *</label>
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 ml-1">Nhà cung cấp đối tác *</label>
                   <select
                     required
-                    className="w-full px-4 py-2.5 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-green-500 text-slate-900 dark:text-slate-100 transition-all"
+                    className={`w-full px-5 py-4 border rounded-2xl outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
                     value={importForm.supplier_id}
                     onChange={(e) => setImportForm({...importForm, supplier_id: e.target.value})}
                   >
-                    <option value="" className="dark:bg-slate-800">-- Chọn nhà cung cấp --</option>
-                    {suppliers.map(s => <option key={s.id} value={s.id} className="dark:bg-slate-800">{s.name}</option>)}
+                    <option value="" className={isDarkMode ? 'bg-slate-900' : ''}>-- Chọn nhà cung cấp --</option>
+                    {suppliers.map(s => <option key={s.id} value={s.id} className={isDarkMode ? 'bg-slate-900' : ''}>{s.name}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 dark:text-slate-300 mb-1.5">Nhập vào kho *</label>
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 ml-1">Nhập vào kho hàng *</label>
                   <select
                     required
-                    className="w-full px-4 py-2.5 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-green-500 text-slate-900 dark:text-slate-100 transition-all"
+                    className={`w-full px-5 py-4 border rounded-2xl outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
                     value={importForm.warehouse_id}
                     onChange={(e) => setImportForm({...importForm, warehouse_id: e.target.value})}
                   >
-                    <option value="" className="dark:bg-slate-800">-- Chọn kho nhận --</option>
-                    {warehouses.map(w => <option key={w.custom_id} value={w.custom_id} className="dark:bg-slate-800">{w.name}</option>)}
+                    <option value="" className={isDarkMode ? 'bg-slate-900' : ''}>-- Chọn kho nhận hàng --</option>
+                    {warehouses.map(w => <option key={w.custom_id} value={w.custom_id} className={isDarkMode ? 'bg-slate-900' : ''}>{w.name}</option>)}
                   </select>
                 </div>
               </div>
 
               <div>
-                <div className="flex items-center justify-between mb-3">
-                  <label className="block text-sm font-bold text-gray-700 dark:text-slate-300">Danh sách sản phẩm</label>
-                  <button type="button" onClick={addImportItem} className="text-xs font-bold text-green-600 dark:text-emerald-400 hover:text-green-700 dark:hover:text-emerald-300 flex items-center gap-1 bg-green-50 dark:bg-emerald-900/20 px-3 py-1.5 rounded-full border border-green-100 dark:border-emerald-800">
-                    <Plus size={14} /> Thêm dòng
+                <div className="flex items-center justify-between mb-5">
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Danh mục sản phẩm nhập</label>
+                  <button type="button" onClick={addImportItem} className="text-[10px] font-black text-emerald-600 hover:text-emerald-700 flex items-center gap-2 bg-emerald-50 dark:bg-emerald-900/20 px-4 py-2 rounded-xl border border-emerald-100 dark:border-emerald-800 transition-all active:scale-95 uppercase tracking-widest">
+                    <Plus size={14} strokeWidth={3} /> Thêm sản phẩm
                   </button>
                 </div>
-                <div className="space-y-3 max-h-60 overflow-y-auto pr-1">
+                <div className="space-y-4 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
                   {importForm.items.map((item, idx) => (
-                    <div key={idx} className="flex gap-2 items-start p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 group">
-                      <select
-                        required
-                        className="flex-1 px-3 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-sm outline-none focus:ring-2 focus:ring-green-500 text-slate-900 dark:text-slate-100"
-                        value={item.product_id}
-                        onChange={(e) => handleImportItemChange(idx, 'product_id', e.target.value)}
-                      >
-                        <option value="" className="dark:bg-slate-800">-- Chọn sản phẩm --</option>
-                        {products.map(p => <option key={p.id} value={p.custom_id} className="dark:bg-slate-800">{p.name} (Tồn: {p.quantity})</option>)}
-                      </select>
-                      <input
-                        type="number" required min="1"
-                        placeholder="SL"
-                        className="w-20 px-3 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-sm outline-none focus:ring-2 focus:ring-green-500 text-center font-bold text-slate-900 dark:text-slate-100"
-                        value={item.quantity}
-                        onChange={(e) => handleImportItemChange(idx, 'quantity', e.target.value)}
-                      />
+                    <div key={idx} className={`flex gap-4 items-end p-5 rounded-[24px] border transition-all ${isDarkMode ? 'bg-slate-800/40 border-slate-800' : 'bg-slate-50 border-slate-100'}`}>
+                      <div className="flex-1">
+                        <label className="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Sản phẩm</label>
+                        <select
+                          required
+                          className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold text-sm ${isDarkMode ? 'bg-slate-900 border-slate-700 text-white' : 'bg-white border-slate-200 text-slate-900'}`}
+                          value={item.product_id}
+                          onChange={(e) => handleImportItemChange(idx, 'product_id', e.target.value)}
+                        >
+                          <option value="" className={isDarkMode ? 'bg-slate-900' : ''}>-- Chọn --</option>
+                          {products.map(p => <option key={p.id} value={p.custom_id} className={isDarkMode ? 'bg-slate-900' : ''}>{p.name}</option>)}
+                        </select>
+                      </div>
+                      <div className="w-32">
+                        <label className="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Số lượng</label>
+                        <input
+                          type="number" required min="1"
+                          className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-black text-center ${isDarkMode ? 'bg-slate-900 border-slate-700 text-white' : 'bg-white border-slate-200 text-slate-900'}`}
+                          value={item.quantity}
+                          onChange={(e) => handleImportItemChange(idx, 'quantity', e.target.value)}
+                        />
+                      </div>
                       <button
                         type="button"
                         onClick={() => removeImportItem(idx)}
                         disabled={importForm.items.length === 1}
-                        className="p-2 text-rose-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-lg disabled:opacity-0 transition-all"
+                        className="p-3 text-rose-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-xl disabled:opacity-0 transition-all active:scale-90"
                       >
-                        <Trash2 size={18} />
+                        <Trash2 size={20} strokeWidth={2.5} />
                       </button>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div className="flex justify-end gap-3 pt-4 border-t dark:border-slate-800">
-                <button type="button" onClick={() => setIsImportModalOpen(false)} className="px-6 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl font-bold transition-all">Hủy bỏ</button>
-                <button type="submit" className="px-8 py-2.5 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 font-bold shadow-lg shadow-emerald-100 dark:shadow-emerald-900/20 transition-all active:scale-95">Lưu phiếu nhập</button>
+              <div className="flex justify-end gap-4 pt-6 border-t border-transparent">
+                <button type="button" onClick={() => setIsImportModalOpen(false)} className={`px-8 py-4 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${isDarkMode ? 'text-slate-400 hover:bg-slate-800' : 'text-slate-500 hover:bg-slate-50'}`}>Hủy phiếu</button>
+                <button type="submit" className="px-12 py-4 bg-emerald-600 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-emerald-700 shadow-xl shadow-emerald-600/20 transition-all active:scale-95 flex items-center gap-3">
+                  <Save size={18} strokeWidth={3} className="hidden" /> Hoàn tất nhập kho
+                </button>
               </div>
             </form>
           </div>
@@ -578,83 +592,96 @@ const InventoryPage = () => {
       {/* Export Modal */}
       {isExportModalOpen && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden animate-in fade-in zoom-in duration-200 border dark:border-slate-800">
-            <div className="flex items-center justify-between p-6 border-b dark:border-slate-800 bg-red-50/50 dark:bg-rose-900/20">
-              <h3 className="text-xl font-bold text-red-800 dark:text-rose-400 flex items-center gap-2">
-                <TrendingDown size={24} /> Tạo phiếu xuất kho
-              </h3>
-              <button onClick={() => setIsExportModalOpen(false)} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
-                <X size={24} />
+          <div className={`rounded-[32px] shadow-2xl w-full max-w-3xl overflow-hidden animate-in fade-in zoom-in duration-200 border transition-all ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
+            <div className={`flex items-center justify-between p-8 border-b ${isDarkMode ? 'border-slate-800 bg-rose-950/20' : 'border-slate-100 bg-rose-50/50'}`}>
+              <div className="flex items-center gap-4">
+                <div className="bg-rose-600 p-3 rounded-2xl text-white shadow-lg shadow-rose-600/20">
+                  <TrendingDown size={24} strokeWidth={2.5} />
+                </div>
+                <div>
+                  <h3 className={`text-2xl font-black tracking-tight ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Tạo phiếu xuất kho</h3>
+                  <p className="text-[10px] font-black text-rose-600 uppercase tracking-[0.2em] mt-1">Ghi nhận hàng hóa rời khỏi kho</p>
+                </div>
+              </div>
+              <button onClick={() => setIsExportModalOpen(false)} className="p-2 hover:bg-white dark:hover:bg-slate-800 rounded-xl transition-colors text-slate-400">
+                <X size={24} strokeWidth={3} />
               </button>
             </div>
-            <form onSubmit={handleExportSubmit} className="p-6 space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <form onSubmit={handleExportSubmit} className="p-10 space-y-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 dark:text-slate-300 mb-1.5">Khách hàng / Đối tác *</label>
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 ml-1">Khách hàng / Đối tác nhận *</label>
                   <input
                     type="text" required
-                    placeholder="Nhập tên khách hàng"
-                    className="w-full px-4 py-2.5 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-red-500 text-slate-900 dark:text-slate-100 transition-all"
+                    className={`w-full px-5 py-4 border rounded-2xl outline-none focus:ring-4 focus:ring-rose-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
                     value={exportForm.customer_name}
                     onChange={(e) => setExportForm({...exportForm, customer_name: e.target.value})}
+                    placeholder="Vd: Đại lý Anh Tú, Apple Store..."
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 dark:text-slate-300 mb-1.5">Xuất từ kho *</label>
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 ml-1">Xuất từ kho hàng *</label>
                   <select
                     required
-                    className="w-full px-4 py-2.5 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-red-500 text-slate-900 dark:text-slate-100 transition-all"
+                    className={`w-full px-5 py-4 border rounded-2xl outline-none focus:ring-4 focus:ring-rose-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
                     value={exportForm.warehouse_id}
                     onChange={(e) => setExportForm({...exportForm, warehouse_id: e.target.value})}
                   >
-                    <option value="" className="dark:bg-slate-800">-- Chọn kho xuất --</option>
-                    {warehouses.map(w => <option key={w.custom_id} value={w.custom_id} className="dark:bg-slate-800">{w.name}</option>)}
+                    <option value="" className={isDarkMode ? 'bg-slate-900' : ''}>-- Chọn kho nguồn --</option>
+                    {warehouses.map(w => <option key={w.custom_id} value={w.custom_id} className={isDarkMode ? 'bg-slate-900' : ''}>{w.name}</option>)}
                   </select>
                 </div>
               </div>
 
               <div>
-                <div className="flex items-center justify-between mb-3">
-                  <label className="block text-sm font-bold text-gray-700 dark:text-slate-300">Danh sách sản phẩm</label>
-                  <button type="button" onClick={addExportItem} className="text-xs font-bold text-red-600 dark:text-rose-400 hover:text-red-700 dark:hover:text-rose-300 flex items-center gap-1 bg-red-50 dark:bg-rose-900/20 px-3 py-1.5 rounded-full border border-red-100 dark:border-rose-800">
-                    <Plus size={14} /> Thêm dòng
+                <div className="flex items-center justify-between mb-5">
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Danh mục sản phẩm xuất</label>
+                  <button type="button" onClick={addExportItem} className="text-[10px] font-black text-rose-600 hover:text-rose-700 flex items-center gap-2 bg-rose-50 dark:bg-rose-900/20 px-4 py-2 rounded-xl border border-rose-100 dark:border-rose-800 transition-all active:scale-95 uppercase tracking-widest">
+                    <Plus size={14} strokeWidth={3} /> Thêm sản phẩm
                   </button>
                 </div>
-                <div className="space-y-3 max-h-60 overflow-y-auto pr-1">
+                <div className="space-y-4 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
                   {exportForm.items.map((item, idx) => (
-                    <div key={idx} className="flex gap-2 items-start p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 group">
-                      <select
-                        required
-                        className="flex-1 px-3 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-sm outline-none focus:ring-2 focus:ring-rose-500 text-slate-900 dark:text-slate-100"
-                        value={item.product_id}
-                        onChange={(e) => handleExportItemChange(idx, 'product_id', e.target.value)}
-                      >
-                        <option value="" className="dark:bg-slate-800">-- Chọn sản phẩm --</option>
-                        {products.map(p => <option key={p.id} value={p.custom_id} className="dark:bg-slate-800">{p.name} (Tồn: {p.quantity})</option>)}
-                      </select>
-                      <input
-                        type="number" required min="1"
-                        placeholder="SL"
-                        className="w-20 px-3 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-sm outline-none focus:ring-2 focus:ring-rose-500 text-center font-bold text-slate-900 dark:text-slate-100"
-                        value={item.quantity}
-                        onChange={(e) => handleExportItemChange(idx, 'quantity', e.target.value)}
-                      />
+                    <div key={idx} className={`flex gap-4 items-end p-5 rounded-[24px] border transition-all ${isDarkMode ? 'bg-slate-800/40 border-slate-800' : 'bg-slate-50 border-slate-100'}`}>
+                      <div className="flex-1">
+                        <label className="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Sản phẩm trong kho</label>
+                        <select
+                          required
+                          className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-rose-500/10 transition-all font-bold text-sm ${isDarkMode ? 'bg-slate-900 border-slate-700 text-white' : 'bg-white border-slate-200 text-slate-900'}`}
+                          value={item.product_id}
+                          onChange={(e) => handleExportItemChange(idx, 'product_id', e.target.value)}
+                        >
+                          <option value="" className={isDarkMode ? 'bg-slate-900' : ''}>-- Chọn --</option>
+                          {products.map(p => <option key={p.id} value={p.custom_id} className={isDarkMode ? 'bg-slate-900' : ''}>{p.name} (Tồn: {p.quantity})</option>)}
+                        </select>
+                      </div>
+                      <div className="w-32">
+                        <label className="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Số lượng</label>
+                        <input
+                          type="number" required min="1"
+                          className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-rose-500/10 transition-all font-black text-center ${isDarkMode ? 'bg-slate-900 border-slate-700 text-white' : 'bg-white border-slate-200 text-slate-900'}`}
+                          value={item.quantity}
+                          onChange={(e) => handleExportItemChange(idx, 'quantity', e.target.value)}
+                        />
+                      </div>
                       <button
                         type="button"
                         onClick={() => removeExportItem(idx)}
                         disabled={exportForm.items.length === 1}
-                        className="p-2 text-rose-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-lg disabled:opacity-0 transition-all"
+                        className="p-3 text-rose-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-xl disabled:opacity-0 transition-all active:scale-90"
                       >
-                        <Trash2 size={18} />
+                        <Trash2 size={20} strokeWidth={2.5} />
                       </button>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div className="flex justify-end gap-3 pt-4 border-t dark:border-slate-800">
-                <button type="button" onClick={() => setIsExportModalOpen(false)} className="px-6 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl font-bold transition-all">Hủy bỏ</button>
-                <button type="submit" className="px-8 py-2.5 bg-rose-600 text-white rounded-xl hover:bg-rose-700 font-bold shadow-lg shadow-rose-100 dark:shadow-rose-900/20 transition-all active:scale-95">Lưu phiếu xuất</button>
+              <div className="flex justify-end gap-4 pt-6 border-t border-transparent">
+                <button type="button" onClick={() => setIsExportModalOpen(false)} className={`px-8 py-4 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${isDarkMode ? 'text-slate-400 hover:bg-slate-800' : 'text-slate-500 hover:bg-slate-50'}`}>Hủy phiếu</button>
+                <button type="submit" className="px-12 py-4 bg-rose-600 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-rose-700 shadow-xl shadow-rose-600/20 transition-all active:scale-95 flex items-center gap-3">
+                  Hoàn tất xuất kho
+                </button>
               </div>
             </form>
           </div>

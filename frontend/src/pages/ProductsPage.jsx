@@ -46,6 +46,7 @@ const ProductsPage = () => {
     name: '',
     description: '',
     price: '',
+    category: '',
     brand: '',
     supplierId: ''
   });
@@ -158,6 +159,7 @@ const ProductsPage = () => {
       name: product.name,
       description: product.description || '',
       price: product.price,
+      category: product.category || '',
       brand: product.brand || '',
       supplierId: product.supplier_id || ''
     });
@@ -175,6 +177,7 @@ const ProductsPage = () => {
       name: '',
       description: '',
       price: '',
+      category: '',
       brand: '',
       supplierId: ''
     });
@@ -382,37 +385,45 @@ const ProductsPage = () => {
       {/* Add Modal */}
       {isAddModalOpen && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className={`rounded-3xl shadow-2xl w-full max-w-md overflow-hidden border transition-all ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
+          <div className={`rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden border transition-all ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
             <div className={`flex items-center justify-between p-6 border-b ${isDarkMode ? 'border-slate-800' : 'border-slate-100'}`}>
-              <h3 className={`text-xl font-black tracking-tight ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Thêm sản phẩm mới</h3>
+              <div className="flex items-center gap-3">
+                <div className="bg-blue-600 p-2 rounded-xl text-white">
+                  <Plus size={20} strokeWidth={3} />
+                </div>
+                <h3 className={`text-xl font-black tracking-tight ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Thêm sản phẩm mới</h3>
+              </div>
               <button onClick={() => setIsAddModalOpen(false)} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors text-slate-400">
                 <X size={20} strokeWidth={3} />
               </button>
             </div>
-            <form onSubmit={handleAddSubmit} className="p-8 space-y-5">
-              <div>
-                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Mã sản phẩm *</label>
-                <input
-                  type="text" required
-                  className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
-                  value={formData.customId}
-                  onChange={(e) => setFormData({...formData, customId: e.target.value})}
-                  placeholder="SP001"
-                />
-              </div>
-              <div>
-                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Tên sản phẩm *</label>
-                <input
-                  type="text" required
-                  className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
-                  value={formData.name}
-                  onChange={(e) => setFormData({...formData, name: e.target.value})}
-                  placeholder="Tên sản phẩm"
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
+            <form onSubmit={handleAddSubmit} className="p-8 space-y-6">
+              <div className="grid grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Giá bán *</label>
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Mã sản phẩm *</label>
+                  <input
+                    type="text" required
+                    className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
+                    value={formData.customId}
+                    onChange={(e) => setFormData({...formData, customId: e.target.value})}
+                    placeholder="Vd: SP001"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Tên sản phẩm *</label>
+                  <input
+                    type="text" required
+                    className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
+                    value={formData.name}
+                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    placeholder="Tên sản phẩm"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Giá bán (VNĐ) *</label>
                   <input
                     type="number" required
                     className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
@@ -422,40 +433,55 @@ const ProductsPage = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Nhãn hiệu</label>
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Thương hiệu</label>
                   <input
                     type="text"
                     className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
                     value={formData.brand}
                     onChange={(e) => setFormData({...formData, brand: e.target.value})}
-                    placeholder="Samsung..."
+                    placeholder="Vd: Samsung, Apple..."
                   />
                 </div>
               </div>
-              <div>
-                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Nhà cung cấp</label>
-                <select
-                  className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
-                  value={formData.supplierId}
-                  onChange={(e) => setFormData({...formData, supplierId: e.target.value})}
-                >
-                  <option value="" className={isDarkMode ? 'bg-slate-900' : ''}>Chọn nhà cung cấp</option>
-                  {suppliers.map(s => <option key={s.id} value={s.id} className={isDarkMode ? 'bg-slate-900' : ''}>{s.name}</option>)}
-                </select>
+
+              <div className="grid grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Danh mục</label>
+                  <input
+                    type="text"
+                    className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
+                    value={formData.category}
+                    onChange={(e) => setFormData({...formData, category: e.target.value})}
+                    placeholder="Vd: Điện thoại, Gia dụng..."
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Nhà cung cấp</label>
+                  <select
+                    className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
+                    value={formData.supplierId}
+                    onChange={(e) => setFormData({...formData, supplierId: e.target.value})}
+                  >
+                    <option value="" className={isDarkMode ? 'bg-slate-900' : ''}>Chọn nhà cung cấp</option>
+                    {suppliers.map(s => <option key={s.id} value={s.id} className={isDarkMode ? 'bg-slate-900' : ''}>{s.name}</option>)}
+                  </select>
+                </div>
               </div>
+
               <div>
-                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Mô tả</label>
+                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Mô tả sản phẩm</label>
                 <textarea
                   className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
                   rows="3"
                   value={formData.description}
                   onChange={(e) => setFormData({...formData, description: e.target.value})}
-                  placeholder="Chi tiết sản phẩm..."
+                  placeholder="Thông tin chi tiết về sản phẩm..."
                 />
               </div>
-              <div className="flex justify-end gap-3 mt-8">
-                <button type="button" onClick={() => setIsAddModalOpen(false)} className={`px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${isDarkMode ? 'text-slate-400 hover:bg-slate-800' : 'text-slate-500 hover:bg-slate-50'}`}>Hủy</button>
-                <button type="submit" className="px-8 py-3 bg-blue-600 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-blue-700 shadow-lg shadow-blue-600/20 transition-all active:scale-95">Lưu sản phẩm</button>
+
+              <div className="flex justify-end gap-3 pt-4">
+                <button type="button" onClick={() => setIsAddModalOpen(false)} className={`px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${isDarkMode ? 'text-slate-400 hover:bg-slate-800' : 'text-slate-500 hover:bg-slate-50'}`}>Hủy bỏ</button>
+                <button type="submit" className="px-10 py-3 bg-blue-600 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-blue-700 shadow-xl shadow-blue-600/20 transition-all active:scale-95">Xác nhận thêm</button>
               </div>
             </form>
           </div>
@@ -465,34 +491,42 @@ const ProductsPage = () => {
       {/* Edit Modal */}
       {isEditModalOpen && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className={`rounded-3xl shadow-2xl w-full max-w-md overflow-hidden border transition-all ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
+          <div className={`rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden border transition-all ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
             <div className={`flex items-center justify-between p-6 border-b ${isDarkMode ? 'border-slate-800' : 'border-slate-100'}`}>
-              <h3 className={`text-xl font-black tracking-tight ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Chỉnh sửa sản phẩm</h3>
+              <div className="flex items-center gap-3">
+                <div className="bg-amber-500 p-2 rounded-xl text-white">
+                  <Edit size={20} strokeWidth={3} />
+                </div>
+                <h3 className={`text-xl font-black tracking-tight ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Chỉnh sửa sản phẩm</h3>
+              </div>
               <button onClick={() => setIsEditModalOpen(false)} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors text-slate-400">
                 <X size={20} strokeWidth={3} />
               </button>
             </div>
-            <form onSubmit={handleEditSubmit} className="p-8 space-y-5">
-              <div>
-                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Mã sản phẩm (Không thể sửa)</label>
-                <input
-                  type="text" disabled
-                  className={`w-full px-4 py-3 border rounded-xl font-bold cursor-not-allowed opacity-60 ${isDarkMode ? 'bg-slate-800 border-slate-700 text-slate-500' : 'bg-slate-50 border-slate-200 text-slate-500'}`}
-                  value={formData.customId}
-                />
-              </div>
-              <div>
-                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Tên sản phẩm *</label>
-                <input
-                  type="text" required
-                  className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
-                  value={formData.name}
-                  onChange={(e) => setFormData({...formData, name: e.target.value})}
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
+            <form onSubmit={handleEditSubmit} className="p-8 space-y-6">
+              <div className="grid grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Giá bán *</label>
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Mã sản phẩm (Cố định)</label>
+                  <input
+                    type="text" disabled
+                    className={`w-full px-4 py-3 border rounded-xl font-bold cursor-not-allowed opacity-60 ${isDarkMode ? 'bg-slate-800 border-slate-700 text-slate-500' : 'bg-slate-50 border-slate-200 text-slate-500'}`}
+                    value={formData.customId}
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Tên sản phẩm *</label>
+                  <input
+                    type="text" required
+                    className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
+                    value={formData.name}
+                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Giá bán (VNĐ) *</label>
                   <input
                     type="number" required
                     className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
@@ -501,7 +535,7 @@ const ProductsPage = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Nhãn hiệu</label>
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Thương hiệu</label>
                   <input
                     type="text"
                     className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
@@ -510,19 +544,32 @@ const ProductsPage = () => {
                   />
                 </div>
               </div>
-              <div>
-                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Nhà cung cấp</label>
-                <select
-                  className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
-                  value={formData.supplierId}
-                  onChange={(e) => setFormData({...formData, supplierId: e.target.value})}
-                >
-                  <option value="" className={isDarkMode ? 'bg-slate-900' : ''}>Chọn nhà cung cấp</option>
-                  {suppliers.map(s => <option key={s.id} value={s.id} className={isDarkMode ? 'bg-slate-900' : ''}>{s.name}</option>)}
-                </select>
+
+              <div className="grid grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Danh mục</label>
+                  <input
+                    type="text"
+                    className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
+                    value={formData.category}
+                    onChange={(e) => setFormData({...formData, category: e.target.value})}
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Nhà cung cấp</label>
+                  <select
+                    className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
+                    value={formData.supplierId}
+                    onChange={(e) => setFormData({...formData, supplierId: e.target.value})}
+                  >
+                    <option value="" className={isDarkMode ? 'bg-slate-900' : ''}>Chọn nhà cung cấp</option>
+                    {suppliers.map(s => <option key={s.id} value={s.id} className={isDarkMode ? 'bg-slate-900' : ''}>{s.name}</option>)}
+                  </select>
+                </div>
               </div>
+
               <div>
-                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Mô tả</label>
+                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Mô tả sản phẩm</label>
                 <textarea
                   className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
                   rows="3"
@@ -530,9 +577,10 @@ const ProductsPage = () => {
                   onChange={(e) => setFormData({...formData, description: e.target.value})}
                 />
               </div>
-              <div className="flex justify-end gap-3 mt-8">
-                <button type="button" onClick={() => setIsEditModalOpen(false)} className={`px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${isDarkMode ? 'text-slate-400 hover:bg-slate-800' : 'text-slate-500 hover:bg-slate-50'}`}>Hủy</button>
-                <button type="submit" className="px-8 py-3 bg-blue-600 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-blue-700 shadow-lg shadow-blue-600/20 transition-all active:scale-95">Lưu thay đổi</button>
+
+              <div className="flex justify-end gap-3 pt-4">
+                <button type="button" onClick={() => setIsEditModalOpen(false)} className={`px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${isDarkMode ? 'text-slate-400 hover:bg-slate-800' : 'text-slate-500 hover:bg-slate-50'}`}>Hủy bỏ</button>
+                <button type="submit" className="px-10 py-3 bg-amber-500 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-amber-600 shadow-xl shadow-amber-500/20 transition-all active:scale-95">Lưu thay đổi</button>
               </div>
             </form>
           </div>

@@ -12,7 +12,6 @@ import {
   Package,
   Menu,
   X,
-  Bell,
   Search,
   ChevronRight,
   Sun,
@@ -181,13 +180,6 @@ const MainLayout = ({ children }) => {
             >
               {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
             </button>
-
-            <button className={`p-2.5 rounded-xl transition-colors relative ${isDarkMode ? 'bg-slate-800 text-slate-400 hover:bg-slate-700' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}`}>
-              <Bell size={20} />
-              <span className="absolute top-2 right-2 w-2 h-2 bg-rose-500 border-2 border-white rounded-full"></span>
-            </button>
-
-            <div className="h-8 w-px bg-slate-200 hidden md:block"></div>
 
             <div className="flex items-center gap-4 group cursor-pointer pl-2">
               <div className="text-right hidden sm:block">
