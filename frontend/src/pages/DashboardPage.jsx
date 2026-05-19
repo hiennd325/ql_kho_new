@@ -149,15 +149,15 @@ const DashboardPage = () => {
   return (
     <motion.div variants={container} initial="hidden" animate="show" className="space-y-6 max-w-[1600px] mx-auto pb-10">
       {/* Top Header Section */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 sm:gap-6 mb-6 sm:mb-8">
         <div>
-          <h2 className={`text-3xl font-black tracking-tighter ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Tổng quan vận hành</h2>
-          <p className={`text-xs font-black uppercase tracking-[0.2em] mt-2 px-3 py-1 rounded-full border w-fit shadow-sm ${isDarkMode ? 'bg-slate-900 text-slate-400 border-slate-800' : 'bg-white text-slate-400 border-slate-100'}`}>
-            Cập nhật thời gian thực: {new Date().toLocaleTimeString()}
+          <h2 className={`text-xl sm:text-3xl font-black tracking-tighter ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Tổng quan vận hành</h2>
+          <p className={`text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] mt-2 px-3 py-1 rounded-full border w-fit shadow-sm ${isDarkMode ? 'bg-slate-900 text-slate-400 border-slate-800' : 'bg-white text-slate-400 border-slate-100'}`}>
+            Cập nhật: {new Date().toLocaleTimeString()}
           </p>
         </div>
-        <div className="flex items-center gap-3">
-          <div className={`border p-1 rounded-xl flex shadow-sm ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`}>
+        <div className="flex items-center gap-2 sm:gap-3 w-full md:w-auto">
+          <div className={`border p-1 rounded-xl flex shadow-sm flex-1 md:flex-none ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`}>
             {Object.entries(periodMap).map(([key, label]) => (
               <button
                 key={key}
@@ -165,20 +165,20 @@ const DashboardPage = () => {
                   setActiveTab(key);
                   fetchData(key);
                 }}
-                className={`px-4 py-2 rounded-lg text-xs font-black uppercase tracking-widest transition-all ${activeTab === key ? 'bg-slate-900 dark:bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
+                className={`flex-1 md:flex-none px-3 sm:px-4 py-2 rounded-lg text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all ${activeTab === key ? 'bg-slate-900 dark:bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
               >
                 {label}
               </button>
             ))}
           </div>
-          <button onClick={() => fetchData()} className="flex items-center gap-2 bg-blue-600 px-5 py-3 rounded-xl text-xs font-black uppercase tracking-widest text-white hover:bg-blue-700 transition-all shadow-lg shadow-blue-200">
-            <RefreshCw size={14} className={loading ? 'animate-spin' : ''} /> Đồng bộ
+          <button onClick={() => fetchData()} className="flex items-center gap-2 bg-blue-600 px-3 sm:px-5 py-2.5 sm:py-3 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-widest text-white hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 shrink-0">
+            <RefreshCw size={14} className={loading ? 'animate-spin' : ''} /> <span className="hidden xs:inline">Đồng bộ</span>
           </button>
         </div>
       </div>
 
-      {/* Main Grid Layout - Strictly Single Row with Expansion effect */}
-      <div className="flex flex-row flex-nowrap gap-4 overflow-x-auto lg:overflow-visible pb-4 lg:pb-0 items-stretch h-32 xl:h-36">
+      {/* Main Grid Layout */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <StatCard
           label="Sản phẩm"
           value={stats.totalProducts}
@@ -229,18 +229,18 @@ const DashboardPage = () => {
         {/* Left Column: Chart & Recent Activity (Table) */}
         <div className="lg:col-span-8 space-y-6">
           {/* Chart Section */}
-          <motion.div variants={item} className={`p-6 rounded-3xl border shadow-sm ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
-            <div className="flex justify-between items-center mb-6">
-              <h3 className={`font-black flex items-center gap-2 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+          <motion.div variants={item} className={`p-4 sm:p-6 rounded-2xl sm:rounded-3xl border shadow-sm ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
+            <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 mb-4 sm:mb-6">
+              <h3 className={`font-black flex items-center gap-2 text-sm sm:text-base ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
                 <Activity size={18} className="text-blue-600" />
-                Biểu đồ luân chuyển hàng hóa (7 ngày)
+                Biểu đồ luân chuyển (7 ngày)
               </h3>
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-1.5"><div className="w-2 h-2 bg-emerald-500 rounded-full"></div><span className="text-[10px] font-black uppercase text-slate-400">Nhập</span></div>
                 <div className="flex items-center gap-1.5"><div className="w-2 h-2 bg-rose-500 rounded-full"></div><span className="text-[10px] font-black uppercase text-slate-400">Xuất</span></div>
               </div>
             </div>
-            <div className="h-[300px]">
+            <div className="h-[220px] sm:h-[300px]">
               {chartData ? (
                 <Line
                   data={chartData}

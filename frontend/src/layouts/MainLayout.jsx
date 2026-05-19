@@ -25,13 +25,17 @@ const MainLayout = ({ children }) => {
   const { isDarkMode, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
+  const [isMobile, setIsMobile] = React.useState(window.innerWidth <= 1024);
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(window.innerWidth > 1024);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
 
   React.useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth <= 1024) {
+      const mobile = window.innerWidth <= 1024;
+      setIsMobile(mobile);
+      if (mobile) {
         setIsSidebarOpen(false);
+        setIsMobileMenuOpen(false);
       } else {
         setIsSidebarOpen(true);
       }
@@ -46,7 +50,7 @@ const MainLayout = ({ children }) => {
   };
 
   const closeMobileMenu = () => {
-    if (window.innerWidth <= 1024) {
+    if (isMobile) {
       setIsMobileMenuOpen(false);
     }
   };
@@ -64,8 +68,14 @@ const MainLayout = ({ children }) => {
     navItems.push({ name: 'Người dùng', path: '/users', icon: <Users size={20} /> });
   }
 
+  // On mobile: sidebar is fixed overlay, width always 300, hidden via translateX
+  // On desktop: sidebar is sticky, width 300 or 96 based on isSidebarOpen
+  const sidebarWidth = isMobile ? 300 : (isSidebarOpen ? 300 : 96);
+  const sidebarX = (isMobile && !isMobileMenuOpen) ? -300 : 0;
+  const isOpen = isSidebarOpen || isMobileMenuOpen;
+
   return (
-    <div className={`min-h-screen flex font-sans selection:bg-blue-100 selection:text-blue-700 transition-colors duration-300 ${isDarkMode ? 'bg-slate-950 text-slate-100' : 'bg-[#f8fafc] text-slate-900'}`}>
+    <div className={`min-h-screen flex overflow-x-hidden font-sans selection:bg-blue-100 selection:text-blue-700 transition-colors duration-300 ${isDarkMode ? 'bg-slate-950 text-slate-100' : 'bg-[#f8fafc] text-slate-900'}`}>
       {/* Mobile Overlay */}
       <AnimatePresence>
         {isMobileMenuOpen && (
@@ -82,16 +92,13 @@ const MainLayout = ({ children }) => {
       {/* Sidebar */}
       <motion.aside
         initial={false}
-        animate={{
-          width: isSidebarOpen ? 300 : 96,
-          x: (window.innerWidth <= 1024 && !isMobileMenuOpen) ? -300 : 0
-        }}
+        animate={{ width: sidebarWidth, x: sidebarX }}
         transition={{ type: "spring", stiffness: 300, damping: 35 }}
-        className={`${isDarkMode ? 'bg-slate-900 border-slate-800 shadow-[4px_0_24px_rgba(0,0,0,0.2)]' : 'bg-white border-slate-200 shadow-[4px_0_24px_rgba(0,0,0,0.02)]'} border-r flex flex-col z-50 fixed lg:sticky top-0 h-screen transition-colors duration-300`}
+        className={`${isDarkMode ? 'bg-slate-900 border-slate-800 shadow-[4px_0_24px_rgba(0,0,0,0.2)]' : 'bg-white border-slate-200 shadow-[4px_0_24px_rgba(0,0,0,0.02)]'} border-r flex flex-col z-50 ${isMobile ? 'fixed' : 'sticky'} top-0 h-screen transition-colors duration-300 shrink-0`}
       >
         <div className={`h-20 flex items-center px-6 justify-between border-b ${isDarkMode ? 'border-slate-800' : 'border-slate-50/50'}`}>
           <AnimatePresence mode="wait">
-            {(isSidebarOpen || isMobileMenuOpen) ? (
+            {isOpen ? (
               <motion.div
                 key="logo-full"
                 initial={{ opacity: 0, x: -10 }}
@@ -126,7 +133,6 @@ const MainLayout = ({ children }) => {
         <nav className="flex-1 px-4 py-6 space-y-1.5 overflow-y-auto scrollbar-hide">
           {navItems.map((item) => {
             const isActive = location.pathname === item.path;
-            const isOpen = isSidebarOpen || isMobileMenuOpen;
             return (
               <Link
                 key={item.path}
@@ -192,7 +198,7 @@ const MainLayout = ({ children }) => {
       </motion.aside>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col h-screen overflow-hidden lg:pl-0">
+      <main className="flex-1 min-w-0 flex flex-col h-screen overflow-hidden">
         <header className={`${isDarkMode ? 'bg-slate-900/70 border-slate-800' : 'bg-white/70 border-slate-200/60'} backdrop-blur-md border-b h-20 flex justify-between items-center px-4 sm:px-6 lg:px-10 z-20 sticky top-0 transition-colors duration-300`}>
           <div className="flex items-center gap-4 sm:gap-10 flex-1">
             <button

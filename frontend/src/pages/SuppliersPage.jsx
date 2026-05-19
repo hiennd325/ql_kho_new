@@ -151,8 +151,7 @@ const SuppliersPage = () => {
           <h3 className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Không tìm thấy nhà cung cấp nào</h3>
           <p className={`mt-1 ${isDarkMode ? 'text-slate-400' : 'text-gray-500'}`}>Hãy thử tìm kiếm khác hoặc thêm nhà cung cấp mới.</p>
         </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {suppliers.map(supplier => (
             <div key={supplier.id} className={`rounded-xl shadow-sm border overflow-hidden hover:shadow-md transition-shadow ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-gray-100'}`}>
               <div className="p-6">
@@ -212,7 +211,7 @@ const SuppliersPage = () => {
               </button>
             </div>
             <form onSubmit={handleAddEdit} className="p-10 space-y-8">
-              <div className="grid grid-cols-2 gap-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8">
                 <div>
                   <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Mã nhà cung cấp *</label>
                   <input
@@ -250,7 +249,7 @@ const SuppliersPage = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8">
                 <div>
                   <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Đường dây nóng (Hotline)</label>
                   <div className="relative group">

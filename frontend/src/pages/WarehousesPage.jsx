@@ -179,8 +179,8 @@ const WarehousesPage = () => {
       />
 
       {/* Stats */}
-      <div className={`p-4 rounded-xl border shadow-sm flex flex-wrap items-center justify-between gap-4 transition-colors duration-300 ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`}>
-        <div className={`flex items-center gap-4 px-4 border-r last:border-0 flex-1 ${isDarkMode ? 'border-slate-800' : 'border-slate-100'}`}>
+      <div className={`p-4 rounded-xl border shadow-sm grid grid-cols-1 sm:grid-cols-3 gap-4 transition-colors duration-300 ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`}>
+        <div className={`flex items-center gap-4 px-4 ${isDarkMode ? '' : ''}`}>
           <div className={`p-2 rounded-lg ${isDarkMode ? 'bg-blue-900/20 text-blue-400' : 'bg-blue-50 text-blue-600'}`}>
             <Warehouse size={20} />
           </div>
@@ -190,22 +190,22 @@ const WarehousesPage = () => {
           </div>
         </div>
 
-        <div className={`flex items-center gap-4 px-4 border-r last:border-0 flex-1 ${isDarkMode ? 'border-slate-800' : 'border-slate-100'}`}>
+        <div className={`flex items-center gap-4 px-4 ${isDarkMode ? '' : ''}`}>
           <div className={`p-2 rounded-lg ${isDarkMode ? 'bg-indigo-900/20 text-indigo-400' : 'bg-indigo-50 text-indigo-600'}`}>
             <LayoutGrid size={20} />
           </div>
           <div>
-            <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">Sức chứa hệ thống</p>
+            <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">Sức chứa</p>
             <h3 className={`text-xl font-black leading-none ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>{stats.capacity.toLocaleString()} <span className="text-[10px] font-bold text-slate-400">SP</span></h3>
           </div>
         </div>
 
-        <div className={`flex items-center gap-4 px-4 border-r last:border-0 flex-1 ${isDarkMode ? 'border-slate-800' : 'border-slate-100'}`}>
+        <div className={`flex items-center gap-4 px-4 ${isDarkMode ? '' : ''}`}>
           <div className={`p-2 rounded-lg ${isDarkMode ? 'bg-emerald-900/20 text-emerald-400' : 'bg-emerald-50 text-emerald-600'}`}>
             <Activity size={20} />
           </div>
           <div>
-            <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">Mức độ lấp đầy</p>
+            <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">Lấp đầy</p>
             <h3 className={`text-xl font-black leading-none ${isDarkMode ? 'text-emerald-400' : 'text-emerald-600'}`}>{stats.usage.toLocaleString()} <span className="text-[10px] font-bold text-slate-400">({stats.capacity > 0 ? Math.round((stats.usage/stats.capacity)*100) : 0}%)</span></h3>
           </div>
         </div>
@@ -228,8 +228,8 @@ const WarehousesPage = () => {
           </button>
         </div>
 
-          <div className="flex flex-wrap items-center gap-4">
-            <div className="relative group min-w-[300px]">
+          <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3 sm:gap-4">
+            <div className="relative group flex-1 sm:min-w-[300px]">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors" size={20} />
               <input
                 type="text"
@@ -239,18 +239,18 @@ const WarehousesPage = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-            <div className="flex gap-3">
+            <div className="flex flex-col sm:flex-row gap-3">
               <button
                 onClick={() => { resetForm(); setIsModalOpen(true); }}
-                className={`flex items-center gap-3 px-6 py-3 rounded-xl hover:bg-blue-700 transition-all font-black shadow-lg active:scale-95 ${isDarkMode ? 'bg-blue-600 text-white shadow-blue-900/20' : 'bg-blue-600 text-white shadow-blue-100'}`}
+                className={`flex items-center justify-center gap-2 sm:gap-3 px-5 sm:px-6 py-3 rounded-xl hover:bg-blue-700 transition-all font-black shadow-lg active:scale-95 text-xs sm:text-sm ${isDarkMode ? 'bg-blue-600 text-white shadow-blue-900/20' : 'bg-blue-600 text-white shadow-blue-100'}`}
               >
-                <Plus size={20} strokeWidth={3} /> THÊM KHO MỚI
+                <Plus size={20} strokeWidth={3} /> THÊM KHO
               </button>
               <button
                 onClick={() => alert('Chức năng điều chuyển đang được tích hợp...')}
-                className={`flex items-center gap-3 px-6 py-3 rounded-xl hover:bg-emerald-700 transition-all font-black shadow-lg active:scale-95 ${isDarkMode ? 'bg-emerald-600 text-white shadow-emerald-900/20' : 'bg-emerald-600 text-white shadow-emerald-100'}`}
+                className={`flex items-center justify-center gap-2 sm:gap-3 px-5 sm:px-6 py-3 rounded-xl hover:bg-emerald-700 transition-all font-black shadow-lg active:scale-95 text-xs sm:text-sm ${isDarkMode ? 'bg-emerald-600 text-white shadow-emerald-900/20' : 'bg-emerald-600 text-white shadow-emerald-100'}`}
               >
-                <PlusCircle size={20} strokeWidth={3} /> ĐIỀU CHUYỂN MỚI
+                <PlusCircle size={20} strokeWidth={3} /> ĐIỀU CHUYỂN
               </button>
             </div>
           </div>
@@ -441,7 +441,7 @@ const WarehousesPage = () => {
               </button>
             </div>
             <form onSubmit={handleAddEdit} className="p-8 space-y-6">
-              <div className="grid grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 <div>
                   <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Mã định danh kho *</label>
                   <input
@@ -465,7 +465,7 @@ const WarehousesPage = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 <div>
                   <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Sức chứa tối đa (SP) *</label>
                   <input

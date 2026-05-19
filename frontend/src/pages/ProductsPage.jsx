@@ -220,34 +220,34 @@ const ProductsPage = () => {
   return (
     <div className="space-y-6">
       {/* Stats & Actions */}
-      <div className={`flex flex-col xl:flex-row xl:items-center justify-between gap-8 p-8 rounded-[32px] border shadow-[0_8px_30px_rgb(0,0,0,0.02)] mb-8 transition-colors duration-300 ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
-        <div className="flex items-center gap-6">
-          <div className="bg-gradient-to-br from-blue-600 to-indigo-600 p-5 rounded-[24px] text-white shadow-xl shadow-blue-600/20">
-            <Box size={36} strokeWidth={2.5} />
+      <div className={`flex flex-col xl:flex-row xl:items-center justify-between gap-6 sm:gap-8 p-5 sm:p-8 rounded-[24px] sm:rounded-[32px] border shadow-[0_8px_30px_rgb(0,0,0,0.02)] mb-6 sm:mb-8 transition-colors duration-300 ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
+        <div className="flex items-center gap-4 sm:gap-6">
+          <div className="bg-gradient-to-br from-blue-600 to-indigo-600 p-3 sm:p-5 rounded-[18px] sm:rounded-[24px] text-white shadow-xl shadow-blue-600/20">
+            <Box size={28} strokeWidth={2.5} className="sm:w-9 sm:h-9" />
           </div>
           <div>
-            <p className="text-xs text-slate-400 font-black uppercase tracking-[0.2em] mb-2">Quản lý kho hàng</p>
-            <h3 className={`text-4xl font-black tracking-tighter leading-none flex items-baseline gap-3 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+            <p className="text-[10px] sm:text-xs text-slate-400 font-black uppercase tracking-[0.2em] mb-1 sm:mb-2">Quản lý kho hàng</p>
+            <h3 className={`text-2xl sm:text-4xl font-black tracking-tighter leading-none flex items-baseline gap-2 sm:gap-3 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
               {totalCount}
-              <span className="text-sm font-black text-slate-300 uppercase tracking-widest">Sản phẩm hiện có</span>
+              <span className="text-xs sm:text-sm font-black text-slate-300 uppercase tracking-widest">Sản phẩm</span>
             </h3>
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-4">
+        <div className="flex flex-wrap items-center gap-3 sm:gap-4">
           <button
             onClick={() => { resetForm(); setIsAddModalOpen(true); }}
-            className={`flex items-center gap-3 px-8 py-4 rounded-2xl hover:bg-blue-600 transition-all font-black shadow-xl active:scale-95 group uppercase tracking-widest text-xs ${isDarkMode ? 'bg-blue-600 text-white shadow-blue-900/20' : 'bg-slate-900 text-white shadow-slate-900/10'}`}
+            className={`flex items-center gap-2 sm:gap-3 px-5 sm:px-8 py-3 sm:py-4 rounded-2xl hover:bg-blue-600 transition-all font-black shadow-xl active:scale-95 group uppercase tracking-widest text-[10px] sm:text-xs ${isDarkMode ? 'bg-blue-600 text-white shadow-blue-900/20' : 'bg-slate-900 text-white shadow-slate-900/10'}`}
           >
             <Plus size={18} strokeWidth={3} className="group-hover:rotate-90 transition-transform" />
             Nhập hàng mới
           </button>
           <div className={`h-12 w-px mx-2 hidden xl:block ${isDarkMode ? 'bg-slate-800' : 'bg-slate-100'}`}></div>
           <div className="flex items-center gap-2">
-            <button onClick={exportToCSV} className={`p-4 rounded-2xl hover:bg-white hover:shadow-lg transition-all hover:text-blue-600 group border border-transparent hover:border-slate-100 ${isDarkMode ? 'bg-slate-800 text-slate-400 border-slate-700' : 'bg-slate-50 text-slate-600'}`} title="Xuất CSV">
+            <button onClick={exportToCSV} className={`p-3 sm:p-4 rounded-2xl hover:bg-white hover:shadow-lg transition-all hover:text-blue-600 group border border-transparent hover:border-slate-100 ${isDarkMode ? 'bg-slate-800 text-slate-400 border-slate-700' : 'bg-slate-50 text-slate-600'}`} title="Xuất CSV">
               <Download size={20} strokeWidth={2.5} />
             </button>
-            <button onClick={() => window.print()} className={`p-4 rounded-2xl hover:bg-white hover:shadow-lg transition-all hover:text-blue-600 group border border-transparent hover:border-slate-100 ${isDarkMode ? 'bg-slate-800 text-slate-400 border-slate-700' : 'bg-slate-50 text-slate-600'}`} title="In báo cáo">
+            <button onClick={() => window.print()} className={`p-3 sm:p-4 rounded-2xl hover:bg-white hover:shadow-lg transition-all hover:text-blue-600 group border border-transparent hover:border-slate-100 ${isDarkMode ? 'bg-slate-800 text-slate-400 border-slate-700' : 'bg-slate-50 text-slate-600'}`} title="In báo cáo">
               <Printer size={20} strokeWidth={2.5} />
             </button>
           </div>
@@ -255,8 +255,8 @@ const ProductsPage = () => {
       </div>
 
       {/* Filters */}
-      <div className={`p-5 rounded-2xl shadow-sm border flex flex-wrap gap-5 items-center transition-colors duration-300 ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`}>
-        <div className="relative group flex-1 min-w-[280px]">
+      <div className={`p-4 sm:p-5 rounded-2xl shadow-sm border flex flex-col sm:flex-row gap-4 sm:gap-5 items-stretch sm:items-center transition-colors duration-300 ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`}>
+        <div className="relative group flex-1">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors" size={20} />
           <input
             type="text"
@@ -356,9 +356,9 @@ const ProductsPage = () => {
         </div>
 
         {/* Pagination */}
-        <div className={`px-8 py-6 border-t flex items-center justify-between transition-colors duration-300 ${isDarkMode ? 'bg-slate-800/50 border-slate-700' : 'bg-slate-50/30 border-slate-100'}`}>
-          <p className="text-sm text-slate-500 font-medium">
-            Hiển thị <span className={`font-black ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{(currentPage - 1) * limit + 1}</span> - <span className={`font-black ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{Math.min(currentPage * limit, totalCount)}</span> của <span className={`font-black ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{totalCount}</span> sản phẩm
+        <div className={`px-4 sm:px-8 py-4 sm:py-6 border-t flex flex-col sm:flex-row items-center justify-between gap-3 transition-colors duration-300 ${isDarkMode ? 'bg-slate-800/50 border-slate-700' : 'bg-slate-50/30 border-slate-100'}`}>
+          <p className="text-xs sm:text-sm text-slate-500 font-medium text-center sm:text-left">
+            <span className={`font-black ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{(currentPage - 1) * limit + 1}</span> - <span className={`font-black ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{Math.min(currentPage * limit, totalCount)}</span> / <span className={`font-black ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{totalCount}</span>
           </p>
           <div className="flex items-center gap-3">
             <button
@@ -398,7 +398,7 @@ const ProductsPage = () => {
               </button>
             </div>
             <form onSubmit={handleAddSubmit} className="p-8 space-y-6">
-              <div className="grid grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 <div>
                   <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Mã sản phẩm *</label>
                   <input
@@ -421,7 +421,7 @@ const ProductsPage = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 <div>
                   <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Giá bán (VNĐ) *</label>
                   <input
@@ -444,7 +444,7 @@ const ProductsPage = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 <div>
                   <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Danh mục</label>
                   <input
@@ -504,7 +504,7 @@ const ProductsPage = () => {
               </button>
             </div>
             <form onSubmit={handleEditSubmit} className="p-8 space-y-6">
-              <div className="grid grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 <div>
                   <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Mã sản phẩm (Cố định)</label>
                   <input

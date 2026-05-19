@@ -287,24 +287,24 @@ const ReportsPage = () => {
   return (
     <div className="space-y-6">
       {/* Tab Switcher */}
-      <div className="flex bg-white dark:bg-slate-900 p-1 rounded-xl border border-gray-200 dark:border-slate-800 w-fit shadow-sm">
+      <div className="flex bg-white dark:bg-slate-900 p-1 rounded-xl border border-gray-200 dark:border-slate-800 w-full sm:w-fit shadow-sm overflow-x-auto scrollbar-hide">
         <button
           onClick={() => setActiveTab('audits')}
-          className={`px-6 py-2.5 rounded-lg text-sm font-bold flex items-center gap-2 transition-all ${activeTab === 'audits' ? 'bg-blue-600 text-white shadow-md shadow-blue-900/20' : 'text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800'}`}
+          className={`flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all whitespace-nowrap ${activeTab === 'audits' ? 'bg-blue-600 text-white shadow-md shadow-blue-900/20' : 'text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800'}`}
         >
-          <ClipboardList size={18} /> Phiếu kiểm kê
+          <ClipboardList size={16} /> <span className="hidden xs:inline">Phiếu</span> Kiểm kê
         </button>
         <button
           onClick={() => setActiveTab('inventory')}
-          className={`px-6 py-2.5 rounded-lg text-sm font-bold flex items-center gap-2 transition-all ${activeTab === 'inventory' ? 'bg-blue-600 text-white shadow-md shadow-blue-900/20' : 'text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800'}`}
+          className={`flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all whitespace-nowrap ${activeTab === 'inventory' ? 'bg-blue-600 text-white shadow-md shadow-blue-900/20' : 'text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800'}`}
         >
-          <FileText size={18} /> Báo cáo tồn kho
+          <FileText size={16} /> Tồn kho
         </button>
         <button
           onClick={() => setActiveTab('analytics')}
-          className={`px-6 py-2.5 rounded-lg text-sm font-bold flex items-center gap-2 transition-all ${activeTab === 'analytics' ? 'bg-blue-600 text-white shadow-md shadow-blue-900/20' : 'text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800'}`}
+          className={`flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all whitespace-nowrap ${activeTab === 'analytics' ? 'bg-blue-600 text-white shadow-md shadow-blue-900/20' : 'text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800'}`}
         >
-          <BarChart3 size={18} /> Phân tích nhập/xuất
+          <BarChart3 size={16} /> Phân tích
         </button>
       </div>
 
