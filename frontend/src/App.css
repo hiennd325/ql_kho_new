@@ -1,4 +1,1 @@
 /* Clear default styles to use Tailwind utility classes */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
