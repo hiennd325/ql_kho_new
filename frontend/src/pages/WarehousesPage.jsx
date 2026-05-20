@@ -37,9 +37,19 @@ const WarehousesPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
   const [warehouseToDelete, setWarehouseToDelete] = useState(null);
   const [selectedWarehouse, setSelectedWarehouse] = useState(null);
   const [warehouseProducts, setWarehouseProducts] = useState([]);
+  const [availableProducts, setAvailableProducts] = useState([]);
+  
+  // Transfer state
+  const [transferData, setTransferData] = useState({
+    from_warehouse_id: '',
+    to_warehouse_id: '',
+    notes: '',
+  });
+  const [transferItems, setTransferItems] = useState([]);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -68,6 +78,27 @@ const WarehousesPage = () => {
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+  // Handle from_warehouse change to fetch its products
+  useEffect(() => {
+    const fetchProductsForTransfer = async () => {
+      if (transferData.from_warehouse_id) {
+        try {
+          const response = await api.get(`/warehouses/${transferData.from_warehouse_id}/products`);
+          setAvailableProducts(response.data);
+          // Reset transfer items when warehouse changes
+          setTransferItems([]);
+        } catch (error) {
+          console.error('Error fetching warehouse products:', error);
+          setAvailableProducts([]);
+        }
+      } else {
+        setAvailableProducts([]);
+        setTransferItems([]);
+      }
+    };
+    fetchProductsForTransfer();
+  }, [transferData.from_warehouse_id]);
 
   const handleAddEdit = async (e) => {
     e.preventDefault();
@@ -139,6 +170,70 @@ const WarehousesPage = () => {
     }
   };
 
+  const handleCreateTransfer = async (e) => {
+    e.preventDefault();
+    if (transferItems.length === 0) {
+      alert('Vui lòng thêm ít nhất một sản phẩm để điều chuyển');
+      return;
+    }
+    
+    // Prepare items for API
+    const items = transferItems.map(item => ({
+      product_id: item.product_id,
+      quantity: item.quantity
+    }));
+
+    setIsSubmitting(true);
+    try {
+      await api.post('/transfers', {
+        from_warehouse_id: transferData.from_warehouse_id,
+        to_warehouse_id: transferData.to_warehouse_id,
+        notes: transferData.notes,
+        items
+      });
+      setIsTransferModalOpen(false);
+      setTransferData({ from_warehouse_id: '', to_warehouse_id: '', notes: '' });
+      setTransferItems([]);
+      setActiveTab('transfers');
+      fetchData();
+    } catch (error) {
+      alert('Lỗi tạo phiếu điều chuyển: ' + (error.response?.data?.error || error.message));
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const addTransferItem = () => {
+    setTransferItems([...transferItems, { product_id: '', quantity: 1, max_quantity: 0 }]);
+  };
+
+  const removeTransferItem = (index) => {
+    const newItems = [...transferItems];
+    newItems.splice(index, 1);
+    setTransferItems(newItems);
+  };
+
+  const handleTransferItemChange = (index, field, value) => {
+    const newItems = [...transferItems];
+    if (field === 'product_id') {
+      const product = availableProducts.find(p => p.id === value);
+      newItems[index] = { 
+        ...newItems[index], 
+        product_id: value, 
+        max_quantity: product ? product.quantity : 0,
+        quantity: 1 // reset quantity when product changes
+      };
+    } else if (field === 'quantity') {
+      const numValue = parseInt(value) || 0;
+      // ensure quantity doesn't exceed max_quantity
+      newItems[index] = { 
+        ...newItems[index], 
+        quantity: Math.min(Math.max(1, numValue), newItems[index].max_quantity)
+      };
+    }
+    setTransferItems(newItems);
+  };
+
   const getStatusBadge = (status) => {
     const styles = {
       completed: isDarkMode ? 'bg-green-900/30 text-green-400' : 'bg-green-100 text-green-700',
@@ -179,34 +274,38 @@ const WarehousesPage = () => {
       />
 
       {/* Stats */}
-      <div className={`p-4 rounded-xl border shadow-sm grid grid-cols-1 sm:grid-cols-3 gap-4 transition-colors duration-300 ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`}>
-        <div className={`flex items-center gap-4 px-4 ${isDarkMode ? '' : ''}`}>
-          <div className={`p-2 rounded-lg ${isDarkMode ? 'bg-blue-900/20 text-blue-400' : 'bg-blue-50 text-blue-600'}`}>
-            <Warehouse size={20} />
+      <div className={`p-6 rounded-2xl border shadow-sm grid grid-cols-1 md:grid-cols-3 gap-6 transition-colors duration-300 ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`}>
+        <div className={`flex items-center gap-5 px-4`}>
+          <div className={`p-4 rounded-2xl ${isDarkMode ? 'bg-blue-900/20 text-blue-400' : 'bg-blue-50 text-blue-600'}`}>
+            <Warehouse size={32} strokeWidth={2.5} />
           </div>
-          <div>
-            <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">Tổng số kho</p>
-            <h3 className={`text-xl font-black leading-none ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{stats.total}</h3>
-          </div>
-        </div>
-
-        <div className={`flex items-center gap-4 px-4 ${isDarkMode ? '' : ''}`}>
-          <div className={`p-2 rounded-lg ${isDarkMode ? 'bg-indigo-900/20 text-indigo-400' : 'bg-indigo-50 text-indigo-600'}`}>
-            <LayoutGrid size={20} />
-          </div>
-          <div>
-            <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">Sức chứa</p>
-            <h3 className={`text-xl font-black leading-none ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>{stats.capacity.toLocaleString()} <span className="text-[10px] font-bold text-slate-400">SP</span></h3>
+          <div className="flex flex-col gap-1">
+            <p className="text-xs text-slate-500 font-black uppercase tracking-widest">Tổng số kho</p>
+            <h3 className={`text-4xl font-black leading-none tracking-tight ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{stats.total}</h3>
           </div>
         </div>
 
-        <div className={`flex items-center gap-4 px-4 ${isDarkMode ? '' : ''}`}>
-          <div className={`p-2 rounded-lg ${isDarkMode ? 'bg-emerald-900/20 text-emerald-400' : 'bg-emerald-50 text-emerald-600'}`}>
-            <Activity size={20} />
+        <div className={`flex items-center gap-5 px-4 md:border-l ${isDarkMode ? 'border-slate-800' : 'border-slate-100'}`}>
+          <div className={`p-4 rounded-2xl ${isDarkMode ? 'bg-indigo-900/20 text-indigo-400' : 'bg-indigo-50 text-indigo-600'}`}>
+            <LayoutGrid size={32} strokeWidth={2.5} />
           </div>
-          <div>
-            <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">Lấp đầy</p>
-            <h3 className={`text-xl font-black leading-none ${isDarkMode ? 'text-emerald-400' : 'text-emerald-600'}`}>{stats.usage.toLocaleString()} <span className="text-[10px] font-bold text-slate-400">({stats.capacity > 0 ? Math.round((stats.usage/stats.capacity)*100) : 0}%)</span></h3>
+          <div className="flex flex-col gap-1">
+            <p className="text-xs text-slate-500 font-black uppercase tracking-widest">Sức chứa</p>
+            <h3 className={`text-4xl font-black leading-none tracking-tight ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>
+              {stats.capacity.toLocaleString()} <span className="text-sm font-bold text-slate-400">SP</span>
+            </h3>
+          </div>
+        </div>
+
+        <div className={`flex items-center gap-5 px-4 md:border-l ${isDarkMode ? 'border-slate-800' : 'border-slate-100'}`}>
+          <div className={`p-4 rounded-2xl ${isDarkMode ? 'bg-emerald-900/20 text-emerald-400' : 'bg-emerald-50 text-emerald-600'}`}>
+            <Activity size={32} strokeWidth={2.5} />
+          </div>
+          <div className="flex flex-col gap-1">
+            <p className="text-xs text-slate-500 font-black uppercase tracking-widest">Lấp đầy</p>
+            <h3 className={`text-4xl font-black leading-none tracking-tight ${isDarkMode ? 'text-emerald-400' : 'text-emerald-600'}`}>
+              {stats.usage.toLocaleString()} <span className="text-sm font-bold text-slate-400">({stats.capacity > 0 ? Math.round((stats.usage/stats.capacity)*100) : 0}%)</span>
+            </h3>
           </div>
         </div>
       </div>
@@ -247,7 +346,7 @@ const WarehousesPage = () => {
                 <Plus size={20} strokeWidth={3} /> THÊM KHO
               </button>
               <button
-                onClick={() => alert('Chức năng điều chuyển đang được tích hợp...')}
+                onClick={() => setIsTransferModalOpen(true)}
                 className={`flex items-center justify-center gap-2 sm:gap-3 px-5 sm:px-6 py-3 rounded-xl hover:bg-emerald-700 transition-all font-black shadow-lg active:scale-95 text-xs sm:text-sm ${isDarkMode ? 'bg-emerald-600 text-white shadow-emerald-900/20' : 'bg-emerald-600 text-white shadow-emerald-100'}`}
               >
                 <PlusCircle size={20} strokeWidth={3} /> ĐIỀU CHUYỂN
@@ -380,39 +479,82 @@ const WarehousesPage = () => {
               <thead>
                 <tr className={`border-b ${isDarkMode ? 'bg-slate-800/80 border-slate-700' : 'bg-slate-50/80 border-slate-100'}`}>
                   <th className="px-8 py-5 text-[11px] font-black text-slate-500 uppercase tracking-widest">Mã phiếu</th>
-                  <th className="px-8 py-5 text-[11px] font-black text-slate-500 uppercase tracking-widest">Ngày lập</th>
-                  <th className="px-8 py-5 text-[11px] font-black text-slate-500 uppercase tracking-widest">Kho nguồn</th>
-                  <th className="px-8 py-5 text-[11px] font-black text-slate-500 uppercase tracking-widest">Kho đích</th>
-                  <th className="px-8 py-5 text-[11px] font-black text-slate-500 uppercase tracking-widest text-right">Số lượng</th>
+                  <th className="px-8 py-5 text-[11px] font-black text-slate-500 uppercase tracking-widest text-center">Hành trình</th>
+                  <th className="px-8 py-5 text-[11px] font-black text-slate-500 uppercase tracking-widest">Sản phẩm</th>
+                  <th className="px-8 py-5 text-[11px] font-black text-slate-500 uppercase tracking-widest text-right">Tổng SP</th>
                   <th className="px-8 py-5 text-[11px] font-black text-slate-500 uppercase tracking-widest text-center">Trạng thái</th>
                   <th className="px-8 py-5 text-[11px] font-black text-slate-500 uppercase tracking-widest text-center">Thao tác</th>
                 </tr>
               </thead>
               <tbody className={`divide-y ${isDarkMode ? 'divide-slate-800' : 'divide-slate-100'}`}>
-                {transfers.map(t => (
+                {transfers.length === 0 ? (
+                  <tr>
+                    <td colSpan="6" className="px-8 py-20 text-center">
+                      <div className="flex flex-col items-center gap-4">
+                        <div className={`p-6 rounded-3xl ${isDarkMode ? 'bg-slate-800' : 'bg-slate-50'}`}>
+                          <ArrowRightLeft size={48} className="text-slate-300" />
+                        </div>
+                        <div>
+                          <p className={`text-lg font-black ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Chưa có phiếu điều chuyển</p>
+                          <p className="text-sm text-slate-500 font-medium">Nhấn nút "Điều chuyển" để tạo phiếu mới</p>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                ) : transfers.map(t => (
                   <tr key={t.id || t.code} className={`transition-colors group ${isDarkMode ? 'hover:bg-slate-800/50' : 'hover:bg-slate-50/50'}`}>
-                    <td className="px-8 py-5 text-sm font-black">
-                       <div className={`px-3 py-1 rounded-lg w-fit border ${isDarkMode ? 'bg-blue-900/20 text-blue-400 border-blue-800/50' : 'bg-blue-50 text-blue-600 border-blue-100'}`}>{t.code}</div>
+                    <td className="px-8 py-5">
+                      <div className="space-y-1">
+                        <div className={`px-3 py-1.5 rounded-xl w-fit border text-xs font-black flex items-center gap-2 ${isDarkMode ? 'bg-slate-800 text-white border-slate-700 shadow-sm' : 'bg-white text-slate-900 border-slate-200 shadow-sm'}`}>
+                          <ArrowRightLeft size={14} className="text-emerald-500" />
+                          {t.code}
+                        </div>
+                        <p className="text-[10px] font-bold text-slate-400 flex items-center gap-1 mt-2">
+                          <Clock size={12} /> {t.date}
+                        </p>
+                      </div>
                     </td>
-                    <td className="px-8 py-5 text-sm text-slate-500 font-bold">{t.date}</td>
-                    <td className={`px-8 py-5 text-sm font-bold flex items-center gap-2 mt-1 ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>
-                       <div className="w-2 h-2 bg-rose-400 rounded-full"></div> {t.from_warehouse}
+                    <td className="px-8 py-5">
+                      <div className="flex items-center justify-center gap-4">
+                        <div className={`flex flex-col items-end gap-1 ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>
+                          <span className="text-sm font-bold max-w-[120px] truncate" title={t.from_warehouse}>{t.from_warehouse}</span>
+                          <span className="text-[10px] font-black text-rose-500 uppercase tracking-widest flex items-center gap-1"><div className="w-1.5 h-1.5 bg-rose-500 rounded-full"></div> Kho xuất</span>
+                        </div>
+                        <div className={`p-2 rounded-full border border-dashed ${isDarkMode ? 'bg-slate-800/50 text-slate-500 border-slate-600' : 'bg-slate-50 text-slate-400 border-slate-300'}`}>
+                          <ArrowRightLeft size={16} />
+                        </div>
+                        <div className={`flex flex-col items-start gap-1 ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>
+                          <span className="text-sm font-bold max-w-[120px] truncate" title={t.to_warehouse}>{t.to_warehouse}</span>
+                          <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest flex items-center gap-1"><div className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></div> Kho nhập</span>
+                        </div>
+                      </div>
                     </td>
-                    <td className={`px-8 py-5 text-sm font-bold ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>
-                       <div className="flex items-center gap-2"><div className="w-2 h-2 bg-emerald-400 rounded-full"></div> {t.to_warehouse}</div>
+                    <td className="px-8 py-5">
+                      <div className="flex items-center gap-2">
+                        <div className={`p-1.5 rounded-lg ${isDarkMode ? 'bg-blue-900/20 text-blue-400' : 'bg-blue-50 text-blue-600'}`}>
+                          <Package size={14} />
+                        </div>
+                        <span className={`text-sm font-bold ${isDarkMode ? 'text-slate-300' : 'text-slate-600'} line-clamp-2 max-w-[200px] leading-snug`} title={t.product_names}>
+                          {t.product_names || 'N/A'}
+                        </span>
+                      </div>
                     </td>
-                    <td className={`px-8 py-5 text-sm font-black text-right ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{(t.quantity || 0).toLocaleString()}</td>
+                    <td className={`px-8 py-5 text-sm font-black text-right ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+                      <span className="text-lg text-emerald-600">{t.item_count || 0}</span> <span className="text-[10px] text-slate-400">loại SP</span>
+                    </td>
                     <td className="px-8 py-5 text-center">
                        <div className="flex justify-center">{getStatusBadge(t.status)}</div>
                     </td>
                     <td className="px-8 py-5">
                       {t.status === 'pending' && (
                         <div className="flex justify-center gap-3">
-                          <button onClick={() => updateTransferStatus(t.id, 'completed')} className={`p-2.5 rounded-xl transition-all shadow-sm active:scale-90 ${isDarkMode ? 'text-emerald-400 bg-emerald-900/20 hover:bg-emerald-600 hover:text-white' : 'text-emerald-600 bg-emerald-50 hover:bg-emerald-600 hover:text-white'}`} title="Hoàn thành">
+                          <button onClick={() => updateTransferStatus(t.id, 'completed')} className={`group/btn relative p-2.5 rounded-xl transition-all shadow-sm active:scale-90 ${isDarkMode ? 'text-emerald-400 bg-emerald-900/20 hover:bg-emerald-600 hover:text-white' : 'text-emerald-600 bg-emerald-50 hover:bg-emerald-600 hover:text-white'}`}>
                             <CheckCircle size={18} strokeWidth={2.5} />
+                            <span className="absolute -top-10 left-1/2 -translate-x-1/2 opacity-0 group-hover/btn:opacity-100 transition-opacity bg-slate-800 text-white text-[10px] font-bold py-1 px-2 rounded-lg whitespace-nowrap pointer-events-none z-10 shadow-xl">Xác nhận hoàn thành</span>
                           </button>
-                          <button onClick={() => updateTransferStatus(t.id, 'cancelled')} className={`p-2.5 rounded-xl transition-all shadow-sm active:scale-90 ${isDarkMode ? 'text-rose-400 bg-rose-900/20 hover:bg-rose-600 hover:text-white' : 'text-rose-600 bg-rose-50 hover:bg-rose-600 hover:text-white'}`} title="Hủy">
+                          <button onClick={() => updateTransferStatus(t.id, 'cancelled')} className={`group/btn relative p-2.5 rounded-xl transition-all shadow-sm active:scale-90 ${isDarkMode ? 'text-rose-400 bg-rose-900/20 hover:bg-rose-600 hover:text-white' : 'text-rose-600 bg-rose-50 hover:bg-rose-600 hover:text-white'}`}>
                             <XCircle size={18} strokeWidth={2.5} />
+                            <span className="absolute -top-10 left-1/2 -translate-x-1/2 opacity-0 group-hover/btn:opacity-100 transition-opacity bg-slate-800 text-white text-[10px] font-bold py-1 px-2 rounded-lg whitespace-nowrap pointer-events-none z-10 shadow-xl">Hủy điều chuyển</span>
                           </button>
                         </div>
                       )}
@@ -497,6 +639,146 @@ const WarehousesPage = () => {
                 >
                   {isSubmitting ? <Loader2 size={16} className="animate-spin" /> : <CheckCircle size={16} strokeWidth={3} />}
                   Xác nhận lưu
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Transfer Modal */}
+      {isTransferModalOpen && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className={`rounded-[32px] shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden border flex flex-col transition-all ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
+            <div className={`flex items-center justify-between p-6 border-b ${isDarkMode ? 'border-slate-800' : 'border-slate-100'}`}>
+              <div className="flex items-center gap-3">
+                <div className="bg-emerald-600 p-2 rounded-xl text-white shadow-lg shadow-emerald-600/20">
+                  <ArrowRightLeft size={20} strokeWidth={3} />
+                </div>
+                <h3 className={`text-xl font-black tracking-tight ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Tạo phiếu điều chuyển</h3>
+              </div>
+              <button onClick={() => setIsTransferModalOpen(false)} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors text-slate-400">
+                <X size={20} strokeWidth={3} />
+              </button>
+            </div>
+            
+            <form onSubmit={handleCreateTransfer} className="flex flex-col flex-1 overflow-hidden">
+              <div className="p-8 overflow-y-auto custom-scrollbar flex-1 space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Kho xuất (Nguồn) *</label>
+                    <select
+                      required
+                      className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
+                      value={transferData.from_warehouse_id}
+                      onChange={(e) => setTransferData({ ...transferData, from_warehouse_id: e.target.value })}
+                    >
+                      <option value="">-- Chọn kho xuất --</option>
+                      {warehouses.map(w => (
+                        <option key={w.custom_id} value={w.custom_id}>{w.name} ({w.custom_id})</option>
+                      ))}
+                    </select>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Kho nhập (Đích) *</label>
+                    <select
+                      required
+                      className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
+                      value={transferData.to_warehouse_id}
+                      onChange={(e) => setTransferData({ ...transferData, to_warehouse_id: e.target.value })}
+                    >
+                      <option value="">-- Chọn kho nhập --</option>
+                      {warehouses.filter(w => w.custom_id !== transferData.from_warehouse_id).map(w => (
+                        <option key={w.custom_id} value={w.custom_id}>{w.name} ({w.custom_id})</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Sản phẩm điều chuyển *</label>
+                    <button 
+                      type="button" 
+                      onClick={addTransferItem}
+                      disabled={!transferData.from_warehouse_id}
+                      className="text-xs font-bold text-emerald-600 flex items-center gap-1 hover:text-emerald-700 disabled:opacity-50"
+                    >
+                      <Plus size={14} /> Thêm sản phẩm
+                    </button>
+                  </div>
+                  
+                  {transferItems.length === 0 ? (
+                    <div className={`p-6 text-center border border-dashed rounded-xl ${isDarkMode ? 'border-slate-700 text-slate-500' : 'border-slate-300 text-slate-400'}`}>
+                      {transferData.from_warehouse_id ? 'Chưa có sản phẩm nào. Nhấn "Thêm sản phẩm" để bắt đầu.' : 'Vui lòng chọn kho xuất trước khi thêm sản phẩm.'}
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {transferItems.map((item, index) => (
+                        <div key={index} className={`flex items-end gap-3 p-3 rounded-xl border ${isDarkMode ? 'bg-slate-800/50 border-slate-700' : 'bg-slate-50 border-slate-200'}`}>
+                          <div className="flex-1">
+                            <label className="block text-[10px] font-bold text-slate-500 mb-1">Sản phẩm</label>
+                            <select
+                              required
+                              className={`w-full px-3 py-2 border rounded-lg outline-none text-sm font-medium ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-white border-slate-300 text-slate-900'}`}
+                              value={item.product_id}
+                              onChange={(e) => handleTransferItemChange(index, 'product_id', e.target.value)}
+                            >
+                              <option value="">-- Chọn SP --</option>
+                              {availableProducts.map(p => (
+                                <option key={p.id} value={p.id} disabled={transferItems.some((ti, i) => i !== index && ti.product_id === p.id)}>
+                                  {p.name} (Tồn: {p.quantity})
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                          <div className="w-24">
+                            <label className="block text-[10px] font-bold text-slate-500 mb-1">Số lượng</label>
+                            <input
+                              type="number"
+                              required min="1" max={item.max_quantity || 1}
+                              className={`w-full px-3 py-2 border rounded-lg outline-none text-sm font-medium ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-white border-slate-300 text-slate-900'}`}
+                              value={item.quantity}
+                              onChange={(e) => handleTransferItemChange(index, 'quantity', e.target.value)}
+                            />
+                          </div>
+                          <button 
+                            type="button" 
+                            onClick={() => removeTransferItem(index)}
+                            className={`p-2 rounded-lg mb-0.5 transition-colors ${isDarkMode ? 'text-rose-400 hover:bg-rose-900/30' : 'text-rose-500 hover:bg-rose-50'}`}
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Ghi chú</label>
+                  <textarea
+                    className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-medium text-sm ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
+                    rows="3"
+                    value={transferData.notes}
+                    onChange={(e) => setTransferData({ ...transferData, notes: e.target.value })}
+                    placeholder="Lý do điều chuyển, ghi chú thêm..."
+                  ></textarea>
+                </div>
+              </div>
+              
+              <div className={`p-6 border-t flex justify-end gap-3 ${isDarkMode ? 'bg-slate-800/50 border-slate-800' : 'bg-slate-50 border-slate-100'}`}>
+                <button type="button" onClick={() => setIsTransferModalOpen(false)} className={`px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${isDarkMode ? 'text-slate-400 hover:bg-slate-800' : 'text-slate-500 hover:bg-slate-100'}`}>
+                  Hủy bỏ
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSubmitting || transferItems.length === 0 || !transferData.from_warehouse_id || !transferData.to_warehouse_id}
+                  className="px-8 py-3 bg-emerald-600 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-emerald-700 shadow-xl shadow-emerald-600/20 transition-all active:scale-95 disabled:opacity-50 disabled:scale-100 flex items-center gap-3"
+                >
+                  {isSubmitting ? <Loader2 size={16} className="animate-spin" /> : <CheckCircle size={16} strokeWidth={3} />}
+                  Tạo phiếu
                 </button>
               </div>
             </form>
