@@ -7,6 +7,10 @@
 const express = require('express'); // Framework web
 const router = express.Router(); // Tạo router instance
 const productModel = require('../models/product'); // Model xử lý logic sản phẩm
+const rateLimiter = require('../middleware/rateLimiter'); // Middleware giới hạn request
+
+// Cấu hình giới hạn: 100 request trong vòng 60 giây (60000 ms)
+const createProductLimiter = rateLimiter(100, 60 * 1000);
 
 /**
  * Route lấy danh sách sản phẩm với bộ lọc và phân trang
@@ -140,7 +144,7 @@ router.get('/:id', async (req, res) => {
  * Đường dẫn: /products
  * Body: { name, description, price, category, brand, supplierId, customId }
  */
-router.post('/', async (req, res) => {
+router.post('/', createProductLimiter, async (req, res) => {
     try {
         const { name, description, price, category, brand, supplierId, customId } = req.body;
         const product = await productModel.createProduct(name, description, price, category, brand, supplierId, customId);

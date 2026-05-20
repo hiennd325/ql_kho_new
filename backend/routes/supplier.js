@@ -7,6 +7,10 @@
 const express = require('express'); // Framework web
 const router = express.Router(); // Tạo router instance
 const supplierModel = require('../models/supplier'); // Model xử lý logic nhà cung cấp
+const rateLimiter = require('../middleware/rateLimiter'); // Middleware giới hạn request
+
+// Cấu hình giới hạn: 100 request trong vòng 60 giây (60000 ms)
+const createSupplierLimiter = rateLimiter(100, 60 * 1000);
 
 /**
  * Route lấy danh sách tất cả nhà cung cấp
@@ -63,7 +67,7 @@ router.get('/:id', async (req, res) => {
  * Body: { code, name, phone?, email?, address? }
  * Validate: code bắt buộc, phone phải 10 số, email đúng định dạng
  */
-router.post('/', async (req, res) => {
+router.post('/', createSupplierLimiter, async (req, res) => {
     try {
         const { code, name, phone, email, address } = req.body;
 
