@@ -1,6 +1,9 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000/api/v1';
+const hostname = window.location.hostname;
+const API_URL = hostname === 'localhost.lambdatest.com'
+  ? 'http://localhost.lambdatest.com:3000/api/v1'
+  : `http://${hostname}:3000/api/v1`;
 
 const api = axios.create({
   baseURL: API_URL,
