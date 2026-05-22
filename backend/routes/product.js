@@ -1,9 +1,4 @@
-/**
- * File định nghĩa các route CRUD cho quản lý sản phẩm (products)
- * Bao gồm: lấy danh sách, tạo, cập nhật, xóa sản phẩm, xuất CSV
- */
 
-// Import các module cần thiết
 const express = require('express'); // Framework web
 const router = express.Router(); // Tạo router instance
 const productModel = require('../models/product'); // Model xử lý logic sản phẩm
@@ -12,12 +7,6 @@ const rateLimiter = require('../middleware/rateLimiter'); // Middleware giới h
 // Cấu hình giới hạn: 100 request trong vòng 60 giây (60000 ms)
 const createProductLimiter = rateLimiter(100, 60 * 1000);
 
-/**
- * Route lấy danh sách sản phẩm với bộ lọc và phân trang
- * Phương thức: GET
- * Đường dẫn: /products
- * Query parameters: search, category, brand, supplier, page, limit
- */
 router.get('/', async (req, res) => {
     try {
         // Lấy các tham số từ query string
