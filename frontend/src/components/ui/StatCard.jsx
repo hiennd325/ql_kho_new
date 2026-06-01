@@ -45,12 +45,12 @@ const StatCard = ({ label, value, icon: Icon, color = 'blue', trend, detail, com
           </div>
           <div className="min-w-0 flex-1">
             <p className="text-[10px] text-slate-400 font-black uppercase tracking-[0.2em] mb-1 truncate">{label}</p>
-            <div className="flex flex-col">
+            <div className="flex flex-col min-w-0">
               <h3
                 title={value}
                 className={`text-xl xl:text-2xl 2xl:text-3xl font-black tracking-tighter tabular-nums leading-none ${
                   isDarkMode ? 'text-white' : 'text-slate-900'
-                } truncate ${isExpanded ? 'overflow-visible whitespace-nowrap' : ''}`}
+                } overflow-hidden text-ellipsis whitespace-nowrap group-hover:whitespace-normal group-hover:overflow-visible group-hover:text-clip group-hover:break-all ${isExpanded ? 'overflow-visible whitespace-nowrap' : ''}`}
               >
                 {value}
               </h3>
@@ -105,7 +105,7 @@ const StatCard = ({ label, value, icon: Icon, color = 'blue', trend, detail, com
 
       <div>
         <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">{label}</p>
-        <h3 className={`text-2xl font-black tracking-tighter tabular-nums truncate ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{value}</h3>
+        <h3 className={`text-2xl font-black tracking-tighter tabular-nums overflow-hidden text-ellipsis whitespace-nowrap group-hover:whitespace-normal group-hover:overflow-visible group-hover:text-clip group-hover:break-all ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{value}</h3>
         {detail && <p className="text-[10px] text-slate-400 font-bold uppercase tracking-tighter italic">{detail}</p>}
       </div>
     </motion.div>

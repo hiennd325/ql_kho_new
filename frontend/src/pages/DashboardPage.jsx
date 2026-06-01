@@ -178,7 +178,7 @@ const DashboardPage = () => {
       </div>
 
       {/* Main Grid Layout */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+      <div className="stat-cards-container gap-3 sm:gap-4">
         <StatCard
           label="Sản phẩm"
           value={stats.totalProducts}
