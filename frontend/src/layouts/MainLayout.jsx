@@ -218,14 +218,7 @@ const MainLayout = ({ children }) => {
               </div>
             </div>
 
-            <div className="hidden lg:flex items-center relative max-w-md w-full ml-4">
-              <Search size={18} className="absolute left-4 text-slate-400" />
-              <input
-                type="text"
-                placeholder="Tìm kiếm sản phẩm, đơn hàng..."
-                className={`w-full border border-transparent focus:border-blue-500/30 focus:ring-4 focus:ring-blue-500/5 py-2.5 pl-12 pr-4 rounded-2xl outline-none transition-all text-sm font-medium ${isDarkMode ? 'bg-slate-800 text-slate-100' : 'bg-slate-100/50 text-slate-900'}`}
-              />
-            </div>
+
           </div>
 
           <div className="flex items-center gap-2 sm:gap-5">
