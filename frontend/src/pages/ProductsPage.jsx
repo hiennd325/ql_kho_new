@@ -237,7 +237,7 @@ const ProductsPage = () => {
         <div className="flex flex-wrap items-center gap-3 sm:gap-4">
           <button
             onClick={() => { resetForm(); setIsAddModalOpen(true); }}
-            className={`flex items-center gap-2 sm:gap-3 px-5 sm:px-8 py-3 sm:py-4 rounded-2xl hover:bg-blue-600 transition-all font-black shadow-xl active:scale-95 group uppercase tracking-widest text-[10px] sm:text-xs ${isDarkMode ? 'bg-blue-600 text-white shadow-blue-900/20' : 'bg-slate-900 text-white shadow-slate-900/10'}`}
+            className={`flex items-center gap-2 sm:gap-3 px-5 sm:px-8 py-3 sm:py-4 rounded-2xl hover:bg-blue-700 transition-all font-black shadow-xl active:scale-95 group uppercase tracking-widest text-[10px] sm:text-xs ${isDarkMode ? 'bg-blue-600 text-white shadow-blue-900/20' : 'bg-blue-600 text-white shadow-blue-100'}`}
           >
             <Plus size={18} strokeWidth={3} className="group-hover:rotate-90 transition-transform" />
             Nhập hàng mới
