@@ -13,7 +13,6 @@ import {
   MoreHorizontal,
   X,
   Box,
-  Users,
   RefreshCw
 } from 'lucide-react';
 import api from '../services/api';
@@ -31,7 +30,6 @@ const ProductsPage = () => {
   const [brands, setBrands] = useState([]);
   const [suppliers, setSuppliers] = useState([]);
   const [brandFilter, setBrandFilter] = useState('all');
-  const [supplierFilter, setSupplierFilter] = useState('all');
   const limit = 6;
 
   // Modal states
@@ -60,7 +58,6 @@ const ProductsPage = () => {
         limit: limit,
       };
       if (brandFilter !== 'all') params.brand = brandFilter;
-      if (supplierFilter !== 'all') params.supplier = supplierFilter;
 
       const response = await api.get('/products', { params });
       setProducts(response.data.products);
@@ -71,7 +68,7 @@ const ProductsPage = () => {
     } finally {
       setLoading(false);
     }
-  }, [debouncedSearchTerm, currentPage, brandFilter, supplierFilter]);
+  }, [debouncedSearchTerm, currentPage, brandFilter]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -188,9 +185,8 @@ const ProductsPage = () => {
     try {
       const params = { search: searchTerm };
       if (brandFilter !== 'all') params.brand = brandFilter;
-      if (supplierFilter !== 'all') params.supplier = supplierFilter;
 
-      const response = await api.get('/products/export', { 
+      const response = await api.get('/products/export', {
         params,
         responseType: 'blob'
       });
@@ -274,18 +270,6 @@ const ProductsPage = () => {
             >
               <option value="all" className={isDarkMode ? 'bg-slate-900' : ''}>Tất cả nhãn hiệu</option>
               {brands.map(brand => <option key={brand} value={brand} className={isDarkMode ? 'bg-slate-900' : ''}>{brand}</option>)}
-            </select>
-          </div>
-
-          <div className={`flex items-center gap-2 border rounded-xl px-4 py-1 ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-slate-50 border-slate-200'}`}>
-            <Users size={18} className="text-slate-400" />
-            <select
-              value={supplierFilter}
-              onChange={(e) => { setSupplierFilter(e.target.value); setCurrentPage(1); }}
-              className={`bg-transparent py-2.5 outline-none text-sm font-bold min-w-[140px] ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}
-            >
-              <option value="all" className={isDarkMode ? 'bg-slate-900' : ''}>Tất cả NCC</option>
-              {suppliers.map(s => <option key={s.id} value={s.id} className={isDarkMode ? 'bg-slate-900' : ''}>{s.name}</option>)}
             </select>
           </div>
         </div>

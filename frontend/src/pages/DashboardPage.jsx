@@ -165,7 +165,7 @@ const DashboardPage = () => {
                   setActiveTab(key);
                   fetchData(key);
                 }}
-                className={`flex-1 md:flex-none px-3 sm:px-4 py-2 rounded-lg text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all ${activeTab === key ? 'bg-slate-900 dark:bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
+                className={`flex-1 md:flex-none px-3 sm:px-4 py-2 rounded-lg text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all ${activeTab === key ? 'bg-blue-600 text-white shadow-md shadow-blue-600/20' : 'text-slate-400 hover:text-blue-600'}`}
               >
                 {label}
               </button>
@@ -298,14 +298,7 @@ const DashboardPage = () => {
                 <div className={`p-2 rounded-xl ${isDarkMode ? 'bg-blue-900/20 text-blue-400' : 'bg-blue-50 text-blue-600'}`}><Clock size={20} strokeWidth={2.5} /></div>
                 Hoạt động gần đây
               </h3>
-              <div className="flex items-center gap-3 w-full md:w-auto">
-                <div className="relative flex-1 md:w-64">
-                  <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                  <input type="text" placeholder="Tìm nhanh..." className={`w-full border border-transparent text-[10px] font-bold pl-10 pr-4 py-2.5 rounded-xl outline-none focus:ring-4 focus:ring-blue-500/5 transition-all ${isDarkMode ? 'bg-slate-800 text-slate-100 focus:bg-slate-700' : 'bg-slate-50/50 text-slate-900 focus:bg-white'}`} />
-                </div>
-                <button className={`text-[10px] font-black uppercase tracking-widest px-4 py-2.5 rounded-xl transition-all ${isDarkMode ? 'bg-blue-900/20 text-blue-400 hover:bg-blue-600 hover:text-white' : 'bg-blue-50/50 text-blue-600 hover:bg-blue-600 hover:text-white'}`}>Tất cả</button>
-              </div>
-            </div>
+                          </div>
 
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">

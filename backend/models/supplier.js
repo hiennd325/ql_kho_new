@@ -50,8 +50,8 @@ const getSuppliers = async (searchTerm) => {
             let sql = 'SELECT * FROM suppliers';
             const params = [];
             if (searchTerm) {
-                sql += ' WHERE name LIKE ?';
-                params.push(`%${searchTerm}%`);
+                sql += ' WHERE name LIKE ? OR code LIKE ?';
+                params.push(`%${searchTerm}%`, `%${searchTerm}%`);
             }
             db.all(sql, params, (err, rows) => {
                 if (err) reject(err);
