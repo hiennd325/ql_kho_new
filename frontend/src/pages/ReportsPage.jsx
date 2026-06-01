@@ -1,63 +1,29 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { 
-  ClipboardList, 
-  Search, 
-  Filter, 
-  Download, 
-  Printer, 
-  Plus, 
-  Eye, 
-  Trash2, 
+import {
+  ClipboardList,
+  Search,
+  Download,
+  Plus,
+  Trash2,
   X,
-  Calendar,
   Warehouse as WarehouseIcon,
   CheckCircle,
   FileText,
-  TrendingUp,
-  BarChart3,
   ChevronLeft,
   ChevronRight,
-  Package,
-  BrainCircuit,
-  AlertCircle,
-  Sparkles
+  Package
 } from 'lucide-react';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
-import { Bar } from 'react-chartjs-2';
 import api from '../services/api';
 import { useTheme } from '../context/ThemeContext';
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
-
 const ReportsPage = () => {
   const { isDarkMode } = useTheme();
-  const [activeTab, setActiveTab] = useState('audits'); // 'audits', 'inventory', 'analytics'
+  const [activeTab, setActiveTab] = useState('audits'); // 'audits', 'inventory'
   const [audits, setAudits] = useState([]);
   const [inventoryReport, setInventoryReport] = useState([]);
-  const [chartData, setChartData] = useState(null);
   const [warehouses, setWarehouses] = useState([]);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  // AI Analysis states
-  const [aiAnalysis, setAiAnalysis] = useState(null);
-  const [aiLoading, setAiLoading] = useState(false);
-  const [aiError, setAiError] = useState(null);
 
   // Filters
   const [searchTerm, setSearchTerm] = useState('');
@@ -195,8 +161,7 @@ const ReportsPage = () => {
   useEffect(() => {
     if (activeTab === 'audits') fetchAudits();
     else if (activeTab === 'inventory') fetchInventoryReport();
-    else if (activeTab === 'analytics') fetchAnalytics();
-  }, [activeTab, fetchAudits, fetchInventoryReport, fetchAnalytics]);
+  }, [activeTab, fetchAudits, fetchInventoryReport]);
 
   const generateAuditCode = () => {
     const date = new Date();
@@ -300,17 +265,10 @@ const ReportsPage = () => {
         >
           <FileText size={16} /> Tồn kho
         </button>
-        <button
-          onClick={() => setActiveTab('analytics')}
-          className={`flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all whitespace-nowrap ${activeTab === 'analytics' ? 'bg-blue-600 text-white shadow-md shadow-blue-900/20' : 'text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800'}`}
-        >
-          <BarChart3 size={16} /> Phân tích
-        </button>
       </div>
 
       {/* Filters (only for audits and inventory) */}
-      {activeTab !== 'analytics' && (
-        <div className="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-slate-800 flex flex-wrap gap-4 items-end">
+      <div className="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-slate-800 flex flex-wrap gap-4 items-end">
           <div className="flex-1 min-w-[200px] space-y-1">
             <label className="text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest ml-1">Tìm kiếm</label>
             <div className="relative">
@@ -391,7 +349,6 @@ const ReportsPage = () => {
             </button>
           </div>
         </div>
-      )}
 
       {/* Main Content Area */}
       <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 overflow-hidden min-h-[400px]">
@@ -446,7 +403,7 @@ const ReportsPage = () => {
               </div>
             </div>
           </div>
-        ) : activeTab === 'inventory' ? (
+        ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
@@ -474,132 +431,6 @@ const ReportsPage = () => {
                 )}
               </tbody>
             </table>
-          </div>
-        ) : (
-          <div className="p-8 bg-white dark:bg-slate-900">
-            <div className="flex flex-col lg:flex-row gap-8">
-              {/* Chart Section */}
-              <div className="flex-1">
-                <div className="flex items-center justify-between mb-8">
-                  <div>
-                    <h3 className="text-xl font-bold text-gray-800 dark:text-slate-100">Xu hướng Nhập & Xuất kho</h3>
-                    <p className="text-sm text-gray-500 dark:text-slate-400">Thống kê số lượng hàng hóa lưu thông theo tháng</p>
-                  </div>
-                  <div className="flex items-center gap-6">
-                    <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                      <span className="text-sm font-bold text-gray-600 dark:text-slate-300">Nhập</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                      <span className="text-sm font-bold text-gray-600 dark:text-slate-300">Xuất</span>
-                    </div>
-                  </div>
-                </div>
-                <div className="h-[400px] w-full relative">
-                  {!chartData || chartData.datasets[0].data.every(v => v === 0) && chartData.datasets[1].data.every(v => v === 0) ? (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-400 dark:text-slate-500">
-                      <BarChart3 size={48} className="mb-4 opacity-50" />
-                      <p>Không có dữ liệu nhập/xuất trong năm nay</p>
-                    </div>
-                  ) : (
-                    <Bar
-                      data={chartData}
-                      options={{
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                          legend: { display: false },
-                          tooltip: {
-                            backgroundColor: isDarkMode ? '#1e293b' : '#fff',
-                            titleColor: isDarkMode ? '#f1f5f9' : '#1e293b',
-                            bodyColor: isDarkMode ? '#f1f5f9' : '#1e293b',
-                            borderColor: isDarkMode ? '#334155' : '#e2e8f0',
-                            borderWidth: 1
-                          }
-                        },
-                        scales: {
-                          y: {
-                            beginAtZero: true,
-                            grid: {
-                              borderDash: [5, 5],
-                              color: isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)'
-                            },
-                            ticks: {
-                              color: isDarkMode ? '#94a3b8' : '#64748b'
-                            }
-                          },
-                          x: {
-                            grid: { display: false },
-                            ticks: {
-                              color: isDarkMode ? '#94a3b8' : '#64748b'
-                            }
-                          }
-                        }
-                      }}
-                    />
-                  )}
-                </div>
-              </div>
-
-              {/* AI Analysis Sidebar */}
-              <div className="w-full lg:w-96 space-y-4">
-                <div className={`p-6 rounded-2xl border transition-all duration-300 ${isDarkMode ? 'bg-slate-800/50 border-slate-700' : 'bg-blue-50/50 border-blue-100'}`}>
-                  <div className="flex items-center justify-between mb-4">
-                    <h4 className={`font-black text-sm uppercase tracking-wider flex items-center gap-2 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>
-                      <Sparkles size={18} /> Phân tích AI
-                    </h4>
-                    <button
-                      onClick={fetchAIAnalysis}
-                      disabled={aiLoading}
-                      className={`p-2 rounded-xl transition-all active:scale-95 ${aiLoading ? 'bg-gray-200 dark:bg-slate-700' : 'bg-blue-600 text-white shadow-lg shadow-blue-600/20 hover:bg-blue-700'}`}
-                    >
-                      <BrainCircuit size={18} className={aiLoading ? 'animate-pulse' : ''} />
-                    </button>
-                  </div>
-
-                  {aiLoading ? (
-                    <div className="space-y-4 py-4">
-                      <div className="h-4 bg-gray-200 dark:bg-slate-700 rounded-full animate-pulse w-full"></div>
-                      <div className="h-4 bg-gray-200 dark:bg-slate-700 rounded-full animate-pulse w-[90%]"></div>
-                      <div className="h-4 bg-gray-200 dark:bg-slate-700 rounded-full animate-pulse w-[95%]"></div>
-                      <p className="text-center text-xs text-gray-500 dark:text-slate-400 font-medium italic mt-4">AI đang phân tích dữ liệu kho...</p>
-                    </div>
-                  ) : aiError ? (
-                    <div className="p-4 bg-rose-50 dark:bg-rose-900/10 rounded-xl border border-rose-100 dark:border-rose-900/20 flex gap-3 items-start">
-                      <AlertCircle className="text-rose-500 shrink-0" size={18} />
-                      <p className="text-xs text-rose-600 dark:text-rose-400 leading-relaxed font-medium">{aiError}</p>
-                    </div>
-                  ) : aiAnalysis ? (
-                    <div className="prose prose-sm dark:prose-invert max-w-none">
-                      <div className={`text-xs leading-relaxed font-medium whitespace-pre-wrap ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>
-                        {aiAnalysis}
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="text-center py-10 space-y-3">
-                      <div className={`w-12 h-12 rounded-2xl mx-auto flex items-center justify-center ${isDarkMode ? 'bg-slate-700 text-slate-400' : 'bg-blue-100 text-blue-600'}`}>
-                        <BrainCircuit size={24} />
-                      </div>
-                      <p className={`text-xs font-bold ${isDarkMode ? 'text-slate-500' : 'text-slate-400'}`}>Bấm để bắt đầu phân tích hệ thống</p>
-                    </div>
-                  )}
-                </div>
-
-                <div className={`p-6 rounded-2xl border ${isDarkMode ? 'bg-slate-800/30 border-slate-700' : 'bg-white border-slate-100'} shadow-sm`}>
-                  <h4 className="text-xs font-black uppercase tracking-widest text-gray-400 mb-4">Mô hình sử dụng</h4>
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
-                      <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-                    </div>
-                    <div>
-                      <p className="text-xs font-black text-slate-900 dark:text-white leading-none">Tencent HY3 Preview</p>
-                      <p className="text-[10px] text-slate-400 mt-1 uppercase font-bold tracking-tighter">OpenRouter Free Tier</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         )}
       </div>
