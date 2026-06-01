@@ -74,8 +74,42 @@ const InventoryPage = () => {
   const [exportForm, setExportForm] = useState({
     customer_name: '',
     warehouse_id: '',
-    items: [{ product_id: '', quantity: 1 }]
+    items: [{ product_id: '', quantity: 1, max_quantity: 0 }]
   });
+
+  const [exportAvailableProducts, setExportAvailableProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchProductsForExport = async () => {
+      if (exportForm.warehouse_id) {
+        try {
+          const response = await api.get(`/warehouses/${exportForm.warehouse_id}/products`);
+          setExportAvailableProducts(response.data);
+
+          // Only reset products if they are no longer in the warehouse
+          setExportForm(prev => {
+            const newItems = prev.items.map(item => {
+              const prod = response.data.find(p => p.id === item.product_id);
+              return {
+                ...item,
+                max_quantity: prod ? prod.quantity : 0,
+                quantity: prod ? Math.min(item.quantity, prod.quantity) : 1
+              };
+            });
+            return { ...prev, items: newItems };
+          });
+        } catch (error) {
+          console.error('Error fetching warehouse products for export:', error);
+          setExportAvailableProducts([]);
+        }
+      } else {
+        setExportAvailableProducts([]);
+        // Optional: clear items if warehouse is deselected
+        setExportForm(prev => ({...prev, items: [{ product_id: '', quantity: 1, max_quantity: 0 }]}));
+      }
+    };
+    fetchProductsForExport();
+  }, [exportForm.warehouse_id]);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -163,7 +197,7 @@ const InventoryPage = () => {
   };
 
   const resetExportForm = () => {
-    setExportForm({ customer_name: '', warehouse_id: '', items: [{ product_id: '', quantity: 1 }] });
+    setExportForm({ customer_name: '', warehouse_id: '', items: [{ product_id: '', quantity: 1, max_quantity: 0 }] });
   };
 
   const addImportItem = () => {
@@ -171,7 +205,7 @@ const InventoryPage = () => {
   };
 
   const addExportItem = () => {
-    setExportForm({ ...exportForm, items: [...exportForm.items, { product_id: '', quantity: 1 }] });
+    setExportForm({ ...exportForm, items: [...exportForm.items, { product_id: '', quantity: 1, max_quantity: 0 }] });
   };
 
   const removeImportItem = (index) => {
@@ -192,7 +226,23 @@ const InventoryPage = () => {
 
   const handleExportItemChange = (index, field, value) => {
     const newItems = [...exportForm.items];
-    newItems[index][field] = value;
+    if (field === 'product_id') {
+      const product = exportAvailableProducts.find(p => p.id === value || p.custom_id === value);
+      newItems[index] = {
+        ...newItems[index],
+        product_id: value,
+        max_quantity: product ? product.quantity : 0,
+        quantity: 1
+      };
+    } else if (field === 'quantity') {
+      const numValue = parseInt(value) || 0;
+      newItems[index] = {
+        ...newItems[index],
+        quantity: Math.min(Math.max(1, numValue), newItems[index].max_quantity)
+      };
+    } else {
+      newItems[index][field] = value;
+    }
     setExportForm({ ...exportForm, items: newItems });
   };
 
@@ -654,10 +704,16 @@ const InventoryPage = () => {
               <div>
                 <div className="flex items-center justify-between mb-4 sm:mb-5">
                   <label className="block text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Danh mục sản phẩm</label>
-                  <button type="button" onClick={addExportItem} className="text-[9px] sm:text-[10px] font-black text-rose-600 hover:text-rose-700 flex items-center gap-1 sm:gap-2 bg-rose-50 dark:bg-rose-900/20 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl border border-rose-100 dark:border-rose-800 transition-all active:scale-95 uppercase tracking-widest">
+                  <button type="button" onClick={addExportItem} disabled={!exportForm.warehouse_id} className="disabled:opacity-50 text-[9px] sm:text-[10px] font-black text-rose-600 hover:text-rose-700 flex items-center gap-1 sm:gap-2 bg-rose-50 dark:bg-rose-900/20 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl border border-rose-100 dark:border-rose-800 transition-all active:scale-95 uppercase tracking-widest">
                     <Plus size={12} sm:size={14} strokeWidth={3} /> Thêm
                   </button>
                 </div>
+
+                {exportForm.items.length === 0 ? (
+                  <div className={`p-6 text-center border border-dashed rounded-xl ${isDarkMode ? 'border-slate-700 text-slate-500' : 'border-slate-300 text-slate-400'}`}>
+                    {exportForm.warehouse_id ? 'Chưa có sản phẩm nào. Nhấn "Thêm" để bắt đầu.' : 'Vui lòng chọn kho xuất trước khi thêm sản phẩm.'}
+                  </div>
+                ) : (
                 <div className="space-y-3 sm:space-y-4 max-h-[250px] sm:max-h-[300px] overflow-y-auto pr-1 sm:pr-2 custom-scrollbar">
                   {exportForm.items.map((item, idx) => (
                     <div key={idx} className={`flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-end p-4 sm:p-5 rounded-[20px] sm:rounded-[24px] border transition-all ${isDarkMode ? 'bg-slate-800/40 border-slate-800' : 'bg-slate-50 border-slate-100'}`}>
@@ -670,14 +726,14 @@ const InventoryPage = () => {
                           onChange={(e) => handleExportItemChange(idx, 'product_id', e.target.value)}
                         >
                           <option value="" className={isDarkMode ? 'bg-slate-900' : ''}>-- Chọn --</option>
-                          {products.map(p => <option key={p.id} value={p.custom_id} className={isDarkMode ? 'bg-slate-900' : ''}>{p.name} (Tồn: {p.quantity})</option>)}
+                          {exportAvailableProducts.map(p => <option key={p.id} value={p.id} disabled={exportForm.items.some((ti, i) => i !== idx && ti.product_id === String(p.id))} className={isDarkMode ? 'bg-slate-900' : ''}>{p.name} (Tồn: {p.quantity})</option>)}
                         </select>
                       </div>
                       <div className="flex items-end gap-3">
                         <div className="flex-1 sm:w-32">
                           <label className="block text-[8px] sm:text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1 sm:mb-2 ml-1">Số lượng</label>
                           <input
-                            type="number" required min="1"
+                            type="number" required min="1" max={item.max_quantity || 1}
                             className={`w-full px-3 sm:px-4 py-2 sm:py-3 border rounded-lg sm:rounded-xl outline-none focus:ring-4 focus:ring-rose-500/10 transition-all font-black text-center text-sm ${isDarkMode ? 'bg-slate-900 border-slate-700 text-white' : 'bg-white border-slate-200 text-slate-900'}`}
                             value={item.quantity}
                             onChange={(e) => handleExportItemChange(idx, 'quantity', e.target.value)}
@@ -686,7 +742,6 @@ const InventoryPage = () => {
                         <button
                           type="button"
                           onClick={() => removeExportItem(idx)}
-                          disabled={exportForm.items.length === 1}
                           className="p-2 sm:p-3 text-rose-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-lg sm:rounded-xl disabled:opacity-0 transition-all active:scale-90"
                         >
                           <Trash2 size={18} sm:size={20} strokeWidth={2.5} />
@@ -695,6 +750,7 @@ const InventoryPage = () => {
                     </div>
                   ))}
                 </div>
+                )}
               </div>
 
               <div className="flex flex-col sm:flex-row justify-end gap-3 sm:gap-4 pt-4">

@@ -120,9 +120,9 @@ const DashboardPage = () => {
   }, []);
 
   const periodMap = {
-    'today': 'Hôm nay',
     'week': 'Tuần này',
-    'month': 'Tháng này'
+    'month': 'Tháng này',
+    'year': 'Năm nay'
   };
 
   const getHealthBadge = (status) => {

@@ -133,7 +133,7 @@ const ReportsPage = () => {
     setLoading(true);
     try {
       const currentYear = new Date().getFullYear();
-      const response = await api.get('/inventory/transactions', { params: { limit: 1000 } });
+      const response = await api.get('/inventory/transactions', { params: { limit: 100 } });
       const transactions = response.data.transactions || [];
 
       const monthlyData = transactions.reduce((acc, t) => {

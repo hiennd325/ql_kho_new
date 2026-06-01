@@ -22,6 +22,8 @@ router.get('/chart-data-v2', async (req, res) => {
             dateFilter = "transaction_date >= date('now')";
         } else if (period === 'month') {
             dateFilter = "transaction_date >= date('now', '-30 days')";
+        } else if (period === 'year') {
+            dateFilter = "transaction_date >= date('now', '-365 days')";
         }
 
         const chartData = await new Promise((resolve, reject) => {
