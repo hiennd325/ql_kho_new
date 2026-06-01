@@ -252,11 +252,18 @@ const DashboardPage = () => {
                       tooltip: {
                         mode: 'index',
                         intersect: false,
-                        backgroundColor: isDarkMode ? 'var(--slate-800, #1e293b)' : 'var(--white, #ffffff)',
-                        titleColor: isDarkMode ? 'var(--slate-100, #f1f5f9)' : 'var(--slate-900, #0f172a)',
-                        bodyColor: isDarkMode ? 'var(--slate-300, #cbd5e1)' : 'var(--slate-600, #475569)',
-                        borderColor: isDarkMode ? 'var(--slate-700, #334155)' : 'var(--slate-200, #e2e8f0)',
-                        borderWidth: 1
+                        backgroundColor: isDarkMode ? '#1e293b' : '#ffffff',
+                        titleColor: isDarkMode ? '#f1f5f9' : '#0f172a',
+                        bodyColor: isDarkMode ? '#cbd5e1' : '#475569',
+                        borderColor: isDarkMode ? '#334155' : '#e2e8f0',
+                        borderWidth: 1,
+                        padding: 10,
+                        bodyFont: {
+                          weight: 'bold'
+                        },
+                        titleFont: {
+                          weight: 'black'
+                        }
                       }
                     },
                     scales: {

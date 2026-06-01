@@ -247,9 +247,6 @@ const ProductsPage = () => {
             <button onClick={exportToCSV} className={`p-3 sm:p-4 rounded-2xl hover:bg-white hover:shadow-lg transition-all hover:text-blue-600 group border border-transparent hover:border-slate-100 ${isDarkMode ? 'bg-slate-800 text-slate-400 border-slate-700' : 'bg-slate-50 text-slate-600'}`} title="Xuất CSV">
               <Download size={20} strokeWidth={2.5} />
             </button>
-            <button onClick={() => window.print()} className={`p-3 sm:p-4 rounded-2xl hover:bg-white hover:shadow-lg transition-all hover:text-blue-600 group border border-transparent hover:border-slate-100 ${isDarkMode ? 'bg-slate-800 text-slate-400 border-slate-700' : 'bg-slate-50 text-slate-600'}`} title="In báo cáo">
-              <Printer size={20} strokeWidth={2.5} />
-            </button>
           </div>
         </div>
       </div>
