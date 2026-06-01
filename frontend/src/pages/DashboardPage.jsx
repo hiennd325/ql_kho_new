@@ -233,7 +233,7 @@ const DashboardPage = () => {
             <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 mb-4 sm:mb-6">
               <h3 className={`font-black flex items-center gap-2 text-sm sm:text-base ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
                 <Activity size={18} className="text-blue-600" />
-                Biểu đồ luân chuyển (7 ngày)
+                Biểu đồ luân chuyển
               </h3>
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-1.5"><div className="w-2 h-2 bg-emerald-500 rounded-full"></div><span className="text-[10px] font-black uppercase text-slate-400">Nhập</span></div>
