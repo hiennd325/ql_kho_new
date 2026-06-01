@@ -375,17 +375,6 @@ const DashboardPage = () => {
                 </div>
               ))}
             </div>
-
-            <div className="mt-8 p-6 bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl text-white relative overflow-hidden group border border-slate-800">
-              <div className="absolute top-0 right-0 -mr-6 -mt-6 w-24 h-24 bg-blue-600/20 rounded-full blur-2xl group-hover:bg-blue-600/40 transition-colors"></div>
-              <p className="text-[10px] text-slate-400 font-black uppercase tracking-[0.2em] mb-1">Đơn hàng mới</p>
-              <div className="flex items-end justify-between relative z-10">
-                <h4 className="text-6xl font-black tracking-tighter tabular-nums drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]">{alerts.newOrders}</h4>
-                <button className="bg-white/10 hover:bg-blue-600 p-3 rounded-2xl transition-all group-hover:shadow-[0_0_20px_rgba(37,99,235,0.3)]">
-                  <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-                </button>
-              </div>
-            </div>
           </motion.div>
         </div>
       </div>
