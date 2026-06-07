@@ -46,7 +46,7 @@ const MainLayout = ({ children }) => {
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    navigate('/login', { replace: true });
   };
 
   const closeMobileMenu = () => {

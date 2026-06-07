@@ -1,0 +1,47 @@
+{
+  "info": {
+    "name": "Test Đăng Ký (Independent)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:3000/api/v1" }
+  ],
+  "item": [
+    {
+      "name": "TC1: Register Success",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"AdminHung\",\n  \"password\": \"admin12345\",\n  \"confirmPassword\": \"admin12345\"\n}"
+        },
+        "url": { "raw": "{{base_url}}/auth/register" }
+      }
+    },
+    {
+      "name": "TC2: Username Empty",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"\",\n  \"password\": \"Admin12345\",\n  \"confirmPassword\": \"Admin12345\"\n}"
+        },
+        "url": { "raw": "{{base_url}}/auth/register" }
+      }
+    },
+    {
+      "name": "TC3: Password Too Short",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"AdminHung2\",\n  \"password\": \"Ad123\",\n  \"confirmPassword\": \"Ad123\"\n}"
+        },
+        "url": { "raw": "{{base_url}}/auth/register" }
+      }
+    }
+  ]
+}

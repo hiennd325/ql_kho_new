@@ -1,0 +1,23 @@
+{
+  "info": {
+    "name": "Test Đăng Xuất (Independent)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:3000/api/v1" },
+    { "key": "auth_token", "value": "" }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{auth_token}}", "type": "string" }]
+  },
+  "item": [
+    {
+      "name": "TC1: Logout Success",
+      "request": {
+        "method": "POST",
+        "url": { "raw": "{{base_url}}/auth/logout" }
+      }
+    }
+  ]
+}

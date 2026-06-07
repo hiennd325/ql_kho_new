@@ -20,6 +20,15 @@ const { createUser, findUserByUsername } = require('../models/user');
 const router = express.Router();
 
 /**
+ * Hàm kiểm tra độ mạnh của mật khẩu
+ * Ràng buộc: Độ dài > 8 ký tự, bao gồm cả chữ và số
+ */
+const isValidPassword = (password) => {
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d).{9,}$/;
+    return passwordRegex.test(password);
+};
+
+/**
  * Route xử lý đăng ký tài khoản người dùng mới
  * Phương thức: POST
  * Đường dẫn: /auth/register
@@ -32,10 +41,17 @@ router.post('/register', async (req, res) => {
         const { username, password, role } = req.body;
 
         // Kiểm tra tính hợp lệ của dữ liệu đầu vào
-        // Đảm bảo username và password không rỗng
-        if (!username || !password) {
-            // Trả về lỗi 400 nếu thiếu thông tin bắt buộc
-            return res.status(400).json({ error: 'Username and password are required' });
+        if (!username) {
+            return res.status(400).json({ error: 'Tên đăng nhập không được để trống' });
+        }
+        if (!password) {
+            return res.status(400).json({ error: 'Mật khẩu không được để trống' });
+        }
+        if (password.length <= 8) {
+            return res.status(400).json({ error: 'Độ dài mật khẩu phải lớn hơn 8 ký tự' });
+        }
+        if (!isValidPassword(password)) {
+            return res.status(400).json({ error: 'Mật khẩu phải chứa cả chữ và số' });
         }
 
         // Gọi hàm createUser từ model để tạo người dùng mới trong cơ sở dữ liệu
@@ -73,16 +89,24 @@ router.post('/login', async (req, res) => {
         const { username, password } = req.body;
 
         // Kiểm tra tính hợp lệ của dữ liệu đầu vào
-        if (!username || !password) {
-            // Trả về lỗi 400 nếu thiếu thông tin
-            return res.status(400).json({ error: 'Username and password are required' });
+        if (!username) {
+            return res.status(400).json({ error: 'Tên đăng nhập không được để trống' });
+        }
+        if (!password) {
+            return res.status(400).json({ error: 'Mật khẩu không được để trống' });
+        }
+        if (password.length <= 8) {
+            return res.status(400).json({ error: 'Độ dài mật khẩu phải lớn hơn 8 ký tự' });
+        }
+        if (!isValidPassword(password)) {
+            return res.status(400).json({ error: 'Mật khẩu phải chứa cả chữ và số' });
         }
 
         // Tìm kiếm người dùng trong cơ sở dữ liệu theo username
         const user = await findUserByUsername(username);
         if (!user) {
             // Nếu không tìm thấy user, trả về lỗi xác thực không hợp lệ
-            return res.status(401).json({ error: 'Invalid credentials' });
+            return res.status(401).json({ error: 'Tài khoản hoặc mật khẩu không chính xác' });
         }
 
         // Kiểm tra trạng thái của tài khoản người dùng
@@ -96,7 +120,7 @@ router.post('/login', async (req, res) => {
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
             // Nếu mật khẩu không khớp, trả về lỗi xác thực
-            return res.status(401).json({ error: 'Invalid credentials' });
+            return res.status(401).json({ error: 'Tài khoản hoặc mật khẩu không chính xác' });
         }
 
         // Nếu xác thực thành công, tạo JWT token chứa thông tin user

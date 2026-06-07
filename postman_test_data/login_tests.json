@@ -1,0 +1,46 @@
+{
+  "info": {
+    "name": "Test Đăng Nhập (Independent)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:3000/api/v1" },
+    { "key": "auth_token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "TC1: Login Success",
+      "event": [{
+        "listen": "test",
+        "script": {
+          "exec": [
+            "var jsonData = pm.response.json();",
+            "if (jsonData.token) { pm.collectionVariables.set(\"auth_token\", jsonData.token); }"
+          ],
+          "type": "text/javascript"
+        }
+      }],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\"\n}"
+        },
+        "url": { "raw": "{{base_url}}/auth/login" }
+      }
+    },
+    {
+      "name": "TC8: Invalid Credentials",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"WrongPass123\"\n}"
+        },
+        "url": { "raw": "{{base_url}}/auth/login" }
+      }
+    }
+  ]
+}

@@ -18,8 +18,35 @@ const RegisterPage = () => {
     e.preventDefault();
     setError('');
 
+    // Client-side validation
+    if (!username.trim()) {
+      setError('Tên đăng nhập không được để trống');
+      return;
+    }
+
+    if (!password) {
+      setError('Mật khẩu không được để trống');
+      return;
+    }
+
+    if (password.length <= 8) {
+      setError('Độ dài mật khẩu phải lớn hơn 8 ký tự');
+      return;
+    }
+
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d).+$/;
+    if (!passwordRegex.test(password)) {
+      setError('Mật khẩu phải chứa cả chữ và số');
+      return;
+    }
+
+    if (!confirmPassword) {
+      setError('Xác nhận mật khẩu không được để trống');
+      return;
+    }
+
     if (password !== confirmPassword) {
-      setError('Mật khẩu xác nhận không khớp.');
+      setError('Mật khẩu xác nhận không trùng khớp');
       return;
     }
 
