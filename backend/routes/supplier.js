@@ -100,6 +100,9 @@ router.post('/', createSupplierLimiter, async (req, res) => {
         if (err.message === 'Mã nhà cung cấp đã tồn tại') {
             return res.status(400).json({ error: err.message });
         }
+        if (err.message && err.message.includes('NOT NULL constraint failed')) {
+            return res.status(500).json({ error: err.message });
+        }
         res.status(500).json({ error: 'Failed to create supplier' });
     }
 });

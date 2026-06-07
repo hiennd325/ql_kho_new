@@ -16,7 +16,7 @@ const db = new sqlite3.Database(path.join(__dirname, '../database.db'), (err) =>
 
 // Hàm tạo nhà cung cấp mới
 // Tham số: code, name, contactPerson, phone, email, address
-// Trả về: Đối tượng chứa ID của nhà cung cấp vừa tạo
+// Trả về: Đối tượng nhà cung cấp vừa tạo
 const createSupplier = async (code, name, contactPerson, phone, email, address) => {
     try {
         // Kiểm tra mã nhà cung cấp đã tồn tại chưa
@@ -25,13 +25,24 @@ const createSupplier = async (code, name, contactPerson, phone, email, address) 
             throw new Error('Mã nhà cung cấp đã tồn tại');
         }
 
+        // Chuyển chuỗi trống thành null để kích hoạt ràng buộc NOT NULL của CSDL
+        const dbName = (name && name.trim() !== '') ? name : null;
+
         const result = await new Promise((resolve, reject) => {
             // Chèn nhà cung cấp mới vào CSDL
-            db.run('INSERT INTO suppliers (code, name, contact_person, phone, email, address) VALUES (?, ?, ?, ?, ?, ?)', [code, name, contactPerson, phone, email, address], function(err) {
+            db.run('INSERT INTO suppliers (code, name, contact_person, phone, email, address) VALUES (?, ?, ?, ?, ?, ?)', [code, dbName, contactPerson, phone, email, address], function(err) {
                 if (err) {
                     reject(err);
                 } else {
-                    resolve({ id: this.lastID });
+                    resolve({
+                        id: this.lastID,
+                        code: code,
+                        name: dbName,
+                        contact_person: contactPerson,
+                        phone: phone,
+                        email: email,
+                        address: address
+                    });
                 }
             });
         });
@@ -63,13 +74,13 @@ const getSuppliers = async (searchTerm) => {
     }
 };
 
-// Hàm lấy thông tin nhà cung cấp theo ID
-// Tham số: id - ID nhà cung cấp
+// Hàm lấy thông tin nhà cung cấp theo ID hoặc Mã code
+// Tham số: idOrCode - ID hoặc Mã nhà cung cấp
 // Trả về: Đối tượng nhà cung cấp hoặc null
-const getSupplierById = async (id) => {
+const getSupplierById = async (idOrCode) => {
     try {
         return await new Promise((resolve, reject) => {
-            db.get('SELECT * FROM suppliers WHERE id = ?', [id], (err, row) => {
+            db.get('SELECT * FROM suppliers WHERE id = ? OR code = ?', [idOrCode, idOrCode], (err, row) => {
                 if (err) reject(err);
                 else resolve(row);
             });
@@ -96,9 +107,9 @@ const getSupplierByCode = async (code) => {
 };
 
 // Hàm cập nhật thông tin nhà cung cấp
-// Tham số: id - ID nhà cung cấp, updates - Đối tượng chứa các trường cần cập nhật
+// Tham số: idOrCode - ID hoặc Mã nhà cung cấp, updates - Đối tượng chứa các trường cần cập nhật
 // Trả về: Đối tượng nhà cung cấp sau khi cập nhật
-const updateSupplier = async (id, updates) => {
+const updateSupplier = async (idOrCode, updates) => {
     try {
         const { code, name, contact_person, phone, email, address } = updates;
         const setClause = [];
@@ -107,7 +118,7 @@ const updateSupplier = async (id, updates) => {
         // Check if code is being updated and already exists for another supplier
         if (code) {
             const existingSupplier = await getSupplierByCode(code);
-            if (existingSupplier && existingSupplier.id != id) {
+            if (existingSupplier && existingSupplier.id != idOrCode && existingSupplier.code != idOrCode) {
                 throw new Error('Mã nhà cung cấp đã tồn tại');
             }
             setClause.push('code = ?');
@@ -137,26 +148,26 @@ const updateSupplier = async (id, updates) => {
         if (setClause.length === 0) {
             throw new Error('No updates provided');
         }
-        values.push(id);
+        values.push(idOrCode, idOrCode);
         await new Promise((resolve, reject) => {
-            db.run(`UPDATE suppliers SET ${setClause.join(', ')} WHERE id = ?`, values, (err) => {
+            db.run(`UPDATE suppliers SET ${setClause.join(', ')} WHERE id = ? OR code = ?`, values, (err) => {
                 if (err) reject(err);
                 else resolve();
             });
         });
-        return getSupplierById(id);
+        return getSupplierById(idOrCode);
     } catch (err) {
         throw err;
     }
 };
 
 // Hàm xóa nhà cung cấp
-// Tham số: id - ID nhà cung cấp cần xóa
+// Tham số: idOrCode - ID hoặc Mã nhà cung cấp cần xóa
 // Trả về: Thông báo xóa thành công
-const deleteSupplier = async (id) => {
+const deleteSupplier = async (idOrCode) => {
     try {
         await new Promise((resolve, reject) => {
-            db.run('DELETE FROM suppliers WHERE id = ?', [id], (err) => {
+            db.run('DELETE FROM suppliers WHERE id = ? OR code = ?', [idOrCode, idOrCode], (err) => {
                 if (err) reject(err);
                 else resolve();
             });
