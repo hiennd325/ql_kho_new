@@ -53,7 +53,7 @@ const RegisterPage = () => {
     setLoading(true);
 
     try {
-      await api.post('/auth/register', { username, password });
+      await api.post('/auth/register', { username, password, confirmPassword });
       alert('Đăng ký thành công! Vui lòng đăng nhập.');
       navigate('/login');
     } catch (err) {

@@ -3,6 +3,7 @@ const express = require('express'); // Framework web cho Node.js
 const bodyParser = require('body-parser'); // Middleware để parse JSON body
 const cors = require('cors'); // Middleware để xử lý CORS
 const sqlite3 = require('sqlite3').verbose(); // SQLite database driver
+const db = require('./db'); // Database connection instance
 const fs = require('fs'); // File system module
 const path = require('path'); // Module để xử lý đường dẫn
 

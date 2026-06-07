@@ -38,7 +38,7 @@ const isValidPassword = (password) => {
 router.post('/register', async (req, res) => {
     try {
         // Lấy thông tin từ thân yêu cầu
-        const { username, password, role } = req.body;
+        const { username, password, confirmPassword, role } = req.body;
 
         // Kiểm tra tính hợp lệ của dữ liệu đầu vào
         if (!username) {
@@ -47,11 +47,17 @@ router.post('/register', async (req, res) => {
         if (!password) {
             return res.status(400).json({ error: 'Mật khẩu không được để trống' });
         }
+        if (confirmPassword === undefined || confirmPassword === '') {
+            return res.status(400).json({ error: 'Xác nhận mật khẩu không được để trống' });
+        }
         if (password.length <= 8) {
             return res.status(400).json({ error: 'Độ dài mật khẩu phải lớn hơn 8 ký tự' });
         }
         if (!isValidPassword(password)) {
             return res.status(400).json({ error: 'Mật khẩu phải chứa cả chữ và số' });
+        }
+        if (password !== confirmPassword) {
+            return res.status(400).json({ error: 'Mật khẩu xác nhận không trùng khớp' });
         }
 
         // Gọi hàm createUser từ model để tạo người dùng mới trong cơ sở dữ liệu
@@ -63,7 +69,7 @@ router.post('/register', async (req, res) => {
     } catch (err) {
         // Xử lý các lỗi có thể xảy ra trong quá trình đăng ký
         // Nếu lỗi do username đã tồn tại (ràng buộc UNIQUE trong database)
-        if (err.message.includes('UNIQUE constraint failed')) {
+        if (err.message.includes('UNIQUE constraint failed') || err.message === 'Username already exists') {
             // Trả về lỗi 400 với thông báo cụ thể
             return res.status(400).json({ error: 'Username already exists' });
         }
