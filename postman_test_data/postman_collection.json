@@ -1,0 +1,1611 @@
+{
+  "info": {
+    "_postman_id": "a3a255b9-1961-4bc0-88ba-a69b8e5bfb62",
+    "name": "QL Kho API v1",
+    "description": "Postman Collection for QL Kho (Warehouse Management) API v1. Includes automated JWT token management.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"staff_test\",\n  \"password\": \"password123\",\n  \"role\": \"staff\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            },
+            "description": "Đăng ký tài khoản mới. Trả về thông báo thành công."
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.token) {",
+                  "    pm.collectionVariables.set(\"auth_token\", jsonData.token);",
+                  "    console.log(\"Saved auth_token to collection variables: \" + jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Đăng nhập hệ thống. Tự động lưu JWT Token vào biến `{{auth_token}}`."
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/auth/logout",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "logout"
+              ]
+            },
+            "description": "Đăng xuất tài khoản."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2. Users",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users?role=staff&status=active&search=",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users"
+              ],
+              "query": [
+                {
+                  "key": "role",
+                  "value": "staff",
+                  "description": "Lọc theo vai trò (admin, staff)"
+                },
+                {
+                  "key": "status",
+                  "value": "active",
+                  "description": "Lọc theo trạng thái (active, inactive)"
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "description": "Tìm theo username hoặc email"
+                }
+              ]
+            },
+            "description": "Lấy danh sách tất cả người dùng (Có hỗ trợ bộ lọc và tìm kiếm)."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Users Count",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/count",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "count"
+              ]
+            },
+            "description": "Lấy tổng số lượng người dùng trong hệ thống."
+          },
+          "response": []
+        },
+        {
+          "name": "Get User By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/2",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "2"
+              ]
+            },
+            "description": "Lấy thông tin người dùng theo ID."
+          },
+          "response": []
+        },
+        {
+          "name": "Create User (Admin only)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"test_create_user\",\n  \"password\": \"password123\",\n  \"role\": \"staff\",\n  \"email\": \"test@example.com\",\n  \"status\": \"active\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users"
+              ]
+            },
+            "description": "Admin tạo tài khoản người dùng mới trực tiếp."
+          },
+          "response": []
+        },
+        {
+          "name": "Update User (Admin only)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"updated_username\",\n  \"role\": \"staff\",\n  \"email\": \"updated@example.com\",\n  \"status\": \"active\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/3",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "3"
+              ]
+            },
+            "description": "Admin cập nhật thông tin người dùng theo ID."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete User (Admin only)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/3",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "3"
+              ]
+            },
+            "description": "Admin xóa tài khoản người dùng theo ID (Không thể tự xóa bản thân hoặc tài khoản admin mặc định)."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "3. Warehouses",
+      "item": [
+        {
+          "name": "Get All Warehouses",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/warehouses",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "warehouses"
+              ]
+            },
+            "description": "Lấy danh sách tất cả các kho bãi."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Warehouses Count",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/warehouses/count",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "warehouses",
+                "count"
+              ]
+            },
+            "description": "Lấy tổng số lượng kho bãi hiện có."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Warehouse By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/warehouses/WH1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "warehouses",
+                "WH1"
+              ]
+            },
+            "description": "Lấy chi tiết thông tin kho bãi theo mã định danh `custom_id`."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Warehouse",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"custom_id\": \"WH_NEW\",\n  \"name\": \"Kho Hàng Mới\",\n  \"location\": \"Địa chỉ Kho Hàng Mới\",\n  \"capacity\": 5000\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/warehouses",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "warehouses"
+              ]
+            },
+            "description": "Tạo mới một kho bãi."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Warehouse",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Kho Hàng Mới Cập Nhật\",\n  \"location\": \"Địa chỉ Kho Hàng Mới Đã Thay Đổi\",\n  \"capacity\": 6000\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/warehouses/WH_NEW",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "warehouses",
+                "WH_NEW"
+              ]
+            },
+            "description": "Cập nhật thông tin kho bãi theo mã `custom_id`."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Warehouse Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/warehouses/WH1/products",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "warehouses",
+                "WH1",
+                "products"
+              ]
+            },
+            "description": "Lấy danh sách các sản phẩm đang có trong kho cụ thể."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Warehouse",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/warehouses/WH_NEW",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "warehouses",
+                "WH_NEW"
+              ]
+            },
+            "description": "Xóa kho bãi theo mã `custom_id`."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "4. Products",
+      "item": [
+        {
+          "name": "Get All Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/products?page=1&limit=10&search=&category=&brand=&supplier=",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "products"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "description": "Tìm kiếm theo tên sản phẩm"
+                },
+                {
+                  "key": "category",
+                  "value": "",
+                  "description": "Lọc theo danh mục"
+                },
+                {
+                  "key": "brand",
+                  "value": "",
+                  "description": "Lọc theo thương hiệu"
+                },
+                {
+                  "key": "supplier",
+                  "value": "",
+                  "description": "Lọc theo nhà cung cấp"
+                }
+              ]
+            },
+            "description": "Lấy danh sách tất cả các sản phẩm (Phân trang và lọc dữ liệu)."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Products Count",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/products/count",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "products",
+                "count"
+              ]
+            },
+            "description": "Lấy tổng số lượng sản phẩm đang quản lý."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Unique Brands",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/products/brands",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "products",
+                "brands"
+              ]
+            },
+            "description": "Lấy danh sách các thương hiệu sản phẩm hiện có."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Product By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/products/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "products",
+                "1"
+              ]
+            },
+            "description": "Lấy thông tin sản phẩm theo ID."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Product",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customId\": \"PROD_NEW_99\",\n  \"name\": \"Sản phẩm Mới\",\n  \"description\": \"Mô tả sản phẩm mới\",\n  \"price\": 250000,\n  \"category\": \"Điện tử\",\n  \"brand\": \"Sony\",\n  \"supplierId\": \"SUP1\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/products",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "products"
+              ]
+            },
+            "description": "Tạo mới một sản phẩm."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Product",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customId\": \"PROD_NEW_99\",\n  \"name\": \"Sản phẩm Mới Cập Nhật\",\n  \"description\": \"Mô tả đã thay đổi\",\n  \"price\": 300000,\n  \"category\": \"Điện tử\",\n  \"brand\": \"Sony\",\n  \"supplierId\": \"SUP1\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/products/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "products",
+                "1"
+              ]
+            },
+            "description": "Cập nhật thông tin sản phẩm theo ID."
+          },
+          "response": []
+        },
+        {
+          "name": "Export Products CSV",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/products/export",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "products",
+                "export"
+              ]
+            },
+            "description": "Tải xuống file CSV chứa danh sách sản phẩm."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Product",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/products/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "products",
+                "1"
+              ]
+            },
+            "description": "Xóa sản phẩm theo ID."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "5. Inventory",
+      "item": [
+        {
+          "name": "Get Inventory Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/inventory?warehouse=WH1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "inventory"
+              ],
+              "query": [
+                {
+                  "key": "warehouse",
+                  "value": "WH1",
+                  "description": "Mã kho bãi lọc (custom_id)"
+                }
+              ]
+            },
+            "description": "Lấy danh sách các sản phẩm đang có tồn kho. Lọc theo kho."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Inventory By Product ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/inventory/PROD1?warehouse=WH1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "inventory",
+                "PROD1"
+              ],
+              "query": [
+                {
+                  "key": "warehouse",
+                  "value": "WH1",
+                  "description": "Mã kho bãi lọc (custom_id)"
+                }
+              ]
+            },
+            "description": "Lấy số lượng tồn kho của một sản phẩm cụ thể tại một kho cụ thể."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Inventory Transactions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/inventory/transactions?page=1&limit=10&type=nhap&warehouseId=WH1&startDate=&endDate=&search=",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "inventory",
+                "transactions"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "type",
+                  "value": "nhap",
+                  "description": "Loại giao dịch (nhap, xuat)"
+                },
+                {
+                  "key": "warehouseId",
+                  "value": "WH1",
+                  "description": "Mã kho"
+                },
+                {
+                  "key": "startDate",
+                  "value": "",
+                  "description": "YYYY-MM-DD"
+                },
+                {
+                  "key": "endDate",
+                  "value": "",
+                  "description": "YYYY-MM-DD"
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "description": "Tìm kiếm mã giao dịch hoặc sản phẩm"
+                }
+              ]
+            },
+            "description": "Lấy nhật ký giao dịch nhập/xuất kho (phân trang và lọc)."
+          },
+          "response": []
+        },
+        {
+          "name": "Import Stock (Nhập kho)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"warehouse_id\": \"WH1\",\n  \"supplier_id\": \"SUP1\",\n  \"products\": [\n    {\n      \"product_id\": \"PROD1\",\n      \"quantity\": 50\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/inventory/import",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "inventory",
+                "import"
+              ]
+            },
+            "description": "Thực hiện nhập kho hàng loạt. Tự động kiểm tra sức chứa kho trước khi cho nhập."
+          },
+          "response": []
+        },
+        {
+          "name": "Export Stock (Xuất kho)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"warehouse_id\": \"WH1\",\n  \"customer_name\": \"Nguyễn Văn A\",\n  \"products\": [\n    {\n      \"product_id\": \"PROD1\",\n      \"quantity\": 5\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/inventory/export",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "inventory",
+                "export"
+              ]
+            },
+            "description": "Thực hiện xuất kho hàng loạt. Tự động kiểm tra tồn kho đủ hay thiếu trước khi cho xuất."
+          },
+          "response": []
+        },
+        {
+          "name": "Export Transactions CSV",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/inventory/transactions/export",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "inventory",
+                "transactions",
+                "export"
+              ]
+            },
+            "description": "Tải xuống file CSV chứa toàn bộ nhật ký giao dịch kho."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Audit (Kiểm kê kho)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"warehouse_id\": \"WH1\",\n  \"date\": \"2026-06-07T08:39:00Z\",\n  \"notes\": \"Kiểm kê định kỳ tháng 6\",\n  \"items\": [\n    {\n      \"product_id\": \"PROD1\",\n      \"system_quantity\": 100,\n      \"actual_quantity\": 98,\n      \"notes\": \"Hao hụt chưa rõ lý do\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/inventory/audits",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "inventory",
+                "audits"
+              ]
+            },
+            "description": "Tạo phiếu kiểm kê kho. Tính toán chênh lệch tồn kho thực tế và hệ thống."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Audit By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/inventory/audits/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "inventory",
+                "audits",
+                "1"
+              ]
+            },
+            "description": "Lấy chi tiết một phiếu kiểm kê kho và các mặt hàng bên trong."
+          },
+          "response": []
+        },
+        {
+          "name": "Export Audit to CSV",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/inventory/audits/1/export",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "inventory",
+                "audits",
+                "1",
+                "export"
+              ]
+            },
+            "description": "Tải xuống file CSV thông tin chi tiết một phiếu kiểm kê kho."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Audit",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/inventory/audits/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "inventory",
+                "audits",
+                "1"
+              ]
+            },
+            "description": "Xóa một phiếu kiểm kê kho."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "6. Transfers (Chuyển kho)",
+      "item": [
+        {
+          "name": "Get Transfers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/transfers?limit=10",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "transfers"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Lấy danh sách các phiếu chuyển kho gần đây."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Transfer By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/transfers/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "transfers",
+                "1"
+              ]
+            },
+            "description": "Lấy thông tin chi tiết một phiếu chuyển kho theo ID."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Transfer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"from_warehouse_id\": \"WH1\",\n  \"to_warehouse_id\": \"WH2\",\n  \"items\": [\n    {\n      \"product_id\": \"PROD1\",\n      \"quantity\": 15\n    }\n  ],\n  \"notes\": \"Chuyển hàng kiểm thử\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/transfers",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "transfers"
+              ]
+            },
+            "description": "Tạo phiếu yêu cầu chuyển hàng giữa 2 kho bãi khác nhau."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Transfer Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"completed\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/transfers/1/status",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "transfers",
+                "1",
+                "status"
+              ]
+            },
+            "description": "Cập nhật trạng thái phiếu chuyển kho (`pending`, `in_progress`, `completed`, `cancelled`)."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Transfer",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/transfers/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "transfers",
+                "1"
+              ]
+            },
+            "description": "Xóa phiếu chuyển kho."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "7. Suppliers",
+      "item": [
+        {
+          "name": "Get All Suppliers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/suppliers?search=",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "suppliers"
+              ],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "",
+                  "description": "Tìm kiếm theo tên nhà cung cấp"
+                }
+              ]
+            },
+            "description": "Lấy danh sách tất cả các nhà cung cấp."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Suppliers Count",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/suppliers/count",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "suppliers",
+                "count"
+              ]
+            },
+            "description": "Lấy tổng số lượng nhà cung cấp hiện có."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Supplier By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/suppliers/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "suppliers",
+                "1"
+              ]
+            },
+            "description": "Lấy thông tin chi tiết của một nhà cung cấp theo ID."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Supplier",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"SUP_NEW_01\",\n  \"name\": \"Công ty TNHH Nhập Khẩu Mới\",\n  \"phone\": \"0987654321\",\n  \"email\": \"import.new@company.com\",\n  \"address\": \"123 Đường Láng, Hà Nội\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/suppliers",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "suppliers"
+              ]
+            },
+            "description": "Tạo mới một nhà cung cấp. Yêu cầu mã nhà cung cấp, kiểm tra số điện thoại (10 chữ số) và email hợp lệ."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Supplier",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Công ty TNHH Nhập Khẩu Mới Cập Nhật\",\n  \"phone\": \"0123456789\",\n  \"email\": \"import.update@company.com\",\n  \"address\": \"456 Nguyễn Trãi, Hà Nội\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/suppliers/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "suppliers",
+                "1"
+              ]
+            },
+            "description": "Cập nhật thông tin của một nhà cung cấp theo ID."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Top Suppliers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/suppliers/top?limit=3",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "suppliers",
+                "top"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "3",
+                  "description": "Số lượng nhà cung cấp muốn lấy (mặc định 3)"
+                }
+              ]
+            },
+            "description": "Lấy danh sách các nhà cung cấp hàng đầu dựa trên số lượng hàng nhập kho."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Supplier",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/suppliers/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "suppliers",
+                "1"
+              ]
+            },
+            "description": "Xóa nhà cung cấp theo ID."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "8. Dashboard & Reports",
+      "item": [
+        {
+          "name": "Chart Data V2",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/dashboard/chart-data-v2?period=week",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "dashboard",
+                "chart-data-v2"
+              ],
+              "query": [
+                {
+                  "key": "period",
+                  "value": "week",
+                  "description": "Khoảng thời gian: today, week, month, year"
+                }
+              ]
+            },
+            "description": "Lấy dữ liệu thống kê nhập/xuất để vẽ biểu đồ."
+          },
+          "response": []
+        },
+        {
+          "name": "Dashboard Alerts & Health Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/dashboard/alerts",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "dashboard",
+                "alerts"
+              ]
+            },
+            "description": "Lấy các cảnh báo hệ thống (Đơn hàng mới, sức khỏe cơ sở dữ liệu, lỗi logs, cảnh báo tồn kho thấp/hết hàng, uptime)."
+          },
+          "response": []
+        },
+        {
+          "name": "Dashboard Quick Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/dashboard/stats?period=month",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "dashboard",
+                "stats"
+              ],
+              "query": [
+                {
+                  "key": "period",
+                  "value": "month",
+                  "description": "Khoảng thời gian: today, week, month"
+                }
+              ]
+            },
+            "description": "Lấy các chỉ số tóm tắt nhanh (Tổng số sản phẩm, lượng nhập/xuất, tổng giá trị tồn kho)."
+          },
+          "response": []
+        },
+        {
+          "name": "Dashboard Recent Activities",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/dashboard/recent-activities",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "dashboard",
+                "recent-activities"
+              ]
+            },
+            "description": "Lấy danh sách 5 hoạt động (giao dịch nhập/xuất) kho gần đây nhất."
+          },
+          "response": []
+        },
+        {
+          "name": "Report - Get Inventory Details",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/inventory?warehouse=Tất cả kho",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "inventory"
+              ],
+              "query": [
+                {
+                  "key": "warehouse",
+                  "value": "Tất cả kho",
+                  "description": "Tên kho lọc cụ thể hoặc 'Tất cả kho'"
+                }
+              ]
+            },
+            "description": "Báo cáo tồn kho chi tiết các sản phẩm trong kho bãi."
+          },
+          "response": []
+        },
+        {
+          "name": "Report - Sales (30 Days)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/sales",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "sales"
+              ]
+            },
+            "description": "Báo cáo doanh thu bán hàng 30 ngày qua gom nhóm theo sản phẩm."
+          },
+          "response": []
+        },
+        {
+          "name": "Report - Low Stock Alerts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/alerts?warehouse=",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "alerts"
+              ],
+              "query": [
+                {
+                  "key": "warehouse",
+                  "value": "",
+                  "description": "Mã kho để lọc"
+                }
+              ]
+            },
+            "description": "Báo cáo các mặt hàng có tồn kho thấp (dưới hoặc bằng 10 đơn vị)."
+          },
+          "response": []
+        },
+        {
+          "name": "Report - Quick Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/quick-stats",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "quick-stats"
+              ]
+            },
+            "description": "Thống kê tổng hợp số lượng nhập, xuất, tồn kho hiện tại, tổng giá trị tài sản, số lượng kiểm kê định kỳ hàng tháng."
+          },
+          "response": []
+        },
+        {
+          "name": "Report - Get Audits list",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/audits?startDate=&endDate=&warehouse=Tất cả kho&status=Tất cả trạng thái&search=&page=1&limit=10",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "audits"
+              ],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": "",
+                  "description": "YYYY-MM-DD"
+                },
+                {
+                  "key": "endDate",
+                  "value": "",
+                  "description": "YYYY-MM-DD"
+                },
+                {
+                  "key": "warehouse",
+                  "value": "Tất cả kho"
+                },
+                {
+                  "key": "status",
+                  "value": "Tất cả trạng thái"
+                },
+                {
+                  "key": "search",
+                  "value": ""
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Lấy danh sách lịch sử kiểm kê kho bãi kèm phân trang và tìm kiếm."
+          },
+          "response": []
+        },
+        {
+          "name": "Report - Generate Report dynamically",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/generate?type=inventory&period=monthly",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "generate"
+              ],
+              "query": [
+                {
+                  "key": "type",
+                  "value": "inventory",
+                  "description": "Loại báo cáo: inventory, import, export, financial"
+                },
+                {
+                  "key": "period",
+                  "value": "monthly",
+                  "description": "Kỳ báo cáo: daily, weekly, monthly, quarterly, yearly"
+                }
+              ]
+            },
+            "description": "Tạo động báo cáo theo các cấu hình mong muốn."
+          },
+          "response": []
+        },
+        {
+          "name": "Report - Export Audit By ID to CSV",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/audits/1/export",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "audits",
+                "1",
+                "export"
+              ]
+            },
+            "description": "Xuất và tải về báo cáo kiểm kê chi tiết của một phiếu kiểm kê dưới dạng CSV."
+          },
+          "response": []
+        },
+        {
+          "name": "Report - Export Audits list to CSV",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/audits/export?startDate=&endDate=&warehouse=Tất cả kho&status=Tất cả trạng thái",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "audits",
+                "export"
+              ],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": ""
+                },
+                {
+                  "key": "endDate",
+                  "value": ""
+                },
+                {
+                  "key": "warehouse",
+                  "value": "Tất cả kho"
+                },
+                {
+                  "key": "status",
+                  "value": "Tất cả trạng thái"
+                }
+              ]
+            },
+            "description": "Xuất toàn bộ danh sách phiếu kiểm kê ra file CSV."
+          },
+          "response": []
+        },
+        {
+          "name": "Report - Export Inventory Report to CSV",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/inventory/export",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "inventory",
+                "export"
+              ]
+            },
+            "description": "Xuất và tải về toàn bộ báo cáo tồn kho hiện tại ra file CSV."
+          },
+          "response": []
+        },
+        {
+          "name": "Report - Export Transactions to CSV",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/transactions/export?type=nhap&warehouseId=WH1&startDate=&endDate=",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "transactions",
+                "export"
+              ],
+              "query": [
+                {
+                  "key": "type",
+                  "value": "nhap",
+                  "description": "Loại giao dịch (nhap, xuat)"
+                },
+                {
+                  "key": "warehouseId",
+                  "value": "WH1",
+                  "description": "Mã kho để lọc"
+                },
+                {
+                  "key": "startDate",
+                  "value": "",
+                  "description": "Từ ngày YYYY-MM-DD"
+                },
+                {
+                  "key": "endDate",
+                  "value": "",
+                  "description": "Đến ngày YYYY-MM-DD"
+                }
+              ]
+            },
+            "description": "Xuất và tải về danh sách nhật ký giao dịch kho ra file CSV."
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{auth_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "auth_token",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}
