@@ -24,7 +24,7 @@ const router = express.Router();
  * Ràng buộc: Độ dài > 8 ký tự, bao gồm cả chữ và số
  */
 const isValidPassword = (password) => {
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d).{9,}$/;
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
     return passwordRegex.test(password);
 };
 
@@ -50,7 +50,7 @@ router.post('/register', async (req, res) => {
         if (confirmPassword === undefined || confirmPassword === '') {
             return res.status(400).json({ error: 'Xác nhận mật khẩu không được để trống' });
         }
-        if (password.length <= 8) {
+        if (password.length < 8) {
             return res.status(400).json({ error: 'Độ dài mật khẩu phải lớn hơn 8 ký tự' });
         }
         if (!isValidPassword(password)) {
@@ -101,7 +101,7 @@ router.post('/login', async (req, res) => {
         if (!password) {
             return res.status(400).json({ error: 'Mật khẩu không được để trống' });
         }
-        if (password.length <= 8) {
+        if (password.length < 8) {
             return res.status(400).json({ error: 'Độ dài mật khẩu phải lớn hơn 8 ký tự' });
         }
         if (!isValidPassword(password)) {

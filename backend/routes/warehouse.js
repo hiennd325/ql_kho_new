@@ -66,9 +66,11 @@ router.post('/', async (req, res) => {
         const warehouse = await warehouseModel.createWarehouse(name, location, capacity, custom_id);
         res.status(201).json(warehouse);
     } catch (err) {
-        // Xử lý lỗi trùng mã kho
-        if (err.message === 'Mã kho đã tồn tại') {
+        // Xử lý lỗi trùng mã kho hoặc sức chứa không hợp lệ
+        if (err.message === 'Mã kho đã tồn tại' || err.message === 'Sức chứa phải là số nguyên lớn hơn 0') {
             res.status(400).json({ error: err.message });
+        } else if (err.message.includes('NOT NULL constraint failed')) {
+            res.status(500).json({ error: err.message });
         } else {
             res.status(500).json({ error: 'Failed to create warehouse' });
         }

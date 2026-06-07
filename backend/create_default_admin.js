@@ -26,18 +26,18 @@ async function createDefaultAdmin() {
         }
 
         // Hash the default password
-        const hashedPassword = await bcrypt.hash('admin123', 10);
+        const hashedPassword = await bcrypt.hash('admin@123', 10);
 
         // Insert default admin user
         await new Promise((resolve, reject) => {
             db.run(`INSERT INTO users (username, password, role) VALUES (?, ?, ?)`,
-                ['admin', hashedPassword, 'admin'], function(err) {
-                if (err) reject(err);
-                else {
-                    console.log('Default admin user created with ID:', this.lastID);
-                    resolve();
-                }
-            });
+                ['admin', hashedPassword, 'admin'], function (err) {
+                    if (err) reject(err);
+                    else {
+                        console.log('Default admin user created with ID:', this.lastID);
+                        resolve();
+                    }
+                });
         });
 
         console.log('Default admin user created successfully!');

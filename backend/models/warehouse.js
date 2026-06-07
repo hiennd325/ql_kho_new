@@ -14,14 +14,10 @@ const db = new sqlite3.Database(path.join(__dirname, '../database.db'), (err) =>
     }
 });
 
-// Hàm tạo kho mới
-// Tham số: name - Tên kho, location - Địa điểm, capacity - Dung lượng, custom_id - Mã kho tùy chỉnh
-// Trả về: Đối tượng chứa custom_id của kho vừa tạo
 const createWarehouse = async (name, location, capacity, custom_id = null) => {
     try {
         // Đảm bảo location không null, mặc định là chuỗi rỗng nếu không cung cấp
         const safeLocation = location || '';
-        const safeCapacity = capacity !== undefined && capacity !== null ? capacity : 0;
 
         // Kiểm tra custom_id phải được cung cấp
         if (!custom_id) {
@@ -34,9 +30,15 @@ const createWarehouse = async (name, location, capacity, custom_id = null) => {
             throw new Error('Mã kho đã tồn tại');
         }
 
-        // Chèn kho mới vào CSDL
+        // Kiểm tra sức chứa phải là số nguyên lớn hơn 0
+        if (capacity === undefined || capacity === null || typeof capacity !== 'number' || !Number.isInteger(capacity) || capacity <= 0) {
+            throw new Error('Sức chứa phải là số nguyên lớn hơn 0');
+        }
+
+        // Chèn kho mới vào CSDL. Nếu tên kho trống hoặc chỉ chứa khoảng trắng, truyền null để kích hoạt NOT NULL constraint
+        const dbName = name && name.trim() !== '' ? name : null;
         const result = await new Promise((resolve, reject) => {
-            db.run('INSERT INTO warehouses (custom_id, name, location, capacity) VALUES (?, ?, ?, ?)', [custom_id, name, safeLocation, safeCapacity], function(err) {
+            db.run('INSERT INTO warehouses (custom_id, name, location, capacity) VALUES (?, ?, ?, ?)', [custom_id, dbName, safeLocation, capacity], function(err) {
                 if (err) {
                     reject(err);
                 } else {
