@@ -589,3 +589,65 @@ F: Không thỏa mãn điều kiện
 | **TC7** | Token = Không gửi hoặc không hợp lệ, Mã sản phẩm = "SP_TH_001" | Trả về lỗi 401/403: Không có quyền truy cập |
 
 **=> Kết hợp hai phương pháp trên ta thấy:** Gộp TC1 với TC5, TC2/TC3 với TC7, TC4 với TC6, ta có tổng cộng 4 Testcase đặc trưng quan trọng cần chạy thực tế đối với luồng xem chi tiết sản phẩm của API backend.
+
+3.10 Chức năng tìm kiếm sản phẩm theo tên
+
+3.10.1 Phân tích thiết kế kiểm thử
+
+a) Giao diện chức năng
+
+![](data:image/png;base64...)
+
+b) Mô tả điều kiện để thực hiện thành công
+
+1, Người dùng đã đăng nhập vào hệ thống (Token JWT gửi kèm hợp lệ).
+2, Nhập từ khóa tìm kiếm vào ô tìm kiếm (tham số `search` trong query string).
+3, Hệ thống sẽ trả về danh sách các sản phẩm có tên, mã hoặc mô tả chứa từ khóa tìm kiếm (không phân biệt hoa thường).
+
+c) Phương pháp tìm testcase: Dùng phương pháp phân vùng tương đương và bảng quyết định
+
+1. Phân vùng tương đương
+
+- Bảng phân vùng tương đương:
+
+| Đầu vào | Vùng hợp lệ | Kí hiệu | Vùng không hợp lệ | Kí hiệu |
+| --- | --- | --- | --- | --- |
+| Phiên đăng nhập (Token) | JWT hợp lệ & còn hạn | A1 | Không gửi token / token rỗng | U1 |
+| | | | Token không hợp lệ / hết hạn | U2 |
+| Từ khóa tìm kiếm (search) | Chứa ký tự tồn tại trong tên sản phẩm | A2 | Từ khóa không khớp với bất kỳ sản phẩm nào | U3 |
+| | Bỏ trống từ khóa | A3 | Có chứa các ký tự đặc biệt không an toàn | U4 |
+
+- Bảng thiết kế testcase phân vùng tương đương:
+
+| Test Case ID | Ghi chú | Đầu vào (Input) (a=Token JWT, b=Từ khóa tìm kiếm) | Đầu ra (Output) |
+| --- | --- | --- | --- |
+| **TC1** | A1, A2 | a= Token hợp lệ; b= "Sữa" (Từ khóa tồn tại) | Trả về danh sách sản phẩm có chứa từ "Sữa" |
+| **TC2** | **U1**, A2 | a= ""; b= "Sữa" | Lỗi HTTP 401 (Access token required) |
+| **TC3** | **U2**, A2 | a= Token sai/hết hạn; b= "Sữa" | Lỗi HTTP 403 (Invalid token) |
+| **TC4** | A1, **U3** | a= Token hợp lệ; b= "XYZ123KhôngTồnTại" | Trả về danh sách rỗng, HTTP 200 |
+| **TC5** | A1, A3 | a= Token hợp lệ; b= "" (Để trống) | Trả về tất cả sản phẩm, HTTP 200 |
+
+2. Phương pháp bảng quyết định
+
+T: Có thỏa mãn điều kiện
+F: Không thỏa mãn điều kiện
+
+| | | **Luật 1** | **Luật 2** | **Luật 3** | **Luật 4** |
+| --- | --- | --- | --- | --- | --- |
+| **Điều kiện đầu vào** | Token đăng nhập hợp lệ (T/F) | T | T | F | T |
+| | Từ khóa tìm kiếm khớp sản phẩm (T/F) | T | F | T | N/A (Trống) |
+| **Hành động đầu ra** | Trả về danh sách kết quả phù hợp | X | | | |
+| | Trả về danh sách rỗng | | X | | |
+| | Báo lỗi hệ thống (401/403) | | | X | |
+| | Trả về toàn bộ sản phẩm | | | | X |
+
+- Bảng thiết kế Testcase theo bảng quyết định:
+
+| TC | Đầu vào | Đầu ra mong đợi |
+| --- | --- | --- |
+| **TC6** | Token = Hợp lệ, Từ khóa = "Sữa" (Có sản phẩm chứa "Sữa") | Trả về các sản phẩm chứa "Sữa" trong thông tin |
+| **TC7** | Token = Hợp lệ, Từ khóa = "XYZ_FAKE" (Không có sản phẩm nào khớp) | Trả về mảng rỗng `[]` |
+| **TC8** | Token = Hợp lệ, Từ khóa để trống | Trả về toàn bộ danh sách sản phẩm (có phân trang) |
+| **TC9** | Token = Không hợp lệ, Từ khóa = "Sữa" | Trả về lỗi 401/403: Không có quyền truy cập |
+
+**=> Kết hợp hai phương pháp trên ta thấy:** Gộp TC1 với TC6, TC4 với TC7, TC5 với TC8, và TC2/TC3 với TC9, ta có tổng cộng 5 Testcase đặc trưng quan trọng cần chạy thực tế đối với luồng tìm kiếm sản phẩm theo tên của API backend.
