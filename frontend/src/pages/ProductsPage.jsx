@@ -625,7 +625,7 @@ const ProductsPage = () => {
                 </div>
               </div>
               <div className="flex justify-end mt-10">
-                <button onClick={() => setIsDetailModalOpen(false)} className={`px-10 py-4 rounded-xl text-xs font-black uppercase tracking-widest transition-all active:scale-95 ${isDarkMode ? 'bg-white text-slate-900 hover:bg-slate-100 shadow-xl shadow-white/5' : 'bg-slate-900 text-white hover:bg-slate-800 shadow-xl shadow-slate-900/10'}`}>Đóng cửa sổ</button>
+                <button onClick={() => setIsDetailModalOpen(false)} className={`px-10 py-4 rounded-xl text-xs font-black uppercase tracking-widest transition-all active:scale-95 ${isDarkMode ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-xl shadow-blue-900/20' : 'bg-blue-600 text-white hover:bg-blue-700 shadow-xl shadow-blue-100'}`}>Đóng cửa sổ</button>
               </div>
             </div>
           </div>
