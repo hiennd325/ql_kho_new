@@ -540,7 +540,7 @@ const WarehousesPage = () => {
                       </div>
                     </td>
                     <td className={`px-8 py-5 text-sm font-black text-right ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
-                      <span className="text-lg text-emerald-600">{t.item_count || 0}</span> <span className="text-[10px] text-slate-400">loại SP</span>
+                      <span className="text-lg text-emerald-600">{t.item_count || 0}</span> <span className="text-[10px] text-slate-400">SP</span>
                     </td>
                     <td className="px-8 py-5 text-center">
                        <div className="flex justify-center">{getStatusBadge(t.status)}</div>

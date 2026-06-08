@@ -103,7 +103,7 @@ const getTransfers = async (limit = 10) => {
         const query = `SELECT t.id, t.code, t.status, t.created_at, t.updated_at,
                               fw.name as from_warehouse_name, tw.name as to_warehouse_name,
                               u.username as user_name,
-                              (SELECT COUNT(*) FROM transfer_items WHERE transfer_id = t.id) as item_count,
+                              (SELECT COALESCE(SUM(quantity), 0) FROM transfer_items WHERE transfer_id = t.id) as item_count,
                               (SELECT GROUP_CONCAT(p.name, ', ') 
                                FROM transfer_items ti 
                                JOIN products p ON ti.product_id = p.custom_id 
