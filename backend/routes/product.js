@@ -136,12 +136,25 @@ router.get('/:id', async (req, res) => {
 router.post('/', createProductLimiter, async (req, res) => {
     try {
         const { name, description, price, category, brand, supplierId, customId } = req.body;
+        
+        // Kiểm tra giá sản phẩm (phải là số và >= 0)
+        if (price !== undefined) {
+            const numPrice = Number(price);
+            if (isNaN(numPrice) || numPrice < 0 || typeof price === 'boolean') {
+                return res.status(400).json({ error: 'Giá sản phẩm không hợp lệ' });
+            }
+        }
+        
         const product = await productModel.createProduct(name, description, price, category, brand, supplierId, customId);
         res.status(201).json(product);
     } catch (err) {
         // Xử lý lỗi cụ thể từ model
         if (err.message === 'Mã sản phẩm đã tồn tại') {
             return res.status(400).json({ error: err.message });
+        }
+        // Bắt lỗi constraint NOT NULL từ SQLite
+        if (err.message && err.message.includes('NOT NULL constraint failed')) {
+            return res.status(500).json({ error: err.message });
         }
         res.status(500).json({ error: 'Failed to create product: ' + err.message });
     }
@@ -156,6 +169,15 @@ router.post('/', createProductLimiter, async (req, res) => {
 router.put('/:id', async (req, res) => {
     try {
         const { name, description, price, category, brand, supplierId, customId } = req.body;
+        
+        // Kiểm tra giá sản phẩm (phải là số và >= 0)
+        if (price !== undefined) {
+            const numPrice = Number(price);
+            if (isNaN(numPrice) || numPrice < 0 || typeof price === 'boolean') {
+                return res.status(400).json({ error: 'Giá sản phẩm không hợp lệ' });
+            }
+        }
+        
         const updates = { name, description, price, category, brand, supplierId, customId };
         const updatedProduct = await productModel.updateProduct(req.params.id, updates);
         res.json(updatedProduct);
@@ -163,6 +185,10 @@ router.put('/:id', async (req, res) => {
         // Xử lý lỗi cụ thể từ model
         if (err.message === 'Mã sản phẩm đã tồn tại') {
             return res.status(400).json({ error: err.message });
+        }
+        // Bắt lỗi constraint NOT NULL từ SQLite
+        if (err.message && err.message.includes('NOT NULL constraint failed')) {
+            return res.status(500).json({ error: err.message });
         }
         res.status(500).json({ error: 'Failed to update product: ' + err.message });
     }

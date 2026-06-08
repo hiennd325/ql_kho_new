@@ -134,6 +134,11 @@ router.post('/', authenticateToken, async (req, res) => {
         res.status(201).json({ message: 'Transfer created successfully', transfer: result });
     } catch (error) {
         console.error('Error creating transfer:', error);
+        if (error.message === 'Quantity must be greater than 0' || 
+            error.message === 'From warehouse does not exist' || 
+            error.message === 'To warehouse does not exist') {
+            return res.status(400).json({ error: error.message });
+        }
         res.status(500).json({ error: 'Internal server error' });
     }
 });

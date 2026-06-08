@@ -21,6 +21,26 @@ const db = new sqlite3.Database(path.join(__dirname, '../database.db'), (err) =>
 const createTransfer = async (transferData) => {
     try {
         const { from_warehouse_id, to_warehouse_id, items, user_id, notes } = transferData;
+        
+        // Kiểm tra số lượng hợp lệ
+        for (const item of items) {
+            if (!item.quantity || item.quantity <= 0) {
+                throw new Error('Quantity must be greater than 0');
+            }
+        }
+
+        // Kiểm tra kho nguồn tồn tại
+        const fromWarehouse = await warehouseModel.getWarehouseById(from_warehouse_id);
+        if (!fromWarehouse) {
+            throw new Error('From warehouse does not exist');
+        }
+
+        // Kiểm tra kho đích tồn tại
+        const toWarehouse = await warehouseModel.getWarehouseById(to_warehouse_id);
+        if (!toWarehouse) {
+            throw new Error('To warehouse does not exist');
+        }
+
         // Tạo mã code duy nhất cho phiếu chuyển kho
         const code = `DC${Date.now()}`;
 

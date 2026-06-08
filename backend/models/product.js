@@ -43,6 +43,9 @@ const createProduct = async (name, description, price, category, brand, supplier
             }
         }
 
+        // Chuyển name thành null nếu rỗng hoặc chỉ chứa khoảng trắng
+        const dbName = (name && name.trim() !== '') ? name : null;
+
         // Chèn sản phẩm mới vào CSDL
         const result = await new Promise((resolve, reject) => {
             // Xây dựng query động dựa trên có customId hay không
@@ -50,8 +53,8 @@ const createProduct = async (name, description, price, category, brand, supplier
                 ? 'INSERT INTO products (custom_id, name, description, price, category, brand, supplier_id) VALUES (?, ?, ?, ?, ?, ?, ?)'
                 : 'INSERT INTO products (name, description, price, category, brand, supplier_id) VALUES (?, ?, ?, ?, ?, ?)';
             const params = trimmedCustomId
-                ? [trimmedCustomId, name, description, price, category, brand, supplierId]
-                : [name, description, price, category, brand, supplierId];
+                ? [trimmedCustomId, dbName, description, price, category, brand, supplierId]
+                : [dbName, description, price, category, brand, supplierId];
 
             db.run(query, params, function(err) {
                 if (err) {
@@ -218,7 +221,7 @@ const updateProduct = async (id, updates) => {
         const values = [];
         if (name !== undefined) {
             setClause.push('name = ?');
-            values.push(name);
+            values.push((name && name.trim() !== '') ? name : null);
         }
         if (description !== undefined) {
             setClause.push('description = ?');
