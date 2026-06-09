@@ -173,6 +173,15 @@ const updateTransferStatus = async (id, status) => {
         const transfer = await getTransferById(id);
         if (!transfer) throw new Error('Transfer not found');
 
+        // State Guard: Chống cập nhật phiếu đã hoàn thành/hủy
+        if (transfer.status === 'completed' || transfer.status === 'cancelled') {
+            throw new Error('Cannot change status of a completed or cancelled transfer');
+        }
+
+        // State Guard: Chống duplicate status update (Replay attack)
+        if (status === transfer.status) {
+            throw new Error('New status cannot be the same as the current status');
+        }
 
         if (status === 'completed') {
             // Get to_warehouse capacity and current usage
