@@ -3,6 +3,10 @@ const router = express.Router();
 const axios = require('axios');
 const db = require('../db');
 const { authenticate } = require('../middleware/auth');
+const rateLimiter = require('../middleware/rateLimiter');
+
+// Cấu hình giới hạn cho AI: 10 request trong vòng 60 giây (60000 ms) cho mỗi IP
+const aiLimiter = rateLimiter(10, 60 * 1000);
 
 /**
  * Thu thập dữ liệu hệ thống để gửi cho AI phân tích
@@ -71,7 +75,7 @@ async function gatherSystemData() {
 /**
  * API Phân tích tình hình hệ thống bằng OpenRouter AI
  */
-router.post('/analyze-system', authenticate, async (req, res) => {
+router.post('/analyze-system', authenticate, aiLimiter, async (req, res) => {
     try {
         const systemData = await gatherSystemData();
         if (!systemData) {

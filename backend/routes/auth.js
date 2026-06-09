@@ -15,9 +15,13 @@ dotenv.config(); // Khởi tạo dotenv để load các biến môi trường
 // createUser: Tạo người dùng mới
 // findUserByUsername: Tìm người dùng theo tên đăng nhập
 const { createUser, findUserByUsername } = require('../models/user');
+const rateLimiter = require('../middleware/rateLimiter');
 
 // Tạo router instance để định nghĩa các route
 const router = express.Router();
+
+// Giới hạn 15 request trong vòng 60 giây (60000 ms) cho mỗi IP đối với đăng ký và đăng nhập
+const authLimiter = rateLimiter(15, 60 * 1000);
 
 /**
  * Hàm kiểm tra độ mạnh của mật khẩu
@@ -35,7 +39,7 @@ const isValidPassword = (password) => {
  * Thân yêu cầu (request body): { username: string, password: string, role?: string }
  * Mô tả: Tạo tài khoản mới với thông tin được cung cấp, hash mật khẩu trước khi lưu
  */
-router.post('/register', async (req, res) => {
+router.post('/register', authLimiter, async (req, res) => {
     try {
         // Lấy thông tin từ thân yêu cầu
         const { username, password, confirmPassword, role } = req.body;
@@ -89,7 +93,7 @@ router.post('/register', async (req, res) => {
  * Thân yêu cầu (request body): { username: string, password: string }
  * Mô tả: Xác thực thông tin đăng nhập, tạo JWT token nếu thành công
  */
-router.post('/login', async (req, res) => {
+router.post('/login', authLimiter, async (req, res) => {
     try {
         // Lấy thông tin đăng nhập từ thân yêu cầu
         const { username, password } = req.body;

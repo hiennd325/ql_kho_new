@@ -1,6 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const { authenticate } = require('../middleware/auth');
+const rateLimiter = require('../middleware/rateLimiter');
+
+// Cấu hình giới hạn chung: 300 request trong vòng 60 giây (60000 ms) cho mỗi IP
+const globalApiLimiter = rateLimiter(300, 60 * 1000);
+router.use(globalApiLimiter);
 
 // Import routes
 const authRoutes = require('./auth');
