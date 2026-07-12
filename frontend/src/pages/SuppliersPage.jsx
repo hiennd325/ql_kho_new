@@ -167,7 +167,7 @@ const SuppliersPage = () => {
                     </div>
                   </div>
                   <div className="flex gap-1">
-                    <button onClick={() => openEditModal(supplier)} className={`p-2 rounded-lg transition-colors ${isDarkMode ? 'text-blue-400 hover:bg-blue-900/20' : 'text-blue-600 hover:bg-blue-50'}`} title="Sửa">
+                    <button onClick={() => openEditModal(supplier)} className={`p-2 rounded-lg transition-colors ${isDarkMode ? 'text-[#ff8a65] hover:bg-[#FF5E3A]/10' : 'text-[#FF5E3A] hover:bg-[#FF5E3A]/8'}`} title="Sửa">
                       <Edit size={18} />
                     </button>
                     <button onClick={() => handleDelete(supplier.id)} className={`p-2 rounded-lg transition-colors ${isDarkMode ? 'text-red-400 hover:bg-red-900/20' : 'text-red-600 hover:bg-red-50'}`} title="Xóa">

@@ -16,7 +16,7 @@ const NotFoundPage = () => {
         </p>
         <Link 
           to="/" 
-          className="inline-flex items-center gap-2 bg-blue-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-100 active:scale-95"
+          className="inline-flex items-center gap-2 bg-[#FF5E3A] text-white px-8 py-3 rounded-xl font-bold hover:bg-[#e04520] transition-all shadow-lg shadow-[#FF5E3A]/10 active:scale-95"
         >
           <Home size={20} /> Quay về Trang chủ
         </Link>

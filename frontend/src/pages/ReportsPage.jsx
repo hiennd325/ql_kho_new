@@ -255,13 +255,13 @@ const ReportsPage = () => {
       <div className="flex bg-white dark:bg-slate-900 p-1 rounded-xl border border-gray-200 dark:border-slate-800 w-full sm:w-fit shadow-sm overflow-x-auto scrollbar-hide">
         <button
           onClick={() => setActiveTab('audits')}
-          className={`flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all whitespace-nowrap ${activeTab === 'audits' ? 'bg-blue-600 text-white shadow-md shadow-blue-900/20' : 'text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800'}`}
+          className={`flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all whitespace-nowrap ${activeTab === 'audits' ? 'bg-[#FF5E3A] text-white shadow-md shadow-[#FF5E3A]/20' : 'text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800'}`}
         >
           <ClipboardList size={16} /> <span className="hidden xs:inline">Phiếu</span> Kiểm kê
         </button>
         <button
           onClick={() => setActiveTab('inventory')}
-          className={`flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all whitespace-nowrap ${activeTab === 'inventory' ? 'bg-blue-600 text-white shadow-md shadow-blue-900/20' : 'text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800'}`}
+          className={`flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all whitespace-nowrap ${activeTab === 'inventory' ? 'bg-[#FF5E3A] text-white shadow-md shadow-[#FF5E3A]/20' : 'text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800'}`}
         >
           <FileText size={16} /> Tồn kho
         </button>
@@ -276,7 +276,7 @@ const ReportsPage = () => {
               <input
                 type="text"
                 placeholder="Mã phiếu, người tạo..."
-                className="w-full pl-9 pr-4 py-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 text-sm text-slate-900 dark:text-slate-100 transition-all"
+                className="w-full pl-9 pr-4 py-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg outline-none focus:ring-2 focus:ring-[#FF5E3A] text-sm text-slate-900 dark:text-slate-100 transition-all"
                 value={searchTerm}
                 onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
               />
@@ -286,7 +286,7 @@ const ReportsPage = () => {
           <div className="space-y-1">
             <label className="text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest ml-1">Kho bãi</label>
             <select
-              className="border border-gray-200 dark:border-slate-700 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 min-w-[150px] transition-all"
+              className="border border-gray-200 dark:border-slate-700 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-[#FF5E3A] text-sm bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 min-w-[150px] transition-all"
               value={warehouseFilter}
               onChange={(e) => { setWarehouseFilter(e.target.value); setCurrentPage(1); }}
             >
@@ -302,7 +302,7 @@ const ReportsPage = () => {
                 <input
                   type="date"
                   max={dateRange.end || new Date().toISOString().split('T')[0]}
-                  className="border border-gray-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 transition-all"
+                  className="border border-gray-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-[#FF5E3A] bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 transition-all"
                   value={dateRange.start}
                   onChange={(e) => setDateRange({...dateRange, start: e.target.value})}
                 />
@@ -311,7 +311,7 @@ const ReportsPage = () => {
                   type="date"
                   min={dateRange.start}
                   max={new Date().toISOString().split('T')[0]}
-                  className="border border-gray-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 transition-all"
+                  className="border border-gray-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-[#FF5E3A] bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 transition-all"
                   value={dateRange.end}
                   onChange={(e) => setDateRange({...dateRange, end: e.target.value})}
                 />
@@ -330,7 +330,7 @@ const ReportsPage = () => {
 
           <div className="flex gap-2 ml-auto">
             {activeTab === 'audits' && (
-              <button onClick={openAddAudit} className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 font-bold text-sm flex items-center gap-2 shadow-md shadow-blue-100 dark:shadow-blue-900/20 active:scale-95 transition-all">
+              <button onClick={openAddAudit} className="bg-[#FF5E3A] text-white px-4 py-2 rounded-lg hover:bg-[#e04520] font-bold text-sm flex items-center gap-2 shadow-md shadow-[#FF5E3A]/10 dark:shadow-[#FF5E3A]/20 active:scale-95 transition-all">
                 <Plus size={18} /> Lập phiếu kiểm
               </button>
             )}
@@ -361,7 +361,7 @@ const ReportsPage = () => {
                   ) : (
                     audits.map(audit => (
                       <tr key={audit.id} className="hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors group">
-                        <td className="px-6 py-4 text-sm font-bold text-blue-600 dark:text-blue-400">{audit.code}</td>
+                        <td className="px-6 py-4 text-sm font-bold text-[#FF5E3A] dark:text-[#ff8a65]">{audit.code}</td>
                         <td className="px-6 py-4 text-sm text-gray-500 dark:text-slate-400">{new Date(audit.date).toLocaleDateString('vi-VN')}</td>
                         <td className="px-6 py-4 text-sm text-gray-700 dark:text-slate-300 font-medium">{audit.warehouse_name}</td>
                         <td className="px-6 py-4 text-sm text-gray-600 dark:text-slate-400">{audit.created_by_username}</td>
@@ -370,7 +370,7 @@ const ReportsPage = () => {
                         </td>
                         <td className="px-6 py-4">
                           <div className="flex justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <button onClick={() => downloadAuditPDF(audit.id)} className="p-1.5 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded transition-all" title="Tải PDF"><Download size={16} /></button>
+                            <button onClick={() => downloadAuditPDF(audit.id)} className="p-1.5 text-[#FF5E3A] dark:text-[#ff8a65] hover:bg-[#FF5E3A]/8 dark:hover:bg-[#FF5E3A]/10 rounded transition-all" title="Tải PDF"><Download size={16} /></button>
                             <button onClick={() => deleteAudit(audit.id)} className="p-1.5 text-red-600 dark:text-rose-400 hover:bg-red-50 dark:hover:bg-rose-900/20 rounded transition-all" title="Xóa"><Trash2 size={16} /></button>
                           </div>
                         </td>
@@ -410,7 +410,7 @@ const ReportsPage = () => {
                     <tr key={item.product_id} className="hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors">
                       <td className="px-6 py-4 text-sm font-medium text-gray-500 dark:text-slate-400">{item.product_id}</td>
                       <td className="px-6 py-4 text-sm font-bold text-gray-900 dark:text-slate-100">{item.name}</td>
-                      <td className="px-6 py-4 text-sm text-right font-bold text-blue-600 dark:text-blue-400">{item.quantity}</td>
+                      <td className="px-6 py-4 text-sm text-right font-bold text-[#FF5E3A] dark:text-[#ff8a65]">{item.quantity}</td>
                       <td className="px-6 py-4 text-sm text-right text-gray-600 dark:text-slate-400">{formatCurrency(item.price)}</td>
                       <td className="px-6 py-4 text-sm text-right text-gray-900 dark:text-slate-100 font-bold">{formatCurrency(item.quantity * item.price)}</td>
                     </tr>
@@ -426,8 +426,8 @@ const ReportsPage = () => {
       {isAuditModalOpen && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
           <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col animate-in fade-in zoom-in duration-200 border dark:border-slate-800">
-            <div className="flex items-center justify-between p-6 border-b dark:border-slate-800 bg-blue-50/50 dark:bg-blue-900/20">
-              <h3 className="text-xl font-bold text-blue-800 dark:text-blue-400 flex items-center gap-2">
+            <div className="flex items-center justify-between p-6 border-b dark:border-slate-800 bg-[#FF5E3A]/8/50 dark:bg-[#FF5E3A]/10">
+              <h3 className="text-xl font-bold text-[#e04520] dark:text-[#ff8a65] flex items-center gap-2">
                 <ClipboardList size={24} /> Lập phiếu kiểm kê hàng hóa
               </h3>
               <button onClick={() => setIsAuditModalOpen(false)} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
@@ -444,11 +444,11 @@ const ReportsPage = () => {
                   </div>
                   <div className="space-y-1">
                     <label className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase ml-1">Ngày lập *</label>
-                    <input type="date" required className="w-full px-4 py-2.5 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-slate-100 transition-all" value={auditForm.date} onChange={e => setAuditForm({...auditForm, date: e.target.value})} />
+                    <input type="date" required className="w-full px-4 py-2.5 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-[#FF5E3A] text-slate-900 dark:text-slate-100 transition-all" value={auditForm.date} onChange={e => setAuditForm({...auditForm, date: e.target.value})} />
                   </div>
                   <div className="space-y-1">
                     <label className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase ml-1">Kho kiểm kê *</label>
-                    <select required className="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 transition-all" value={auditForm.warehouse_id} onChange={e => setAuditForm({...auditForm, warehouse_id: e.target.value})}>
+                    <select required className="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-[#FF5E3A] bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 transition-all" value={auditForm.warehouse_id} onChange={e => setAuditForm({...auditForm, warehouse_id: e.target.value})}>
                       <option value="" className="dark:bg-slate-800">-- Chọn kho --</option>
                       {warehouses.map(w => <option key={w.custom_id} value={w.custom_id} className="dark:bg-slate-800">{w.name}</option>)}
                     </select>
@@ -458,20 +458,20 @@ const ReportsPage = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-1">
                     <label className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase ml-1">Người kiểm kê *</label>
-                    <input type="text" required placeholder="Nhập tên người kiểm" className="w-full px-4 py-2.5 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-slate-100 transition-all" value={auditForm.checker} onChange={e => setAuditForm({...auditForm, checker: e.target.value})} />
+                    <input type="text" required placeholder="Nhập tên người kiểm" className="w-full px-4 py-2.5 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-[#FF5E3A] text-slate-900 dark:text-slate-100 transition-all" value={auditForm.checker} onChange={e => setAuditForm({...auditForm, checker: e.target.value})} />
                   </div>
                   <div className="space-y-1">
                     <label className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase ml-1">Ghi chú</label>
-                    <input type="text" placeholder="Ghi chú thêm (nếu có)" className="w-full px-4 py-2.5 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-slate-100 transition-all" value={auditForm.notes} onChange={e => setAuditForm({...auditForm, notes: e.target.value})} />
+                    <input type="text" placeholder="Ghi chú thêm (nếu có)" className="w-full px-4 py-2.5 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-[#FF5E3A] text-slate-900 dark:text-slate-100 transition-all" value={auditForm.notes} onChange={e => setAuditForm({...auditForm, notes: e.target.value})} />
                   </div>
                 </div>
 
                 <div className="space-y-4">
                   <div className="flex items-center justify-between border-b dark:border-slate-800 pb-2">
-                    <h4 className="font-bold text-gray-800 dark:text-slate-100 flex items-center gap-2"><Package size={18} className="text-blue-600 dark:text-blue-400" /> Chi tiết hàng hóa</h4>
+                    <h4 className="font-bold text-gray-800 dark:text-slate-100 flex items-center gap-2"><Package size={18} className="text-[#FF5E3A] dark:text-[#ff8a65]" /> Chi tiết hàng hóa</h4>
                     <div className="flex gap-2">
                       <select
-                        className="text-sm border border-gray-300 dark:border-slate-700 rounded-lg px-3 py-1.5 outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 min-w-[200px] transition-all"
+                        className="text-sm border border-gray-300 dark:border-slate-700 rounded-lg px-3 py-1.5 outline-none focus:ring-2 focus:ring-[#FF5E3A] bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 min-w-[200px] transition-all"
                         onChange={(e) => { addAuditItem(e.target.value); e.target.value = ''; }}
                         value=""
                       >
@@ -506,7 +506,7 @@ const ReportsPage = () => {
                               <td className="px-4 py-3 text-center">
                                 <input
                                   type="number" min="0"
-                                  className="w-20 px-2 py-1.5 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-lg text-center font-bold focus:ring-2 focus:ring-blue-500 outline-none text-slate-900 dark:text-slate-100 transition-all"
+                                  className="w-20 px-2 py-1.5 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-lg text-center font-bold focus:ring-2 focus:ring-[#FF5E3A] outline-none text-slate-900 dark:text-slate-100 transition-all"
                                   value={item.actual_quantity}
                                   onChange={(e) => updateAuditItem(idx, e.target.value)}
                                 />
@@ -528,7 +528,7 @@ const ReportsPage = () => {
 
               <div className="p-6 border-t dark:border-slate-800 bg-gray-50 dark:bg-slate-800/50 flex justify-end gap-3">
                 <button type="button" onClick={() => setIsAuditModalOpen(false)} className="px-6 py-2.5 text-gray-600 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-xl font-bold transition-all">Đóng</button>
-                <button type="submit" className="px-10 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-bold shadow-lg shadow-blue-100 dark:shadow-blue-900/20 transition-all active:scale-95 flex items-center gap-2">
+                <button type="submit" className="px-10 py-2.5 bg-[#FF5E3A] text-white rounded-xl hover:bg-[#e04520] font-bold shadow-lg shadow-[#FF5E3A]/10 dark:shadow-[#FF5E3A]/20 transition-all active:scale-95 flex items-center gap-2">
                   <CheckCircle size={20} /> Hoàn tất & Cân bằng kho
                 </button>
               </div>

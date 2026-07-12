@@ -218,7 +218,7 @@ const ProductsPage = () => {
       {/* Stats & Actions */}
       <div className={`flex flex-col xl:flex-row xl:items-center justify-between gap-6 sm:gap-8 p-5 sm:p-8 rounded-[24px] sm:rounded-[32px] border shadow-[0_8px_30px_rgb(0,0,0,0.02)] mb-6 sm:mb-8 transition-colors duration-300 ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
         <div className="flex items-center gap-4 sm:gap-6">
-          <div className="bg-gradient-to-br from-blue-600 to-indigo-600 p-3 sm:p-5 rounded-[18px] sm:rounded-[24px] text-white shadow-xl shadow-blue-600/20">
+          <div className="bg-gradient-to-br from-[#FF5E3A] to-[#e04520] p-3 sm:p-5 rounded-[18px] sm:rounded-[24px] text-white shadow-xl shadow-[#FF5E3A]/20">
             <Box size={28} strokeWidth={2.5} className="sm:w-9 sm:h-9" />
           </div>
           <div>
@@ -233,14 +233,14 @@ const ProductsPage = () => {
         <div className="flex flex-wrap items-center gap-3 sm:gap-4">
           <button
             onClick={() => { resetForm(); setIsAddModalOpen(true); }}
-            className={`flex items-center gap-2 sm:gap-3 px-5 sm:px-8 py-3 sm:py-4 rounded-2xl hover:bg-blue-700 transition-all font-black shadow-xl active:scale-95 group uppercase tracking-widest text-[10px] sm:text-xs ${isDarkMode ? 'bg-blue-600 text-white shadow-blue-900/20' : 'bg-blue-600 text-white shadow-blue-100'}`}
+            className={`flex items-center gap-2 sm:gap-3 px-5 sm:px-8 py-3 sm:py-4 rounded-2xl hover:bg-[#e04520] transition-all font-black shadow-xl active:scale-95 group uppercase tracking-widest text-[10px] sm:text-xs ${isDarkMode ? 'bg-[#FF5E3A] text-white shadow-[#FF5E3A]/20' : 'bg-[#FF5E3A] text-white shadow-[#FF5E3A]/10'}`}
           >
             <Plus size={18} strokeWidth={3} className="group-hover:rotate-90 transition-transform" />
             Nhập hàng mới
           </button>
           <div className={`h-12 w-px mx-2 hidden xl:block ${isDarkMode ? 'bg-slate-800' : 'bg-slate-100'}`}></div>
           <div className="flex items-center gap-2">
-            <button onClick={exportToCSV} className={`p-3 sm:p-4 rounded-2xl hover:bg-white hover:shadow-lg transition-all hover:text-blue-600 group border border-transparent hover:border-slate-100 ${isDarkMode ? 'bg-slate-800 text-slate-400 border-slate-700' : 'bg-slate-50 text-slate-600'}`} title="Xuất CSV">
+            <button onClick={exportToCSV} className={`p-3 sm:p-4 rounded-2xl hover:bg-white hover:shadow-lg transition-all hover:text-[#FF5E3A] group border border-transparent hover:border-slate-100 ${isDarkMode ? 'bg-slate-800 text-slate-400 border-slate-700' : 'bg-slate-50 text-slate-600'}`} title="Xuất CSV">
               <Download size={20} strokeWidth={2.5} />
             </button>
           </div>
@@ -250,11 +250,11 @@ const ProductsPage = () => {
       {/* Filters */}
       <div className={`p-4 sm:p-5 rounded-2xl shadow-sm border flex flex-col sm:flex-row gap-4 sm:gap-5 items-stretch sm:items-center transition-colors duration-300 ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`}>
         <div className="relative group flex-1">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors" size={20} />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#FF5E3A] transition-colors" size={20} />
           <input
             type="text"
             placeholder="Tìm theo tên, mã sản phẩm, thương hiệu..."
-            className={`w-full pl-12 pr-4 py-3.5 border rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition-all font-medium ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white focus:bg-slate-700' : 'bg-slate-50 border-slate-200 text-slate-900 focus:bg-white'}`}
+            className={`w-full pl-12 pr-4 py-3.5 border rounded-xl outline-none focus:ring-2 focus:ring-[#FF5E3A] transition-all font-medium ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white focus:bg-slate-700' : 'bg-slate-50 border-slate-200 text-slate-900 focus:bg-white'}`}
             value={searchTerm}
             onChange={handleSearch}
           />
@@ -291,15 +291,15 @@ const ProductsPage = () => {
             </thead>
             <tbody className={`divide-y ${isDarkMode ? 'divide-slate-800' : 'divide-slate-50'}`}>
               {loading ? (
-                <tr><td colSpan="6" className="px-8 py-24 text-center"><div className="flex flex-col items-center gap-4"><RefreshCw className="w-10 h-10 text-blue-600 animate-spin" /><p className="text-slate-400 font-black uppercase text-xs tracking-widest animate-pulse">Đang tải dữ liệu...</p></div></td></tr>
+                <tr><td colSpan="6" className="px-8 py-24 text-center"><div className="flex flex-col items-center gap-4"><RefreshCw className="w-10 h-10 text-[#FF5E3A] animate-spin" /><p className="text-slate-400 font-black uppercase text-xs tracking-widest animate-pulse">Đang tải dữ liệu...</p></div></td></tr>
               ) : products.length === 0 ? (
                 <tr><td colSpan="6" className="px-8 py-24 text-center"><div className={`w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 text-slate-200 shadow-inner ${isDarkMode ? 'bg-slate-800' : 'bg-slate-50'}`}><Box size={40} /></div><p className="text-slate-400 font-black uppercase text-xs tracking-widest">Kho hàng đang trống</p></td></tr>
               ) : (
                 products.map((product) => (
-                  <tr key={product.id} className={`transition-all group ${isDarkMode ? 'hover:bg-slate-800/50' : 'hover:bg-slate-50/70'}`}>
+                  <tr key={product.id} className={`transition-all group border-b ${isDarkMode ? 'border-slate-800/60 hover:bg-[#FF5E3A]/5 hover:border-[#FF5E3A]/20' : 'border-slate-100 hover:bg-[#FF5E3A]/5 hover:border-[#FF5E3A]/20'}`}>
                     <td className="px-8 py-6">
                       <div className="flex flex-col">
-                        <span className={`text-sm font-black group-hover:text-blue-600 transition-colors ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{product.name}</span>
+                        <span className={`text-sm font-black group-hover:text-[#FF5E3A] transition-colors ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{product.name}</span>
                         <span className="text-xs font-black text-slate-400 uppercase tracking-tighter mt-1">{product.custom_id || product.id}</span>
                       </div>
                     </td>
@@ -318,7 +318,7 @@ const ProductsPage = () => {
                     <td className="px-8 py-6 text-xs font-black text-slate-400 uppercase tracking-tighter">{formatDate(product.created_at)}</td>
                     <td className="px-8 py-6">
                       <div className="flex justify-center items-center gap-3">
-                        <button onClick={() => openDetailModal(product)} className={`p-3 text-slate-400 border hover:border-blue-500 hover:text-blue-600 hover:shadow-lg hover:shadow-blue-500/10 rounded-2xl transition-all active:scale-90 ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-100'}`} title="Chi tiết">
+                        <button onClick={() => openDetailModal(product)} className={`p-3 text-slate-400 border hover:border-[#FF5E3A] hover:text-[#FF5E3A] hover:shadow-lg hover:shadow-[#FF5E3A]/10 rounded-2xl transition-all active:scale-90 ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-100'}`} title="Chi tiết">
                           <Eye size={16} strokeWidth={2.5} />
                         </button>
                         <button onClick={() => openEditModal(product)} className={`p-3 text-slate-400 border hover:border-amber-500 hover:text-amber-600 hover:shadow-lg hover:shadow-amber-500/10 rounded-2xl transition-all active:scale-90 ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-100'}`} title="Sửa">
@@ -369,7 +369,7 @@ const ProductsPage = () => {
           <div className={`rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden border transition-all ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
             <div className={`flex items-center justify-between p-6 border-b ${isDarkMode ? 'border-slate-800' : 'border-slate-100'}`}>
               <div className="flex items-center gap-3">
-                <div className="bg-blue-600 p-2 rounded-xl text-white">
+                <div className="bg-[#FF5E3A] p-2 rounded-xl text-white">
                   <Plus size={20} strokeWidth={3} />
                 </div>
                 <h3 className={`text-xl font-black tracking-tight ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Thêm sản phẩm mới</h3>
@@ -384,7 +384,7 @@ const ProductsPage = () => {
                   <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Mã sản phẩm *</label>
                   <input
                     type="text" required
-                    className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
+                    className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-[#FF5E3A]/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
                     value={formData.customId}
                     onChange={(e) => setFormData({...formData, customId: e.target.value})}
                     placeholder="Vd: SP001"
@@ -394,7 +394,7 @@ const ProductsPage = () => {
                   <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Tên sản phẩm *</label>
                   <input
                     type="text" required
-                    className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
+                    className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-[#FF5E3A]/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
                     value={formData.name}
                     onChange={(e) => setFormData({...formData, name: e.target.value})}
                     placeholder="Tên sản phẩm"
@@ -407,7 +407,7 @@ const ProductsPage = () => {
                   <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Giá bán (VNĐ) *</label>
                   <input
                     type="number" required
-                    className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
+                    className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-[#FF5E3A]/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
                     value={formData.price}
                     onChange={(e) => setFormData({...formData, price: e.target.value})}
                     placeholder="0"
@@ -417,7 +417,7 @@ const ProductsPage = () => {
                   <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Thương hiệu</label>
                   <input
                     type="text"
-                    className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
+                    className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-[#FF5E3A]/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
                     value={formData.brand}
                     onChange={(e) => setFormData({...formData, brand: e.target.value})}
                     placeholder="Vd: Samsung, Apple..."
@@ -430,7 +430,7 @@ const ProductsPage = () => {
                   <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Danh mục</label>
                   <input
                     type="text"
-                    className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
+                    className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-[#FF5E3A]/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
                     value={formData.category}
                     onChange={(e) => setFormData({...formData, category: e.target.value})}
                     placeholder="Vd: Điện thoại, Gia dụng..."
@@ -439,7 +439,7 @@ const ProductsPage = () => {
                 <div>
                   <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Nhà cung cấp</label>
                   <select
-                    className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
+                    className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-[#FF5E3A]/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
                     value={formData.supplierId}
                     onChange={(e) => setFormData({...formData, supplierId: e.target.value})}
                   >
@@ -452,7 +452,7 @@ const ProductsPage = () => {
               <div>
                 <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Mô tả sản phẩm</label>
                 <textarea
-                  className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
+                  className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-[#FF5E3A]/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
                   rows="3"
                   value={formData.description}
                   onChange={(e) => setFormData({...formData, description: e.target.value})}
@@ -462,7 +462,7 @@ const ProductsPage = () => {
 
               <div className="flex justify-end gap-3 pt-4">
                 <button type="button" onClick={() => setIsAddModalOpen(false)} className={`px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${isDarkMode ? 'text-slate-400 hover:bg-slate-800' : 'text-slate-500 hover:bg-slate-50'}`}>Hủy bỏ</button>
-                <button type="submit" className="px-10 py-3 bg-blue-600 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-blue-700 shadow-xl shadow-blue-600/20 transition-all active:scale-95">Xác nhận thêm</button>
+                <button type="submit" className="px-10 py-3 bg-[#FF5E3A] text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-[#e04520] shadow-xl shadow-[#FF5E3A]/20 transition-all active:scale-95">Xác nhận thêm</button>
               </div>
             </form>
           </div>
@@ -498,7 +498,7 @@ const ProductsPage = () => {
                   <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Tên sản phẩm *</label>
                   <input
                     type="text" required
-                    className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
+                    className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-[#FF5E3A]/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
                     value={formData.name}
                     onChange={(e) => setFormData({...formData, name: e.target.value})}
                   />
@@ -510,7 +510,7 @@ const ProductsPage = () => {
                   <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Giá bán (VNĐ) *</label>
                   <input
                     type="number" required
-                    className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
+                    className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-[#FF5E3A]/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
                     value={formData.price}
                     onChange={(e) => setFormData({...formData, price: e.target.value})}
                   />
@@ -519,7 +519,7 @@ const ProductsPage = () => {
                   <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Thương hiệu</label>
                   <input
                     type="text"
-                    className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
+                    className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-[#FF5E3A]/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
                     value={formData.brand}
                     onChange={(e) => setFormData({...formData, brand: e.target.value})}
                   />
@@ -531,7 +531,7 @@ const ProductsPage = () => {
                   <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Danh mục</label>
                   <input
                     type="text"
-                    className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
+                    className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-[#FF5E3A]/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
                     value={formData.category}
                     onChange={(e) => setFormData({...formData, category: e.target.value})}
                   />
@@ -539,7 +539,7 @@ const ProductsPage = () => {
                 <div>
                   <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Nhà cung cấp</label>
                   <select
-                    className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
+                    className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-[#FF5E3A]/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
                     value={formData.supplierId}
                     onChange={(e) => setFormData({...formData, supplierId: e.target.value})}
                   >
@@ -552,7 +552,7 @@ const ProductsPage = () => {
               <div>
                 <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Mô tả sản phẩm</label>
                 <textarea
-                  className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
+                  className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-[#FF5E3A]/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
                   rows="3"
                   value={formData.description}
                   onChange={(e) => setFormData({...formData, description: e.target.value})}
@@ -574,7 +574,7 @@ const ProductsPage = () => {
           <div className={`rounded-[32px] shadow-2xl w-full max-w-2xl overflow-hidden border transition-all ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
             <div className={`flex items-center justify-between p-8 border-b ${isDarkMode ? 'border-slate-800' : 'border-slate-100'}`}>
               <div className="flex items-center gap-4">
-                <div className="bg-blue-600 p-3 rounded-2xl text-white shadow-lg shadow-blue-600/20">
+                <div className="bg-[#FF5E3A] p-3 rounded-2xl text-white shadow-lg shadow-[#FF5E3A]/20">
                   <Box size={24} strokeWidth={2.5} />
                 </div>
                 <h3 className={`text-2xl font-black tracking-tight ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Chi tiết sản phẩm</h3>
@@ -596,7 +596,7 @@ const ProductsPage = () => {
                   </div>
                   <div>
                     <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1.5">Giá bán niêm yết</label>
-                    <p className="text-3xl font-black text-blue-600 tracking-tighter tabular-nums">{formatCurrency(selectedProduct.price)}</p>
+                    <p className="text-3xl font-black text-[#FF5E3A] tracking-tighter tabular-nums">{formatCurrency(selectedProduct.price)}</p>
                   </div>
                 </div>
                 <div className="space-y-6">
@@ -625,7 +625,7 @@ const ProductsPage = () => {
                 </div>
               </div>
               <div className="flex justify-end mt-10">
-                <button onClick={() => setIsDetailModalOpen(false)} className={`px-10 py-4 rounded-xl text-xs font-black uppercase tracking-widest transition-all active:scale-95 ${isDarkMode ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-xl shadow-blue-900/20' : 'bg-blue-600 text-white hover:bg-blue-700 shadow-xl shadow-blue-100'}`}>Đóng cửa sổ</button>
+                <button onClick={() => setIsDetailModalOpen(false)} className={`px-10 py-4 rounded-xl text-xs font-black uppercase tracking-widest transition-all active:scale-95 ${isDarkMode ? 'bg-[#FF5E3A] text-white hover:bg-[#e04520] shadow-xl shadow-[#FF5E3A]/20' : 'bg-[#FF5E3A] text-white hover:bg-[#e04520] shadow-xl shadow-[#FF5E3A]/10'}`}>Đóng cửa sổ</button>
               </div>
             </div>
           </div>

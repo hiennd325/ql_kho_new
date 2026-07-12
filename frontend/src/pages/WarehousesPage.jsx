@@ -238,7 +238,7 @@ const WarehousesPage = () => {
     const styles = {
       completed: isDarkMode ? 'bg-green-900/30 text-green-400' : 'bg-green-100 text-green-700',
       in_progress: isDarkMode ? 'bg-yellow-900/30 text-yellow-400' : 'bg-yellow-100 text-yellow-700',
-      pending: isDarkMode ? 'bg-blue-900/30 text-blue-400' : 'bg-blue-100 text-blue-700',
+      pending: isDarkMode ? 'bg-[#FF5E3A]/10 text-[#ff8a65]' : 'bg-[#FF5E3A]/12 text-[#FF5E3A]',
       cancelled: isDarkMode ? 'bg-red-900/30 text-red-400' : 'bg-red-100 text-red-700'
     };
     const labels = {
@@ -276,7 +276,7 @@ const WarehousesPage = () => {
       {/* Stats */}
       <div className={`p-6 rounded-2xl border shadow-sm grid grid-cols-1 md:grid-cols-3 gap-6 transition-colors duration-300 ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`}>
         <div className={`flex items-center gap-5 px-4`}>
-          <div className={`p-4 rounded-2xl ${isDarkMode ? 'bg-blue-900/20 text-blue-400' : 'bg-blue-50 text-blue-600'}`}>
+          <div className={`p-4 rounded-2xl ${isDarkMode ? 'bg-[#FF5E3A]/10 text-[#ff8a65]' : 'bg-[#FF5E3A]/8 text-[#FF5E3A]'}`}>
             <Warehouse size={32} strokeWidth={2.5} />
           </div>
           <div className="flex flex-col gap-1">
@@ -286,12 +286,12 @@ const WarehousesPage = () => {
         </div>
 
         <div className={`flex items-center gap-5 px-4 md:border-l ${isDarkMode ? 'border-slate-800' : 'border-slate-100'}`}>
-          <div className={`p-4 rounded-2xl ${isDarkMode ? 'bg-indigo-900/20 text-indigo-400' : 'bg-indigo-50 text-indigo-600'}`}>
+          <div className={`p-4 rounded-2xl ${isDarkMode ? 'bg-[#FF5E3A]/10 text-[#ff8a65]' : 'bg-[#FF5E3A]/8 text-[#FF5E3A]'}`}>
             <LayoutGrid size={32} strokeWidth={2.5} />
           </div>
           <div className="flex flex-col gap-1">
             <p className="text-xs text-slate-500 font-black uppercase tracking-widest">Sức chứa</p>
-            <h3 className={`text-4xl font-black leading-none tracking-tight ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>
+            <h3 className={`text-4xl font-black leading-none tracking-tight ${isDarkMode ? 'text-[#ff8a65]' : 'text-[#FF5E3A]'}`}>
               {stats.capacity.toLocaleString()} <span className="text-sm font-bold text-slate-400">SP</span>
             </h3>
           </div>
@@ -315,13 +315,13 @@ const WarehousesPage = () => {
         <div className={`flex p-1.5 rounded-xl w-fit ${isDarkMode ? 'bg-slate-800' : 'bg-slate-100'}`}>
           <button
             onClick={() => setActiveTab('list')}
-            className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-black transition-all ${activeTab === 'list' ? (isDarkMode ? 'bg-blue-600 text-white shadow-lg' : 'bg-white text-blue-600 shadow-sm') : 'text-slate-500 hover:text-slate-700'}`}
+            className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-black transition-all ${activeTab === 'list' ? (isDarkMode ? 'bg-[#FF5E3A] text-white shadow-lg' : 'bg-white text-[#FF5E3A] shadow-sm') : 'text-slate-500 hover:text-slate-700'}`}
           >
             <LayoutGrid size={18} /> Danh sách kho
           </button>
           <button
             onClick={() => setActiveTab('transfers')}
-            className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-black transition-all ${activeTab === 'transfers' ? (isDarkMode ? 'bg-blue-600 text-white shadow-lg' : 'bg-white text-blue-600 shadow-sm') : 'text-slate-500 hover:text-slate-700'}`}
+            className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-black transition-all ${activeTab === 'transfers' ? (isDarkMode ? 'bg-[#FF5E3A] text-white shadow-lg' : 'bg-white text-[#FF5E3A] shadow-sm') : 'text-slate-500 hover:text-slate-700'}`}
           >
             <ArrowRightLeft size={18} /> Điều chuyển hàng
           </button>
@@ -329,11 +329,11 @@ const WarehousesPage = () => {
 
           <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3 sm:gap-4">
             <div className="relative group flex-1 sm:min-w-[300px]">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors" size={20} />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#FF5E3A] transition-colors" size={20} />
               <input
                 type="text"
                 placeholder="Tìm kiếm tên kho, vị trí, mã kho..."
-                className={`pl-12 pr-4 py-3 border rounded-xl outline-none focus:ring-2 focus:ring-blue-500 w-full transition-all font-medium text-sm ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white focus:bg-slate-700' : 'bg-slate-50 border-slate-200 text-slate-900 focus:bg-white'}`}
+                className={`pl-12 pr-4 py-3 border rounded-xl outline-none focus:ring-2 focus:ring-[#FF5E3A] w-full transition-all font-medium text-sm ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white focus:bg-slate-700' : 'bg-slate-50 border-slate-200 text-slate-900 focus:bg-white'}`}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -341,7 +341,7 @@ const WarehousesPage = () => {
             <div className="flex flex-col sm:flex-row gap-3">
               <button
                 onClick={() => { resetForm(); setIsModalOpen(true); }}
-                className={`flex items-center justify-center gap-2 sm:gap-3 px-5 sm:px-6 py-3 rounded-xl hover:bg-blue-700 transition-all font-black shadow-lg active:scale-95 text-xs sm:text-sm ${isDarkMode ? 'bg-blue-600 text-white shadow-blue-900/20' : 'bg-blue-600 text-white shadow-blue-100'}`}
+                className={`flex items-center justify-center gap-2 sm:gap-3 px-5 sm:px-6 py-3 rounded-xl hover:bg-[#e04520] transition-all font-black shadow-lg active:scale-95 text-xs sm:text-sm ${isDarkMode ? 'bg-[#FF5E3A] text-white shadow-[#FF5E3A]/20' : 'bg-[#FF5E3A] text-white shadow-[#FF5E3A]/10'}`}
               >
                 <Plus size={20} strokeWidth={3} /> THÊM KHO
               </button>
@@ -417,15 +417,15 @@ const WarehousesPage = () => {
                     </td>
                   </tr>
                 ) : filteredWarehouses.map((wh, idx) => (
-                  <tr key={wh.custom_id || idx} className={`transition-colors group ${isDarkMode ? 'hover:bg-slate-800/50' : 'hover:bg-slate-50/50'}`}>
+                  <tr key={wh.custom_id || idx} className={`transition-all group border-b ${isDarkMode ? 'border-slate-800/60 hover:bg-[#FF5E3A]/5 hover:border-[#FF5E3A]/20' : 'border-slate-100 hover:bg-[#FF5E3A]/5 hover:border-[#FF5E3A]/20'}`}>
                     <td className="px-8 py-5">
                       <div className="flex items-center gap-3">
-                        <div className={`p-2 rounded-lg ${isDarkMode ? 'bg-blue-900/20 text-blue-400' : 'bg-blue-50 text-blue-600'}`}>
+                        <div className={`p-2 rounded-lg ${isDarkMode ? 'bg-[#FF5E3A]/10 text-[#ff8a65]' : 'bg-[#FF5E3A]/8 text-[#FF5E3A]'}`}>
                           <Warehouse size={18} />
                         </div>
                         <div>
                           <p className={`text-sm font-black ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{wh.name}</p>
-                          <p className="text-[10px] font-bold text-blue-600 uppercase">{wh.custom_id}</p>
+                          <p className="text-[10px] font-bold text-[#FF5E3A] uppercase">{wh.custom_id}</p>
                         </div>
                       </div>
                     </td>
@@ -444,18 +444,18 @@ const WarehousesPage = () => {
                       <div className="flex items-center gap-3 min-w-[120px]">
                         <div className={`flex-1 rounded-full h-2 overflow-hidden border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-slate-100 border-slate-200'}`}>
                           <div
-                            className={`h-full rounded-full transition-all duration-1000 ${wh.current_usage/wh.capacity > 0.9 ? 'bg-rose-500' : 'bg-blue-600'}`}
+                            className={`h-full rounded-full transition-all duration-1000 ${wh.current_usage/wh.capacity > 0.9 ? 'bg-rose-500' : 'bg-[#FF5E3A]'}`}
                             style={{ width: `${Math.min((wh.current_usage / wh.capacity) * 100, 100)}%` }}
                           />
                         </div>
-                        <span className={`text-[10px] font-black px-1.5 py-0.5 rounded ${wh.current_usage/wh.capacity > 0.9 ? (isDarkMode ? 'bg-rose-900/20 text-rose-400' : 'bg-rose-100 text-rose-700') : (isDarkMode ? 'bg-blue-900/20 text-blue-400' : 'bg-blue-100 text-blue-700')}`}>
+                        <span className={`text-[10px] font-black px-1.5 py-0.5 rounded ${wh.current_usage/wh.capacity > 0.9 ? (isDarkMode ? 'bg-rose-900/20 text-rose-400' : 'bg-rose-100 text-rose-700') : (isDarkMode ? 'bg-[#FF5E3A]/10 text-[#ff8a65]' : 'bg-[#FF5E3A]/12 text-[#FF5E3A]')}`}>
                           {Math.round((wh.current_usage / wh.capacity) * 100)}%
                         </span>
                       </div>
                     </td>
                     <td className="px-8 py-5">
                       <div className="flex justify-center gap-2">
-                        <button onClick={() => openDetail(wh)} className={`p-2 rounded-lg transition-all ${isDarkMode ? 'text-blue-400 hover:bg-blue-900/20' : 'text-blue-600 hover:bg-blue-50'}`} title="Chi tiết">
+                        <button onClick={() => openDetail(wh)} className={`p-2 rounded-lg transition-all ${isDarkMode ? 'text-[#ff8a65] hover:bg-[#FF5E3A]/10' : 'text-[#FF5E3A] hover:bg-[#FF5E3A]/8'}`} title="Chi tiết">
                           <Eye size={18} />
                         </button>
                         <button onClick={() => openEditModal(wh)} className={`p-2 rounded-lg transition-all ${isDarkMode ? 'text-amber-400 hover:bg-amber-900/20' : 'text-amber-600 hover:bg-amber-50'}`} title="Sửa">
@@ -531,7 +531,7 @@ const WarehousesPage = () => {
                     </td>
                     <td className="px-8 py-5">
                       <div className="flex items-center gap-2">
-                        <div className={`p-1.5 rounded-lg ${isDarkMode ? 'bg-blue-900/20 text-blue-400' : 'bg-blue-50 text-blue-600'}`}>
+                        <div className={`p-1.5 rounded-lg ${isDarkMode ? 'bg-[#FF5E3A]/10 text-[#ff8a65]' : 'bg-[#FF5E3A]/8 text-[#FF5E3A]'}`}>
                           <Package size={14} />
                         </div>
                         <span className={`text-sm font-bold ${isDarkMode ? 'text-slate-300' : 'text-slate-600'} line-clamp-2 max-w-[200px] leading-snug`} title={t.product_names}>
@@ -573,7 +573,7 @@ const WarehousesPage = () => {
           <div className={`rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden border transition-all ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
             <div className={`flex items-center justify-between p-6 border-b ${isDarkMode ? 'border-slate-800' : 'border-slate-100'}`}>
               <div className="flex items-center gap-3">
-                <div className="bg-blue-600 p-2 rounded-xl text-white shadow-lg shadow-blue-600/20">
+                <div className="bg-[#FF5E3A] p-2 rounded-xl text-white shadow-lg shadow-[#FF5E3A]/20">
                   <Warehouse size={20} strokeWidth={3} />
                 </div>
                 <h3 className={`text-xl font-black tracking-tight ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{selectedWarehouse ? 'Chỉnh sửa kho' : 'Thêm kho mới'}</h3>
@@ -589,7 +589,7 @@ const WarehousesPage = () => {
                   <input
                     type="text" required
                     disabled={!!selectedWarehouse}
-                    className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white disabled:opacity-50' : 'bg-slate-50 border-slate-200 text-slate-900 disabled:bg-slate-100 disabled:text-slate-400'}`}
+                    className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-[#FF5E3A]/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white disabled:opacity-50' : 'bg-slate-50 border-slate-200 text-slate-900 disabled:bg-slate-100 disabled:text-slate-400'}`}
                     value={formData.custom_id}
                     onChange={(e) => setFormData({...formData, custom_id: e.target.value})}
                     placeholder="Vd: WH-001"
@@ -599,7 +599,7 @@ const WarehousesPage = () => {
                   <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Tên gọi kho hàng *</label>
                   <input
                     type="text" required
-                    className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
+                    className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-[#FF5E3A]/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
                     value={formData.name}
                     onChange={(e) => setFormData({...formData, name: e.target.value})}
                     placeholder="Vd: Kho Tổng Miền Bắc"
@@ -612,7 +612,7 @@ const WarehousesPage = () => {
                   <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Sức chứa tối đa (SP) *</label>
                   <input
                     type="number" required min="1"
-                    className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
+                    className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-[#FF5E3A]/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
                     value={formData.capacity}
                     onChange={(e) => setFormData({...formData, capacity: e.target.value})}
                     placeholder="1000"
@@ -622,7 +622,7 @@ const WarehousesPage = () => {
                   <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Địa điểm / Vị trí</label>
                   <input
                     type="text"
-                    className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-blue-500/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
+                    className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-[#FF5E3A]/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
                     value={formData.location}
                     onChange={(e) => setFormData({...formData, location: e.target.value})}
                     placeholder="Vd: Hà Nội, KCN Quang Minh..."
@@ -635,7 +635,7 @@ const WarehousesPage = () => {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-10 py-3 bg-blue-600 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-blue-700 shadow-xl shadow-blue-600/20 transition-all active:scale-95 disabled:opacity-50 disabled:scale-100 flex items-center gap-3"
+                  className="px-10 py-3 bg-[#FF5E3A] text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-[#e04520] shadow-xl shadow-[#FF5E3A]/20 transition-all active:scale-95 disabled:opacity-50 disabled:scale-100 flex items-center gap-3"
                 >
                   {isSubmitting ? <Loader2 size={16} className="animate-spin" /> : <CheckCircle size={16} strokeWidth={3} />}
                   Xác nhận lưu
@@ -792,7 +792,7 @@ const WarehousesPage = () => {
           <div className={`rounded-[32px] shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden border flex flex-col transition-all ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
             <div className={`flex items-center justify-between p-8 border-b ${isDarkMode ? 'border-slate-800' : 'border-slate-100'}`}>
               <div className="flex items-center gap-4">
-                <div className="bg-blue-600 p-3 rounded-2xl text-white shadow-lg shadow-blue-600/20">
+                <div className="bg-[#FF5E3A] p-3 rounded-2xl text-white shadow-lg shadow-[#FF5E3A]/20">
                   <Warehouse size={24} strokeWidth={2.5} />
                 </div>
                 <h3 className={`text-2xl font-black tracking-tight ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
@@ -818,7 +818,7 @@ const WarehousesPage = () => {
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-xs font-bold text-slate-400">Sức chứa tối đa:</span>
-                    <span className="text-sm font-black text-blue-500">{selectedWarehouse.capacity.toLocaleString()} SP</span>
+                    <span className="text-sm font-black text-[#FF5E3A]">{selectedWarehouse.capacity.toLocaleString()} SP</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-xs font-bold text-slate-400">Hiện tại sử dụng:</span>
@@ -832,7 +832,7 @@ const WarehousesPage = () => {
                       <circle cx="18" cy="18" r="16" fill="none" className={`${isDarkMode ? 'text-slate-800' : 'text-slate-100'}`} stroke="currentColor" strokeWidth="3.5" />
                       <circle
                         cx="18" cy="18" r="16" fill="none"
-                        className={`${selectedWarehouse.current_usage/selectedWarehouse.capacity > 0.9 ? 'text-rose-500' : 'text-blue-600'}`}
+                        className={`${selectedWarehouse.current_usage/selectedWarehouse.capacity > 0.9 ? 'text-rose-500' : 'text-[#FF5E3A]'}`}
                         stroke="currentColor" strokeWidth="3.5" strokeDasharray="100"
                         strokeDashoffset={100 - Math.min((selectedWarehouse.current_usage/selectedWarehouse.capacity)*100, 100)}
                         strokeLinecap="round"
@@ -849,7 +849,7 @@ const WarehousesPage = () => {
 
               <div>
                 <h4 className={`text-sm font-black mb-6 flex items-center gap-3 uppercase tracking-wider ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
-                  <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-500">
+                  <div className="w-8 h-8 rounded-lg bg-[#FF5E3A]/80/10 flex items-center justify-center text-[#FF5E3A]">
                     <Package size={16} strokeWidth={2.5} />
                   </div>
                   Danh mục hàng hóa hiện có
@@ -889,7 +889,7 @@ const WarehousesPage = () => {
             </div>
 
             <div className={`p-8 border-t flex justify-end transition-colors ${isDarkMode ? 'bg-slate-800/50 border-slate-800' : 'bg-slate-50 border-slate-100'}`}>
-              <button onClick={() => setIsDetailOpen(false)} className={`px-10 py-4 rounded-xl text-xs font-black uppercase tracking-widest transition-all active:scale-95 ${isDarkMode ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-xl shadow-blue-900/20' : 'bg-blue-600 text-white hover:bg-blue-700 shadow-xl shadow-blue-100'}`}>Đóng cửa sổ</button>
+              <button onClick={() => setIsDetailOpen(false)} className={`px-10 py-4 rounded-xl text-xs font-black uppercase tracking-widest transition-all active:scale-95 ${isDarkMode ? 'bg-[#FF5E3A] text-white hover:bg-[#e04520] shadow-xl shadow-[#FF5E3A]/20' : 'bg-[#FF5E3A] text-white hover:bg-[#e04520] shadow-xl shadow-[#FF5E3A]/10'}`}>Đóng cửa sổ</button>
             </div>
           </div>
         </div>

@@ -3,18 +3,21 @@ import { motion } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
 import { ArrowUpRight, ArrowDownRight } from 'lucide-react';
 
-const StatCard = ({ label, value, icon: Icon, color = 'blue', trend, detail, compact = false, isExpanded = false, onExpand }) => {
+const StatCard = ({ label, value, icon: Icon, color = 'primary', trend, detail, compact = false, isExpanded = false, onExpand }) => {
   const { isDarkMode } = useTheme();
 
+  // Map legacy color names to new brand tokens
   const colors = {
-    blue: isDarkMode ? 'bg-blue-900/20 text-blue-400' : 'bg-blue-50 text-blue-600',
+    blue: isDarkMode ? 'bg-[#FF5E3A]/10 text-[#ff8a65]' : 'bg-[#FF5E3A]/10 text-[#FF5E3A]',
+    primary: isDarkMode ? 'bg-[#FF5E3A]/10 text-[#ff8a65]' : 'bg-[#FF5E3A]/10 text-[#FF5E3A]',
     emerald: isDarkMode ? 'bg-emerald-900/20 text-emerald-400' : 'bg-emerald-50 text-emerald-600',
     rose: isDarkMode ? 'bg-rose-900/20 text-rose-400' : 'bg-rose-50 text-rose-600',
     amber: isDarkMode ? 'bg-amber-900/20 text-amber-400' : 'bg-amber-50 text-amber-600',
   };
 
   const glowColors = {
-    blue: 'bg-blue-600',
+    blue: 'bg-[#FF5E3A]',
+    primary: 'bg-[#FF5E3A]',
     emerald: 'bg-emerald-600',
     rose: 'bg-rose-600',
     amber: 'bg-amber-600',
@@ -32,8 +35,8 @@ const StatCard = ({ label, value, icon: Icon, color = 'blue', trend, detail, com
         onClick={onExpand}
         className={`p-6 rounded-[24px] border-2 shadow-xl flex items-center justify-between gap-6 transition-all group relative overflow-hidden min-w-0 cursor-pointer ${
           isDarkMode
-          ? `bg-slate-900 ${isExpanded ? 'border-blue-500/50' : 'border-slate-800'} shadow-blue-900/10`
-          : `bg-white ${isExpanded ? 'border-blue-500/30' : 'border-slate-100'} shadow-slate-200/50`
+          ? `bg-slate-900 ${isExpanded ? 'border-[#FF5E3A]/50' : 'border-slate-800'} shadow-[#FF5E3A]/5`
+          : `bg-white ${isExpanded ? 'border-[#FF5E3A]/30' : 'border-slate-100'} shadow-slate-200/50`
         }`}
       >
         {/* Animated Background Glow */}

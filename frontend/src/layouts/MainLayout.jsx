@@ -56,7 +56,7 @@ const MainLayout = ({ children }) => {
   };
 
   const navItems = [
-    { name: 'Dashboard', path: '/', icon: <LayoutDashboard size={20} /> },
+    { name: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard size={20} /> },
     { name: 'Sản phẩm', path: '/products', icon: <Box size={20} /> },
     { name: 'Kho bãi', path: '/warehouses', icon: <Warehouse size={20} /> },
     { name: 'Nhà cung cấp', path: '/suppliers', icon: <Truck size={20} /> },
@@ -75,7 +75,7 @@ const MainLayout = ({ children }) => {
   const isOpen = isSidebarOpen || isMobileMenuOpen;
 
   return (
-    <div className={`min-h-screen flex overflow-x-hidden font-sans selection:bg-blue-100 selection:text-blue-700 transition-colors duration-300 ${isDarkMode ? 'bg-slate-950 text-slate-100' : 'bg-[#f8fafc] text-slate-900'}`}>
+    <div className={`min-h-screen flex overflow-x-hidden font-sans selection:bg-[#FF5E3A]/12 selection:text-[#FF5E3A] transition-colors duration-300 ${isDarkMode ? 'bg-slate-950 text-slate-100' : 'bg-[#f8fafc] text-slate-900'}`}>
       {/* Mobile Overlay */}
       <AnimatePresence>
         {isMobileMenuOpen && (
@@ -106,10 +106,10 @@ const MainLayout = ({ children }) => {
                 exit={{ opacity: 0, x: -10 }}
                 className="flex items-center gap-3 overflow-hidden"
               >
-                <div className="bg-gradient-to-br from-blue-600 to-indigo-600 p-2 rounded-xl shadow-lg shadow-blue-200">
+                <div className="bg-gradient-to-br from-[#FF5E3A] to-[#e04520] p-2 rounded-xl shadow-lg shadow-[#FF5E3A]/20">
                   <Package size={20} className="text-white" strokeWidth={2.5} />
                 </div>
-                <span className={`font-black text-xl tracking-tighter whitespace-nowrap ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>QL KHO <span className="text-blue-600">PRO</span></span>
+                <span className={`font-black text-xl tracking-tighter whitespace-nowrap ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>QL KHO <span className="text-[#FF5E3A]">PRO</span></span>
               </motion.div>
             ) : (
               <motion.div
@@ -117,7 +117,7 @@ const MainLayout = ({ children }) => {
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.5 }}
-                className="bg-gradient-to-br from-blue-600 to-indigo-600 p-2 rounded-xl shadow-lg shadow-blue-200 mx-auto"
+                className="bg-gradient-to-br from-[#FF5E3A] to-[#e04520] p-2 rounded-xl shadow-lg shadow-[#FF5E3A]/20 mx-auto"
               >
                 <Package size={20} className="text-white" strokeWidth={2.5} />
               </motion.div>
@@ -140,13 +140,13 @@ const MainLayout = ({ children }) => {
                 onClick={closeMobileMenu}
                 className={`group relative flex items-center rounded-2xl transition-all duration-200 ${
                   isActive
-                  ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20 translate-x-1'
+                  ? 'bg-[#FF5E3A] text-white shadow-lg shadow-[#FF5E3A]/20 translate-x-1'
                   : isDarkMode
                     ? 'text-slate-400 hover:bg-slate-800 hover:text-white'
                     : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
                 } ${isOpen ? 'p-3.5 px-4' : 'p-3.5 justify-center'}`}
               >
-                <div className={`${isActive ? 'text-white' : 'text-slate-400 group-hover:text-blue-500 transition-colors'}`}>
+                <div className={`${isActive ? 'text-white' : 'text-slate-400 group-hover:text-[#FF5E3A] transition-colors'}`}>
                   {item.icon}
                 </div>
 
@@ -224,7 +224,7 @@ const MainLayout = ({ children }) => {
           <div className="flex items-center gap-2 sm:gap-5">
             <button
               onClick={toggleTheme}
-              className={`p-2.5 rounded-xl transition-all duration-300 ${isDarkMode ? 'bg-slate-800 text-yellow-400 hover:bg-slate-700' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}`}
+              className={`p-2.5 rounded-xl transition-all duration-300 ${isDarkMode ? 'bg-slate-800 text-yellow-400 hover:bg-slate-700' : 'bg-[#FF5E3A]/10 text-[#FF5E3A] hover:bg-[#FF5E3A]/20'}`}
               title={isDarkMode ? "Chuyển sang chế độ sáng" : "Chuyển sang chế độ tối"}
             >
               {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
@@ -232,13 +232,13 @@ const MainLayout = ({ children }) => {
 
             <div className="flex items-center gap-3 sm:gap-4 group cursor-pointer">
               <div className="text-right hidden md:block">
-                <p className={`text-sm font-black leading-none group-hover:text-blue-600 transition-colors ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{user?.username}</p>
+                <p className={`text-sm font-black leading-none group-hover:text-[#FF5E3A] transition-colors ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{user?.username}</p>
                 <p className={`text-[10px] mt-1.5 font-black uppercase tracking-tighter px-2 py-0.5 rounded-md inline-block ${isDarkMode ? 'bg-slate-800 text-slate-400' : 'bg-slate-100 text-slate-400'}`}>{user?.role}</p>
               </div>
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="w-10 h-10 sm:w-11 sm:h-11 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center text-white font-black shadow-lg shadow-blue-600/20 ring-4 ring-white group-hover:ring-blue-50 transition-all"
+                className="w-10 h-10 sm:w-11 sm:h-11 bg-gradient-to-br from-[#FF5E3A] to-[#e04520] rounded-xl flex items-center justify-center text-white font-black shadow-lg shadow-[#FF5E3A]/20 ring-4 ring-white group-hover:ring-[#FF5E3A]/10 transition-all"
               >
                 {user?.username?.[0].toUpperCase()}
               </motion.div>

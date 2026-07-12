@@ -100,7 +100,7 @@ const UsersPage = () => {
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="bg-indigo-100 dark:bg-indigo-900/30 p-3 rounded-lg text-indigo-600 dark:text-indigo-400">
+          <div className="bg-[#FF5E3A]/10 dark:bg-[#FF5E3A]/10 p-3 rounded-lg text-[#FF5E3A] dark:text-[#ff8a65]">
             <Users size={24} />
           </div>
           <div>
@@ -111,7 +111,7 @@ const UsersPage = () => {
 
         <button
           onClick={() => { resetForm(); setIsModalOpen(true); }}
-          className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors shadow-sm font-bold active:scale-95"
+          className="flex items-center gap-2 bg-[#FF5E3A] text-white px-4 py-2 rounded-lg hover:bg-[#e04520] transition-colors shadow-sm font-bold active:scale-95"
         >
           <Plus size={18} /> Thêm người dùng
         </button>
@@ -140,7 +140,7 @@ const UsersPage = () => {
                     <td className="px-6 py-4 text-sm text-gray-500 dark:text-slate-400">#{user.id}</td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-indigo-100 dark:bg-indigo-900/40 rounded-full flex items-center justify-center text-indigo-700 dark:text-indigo-300 font-bold text-xs">
+                        <div className="w-8 h-8 bg-[#FF5E3A]/10 dark:bg-[#FF5E3A]/10 rounded-full flex items-center justify-center text-[#FF5E3A] dark:text-[#ff8a65] font-bold text-xs">
                           {user.username.charAt(0).toUpperCase()}
                         </div>
                         <div>
@@ -150,7 +150,7 @@ const UsersPage = () => {
                       </div>
                     </td>
                     <td className="px-6 py-4 text-sm">
-                      <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 w-fit ${user.role === 'admin' ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300' : 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300'}`}>
+                      <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 w-fit ${user.role === 'admin' ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300' : 'bg-[#FF5E3A]/12 dark:bg-[#FF5E3A]/10 text-[#FF5E3A] dark:text-[#ff8a65]'}`}>
                         <Shield size={10} /> {user.role}
                       </span>
                     </td>
@@ -163,7 +163,7 @@ const UsersPage = () => {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex justify-center gap-2">
-                        <button onClick={() => openEditModal(user)} className="p-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-all" title="Sửa">
+                        <button onClick={() => openEditModal(user)} className="p-2 text-[#FF5E3A] dark:text-[#ff8a65] hover:bg-[#FF5E3A]/8 dark:hover:bg-[#FF5E3A]/10 rounded-lg transition-all" title="Sửa">
                           <Edit size={18} />
                         </button>
                         <button onClick={() => handleDelete(user.id)} className="p-2 text-red-600 dark:text-rose-400 hover:bg-red-50 dark:hover:bg-rose-900/20 rounded-lg transition-all" title="Xóa">
@@ -183,9 +183,9 @@ const UsersPage = () => {
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
           <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border dark:border-slate-800">
-            <div className="flex items-center justify-between p-6 border-b dark:border-slate-800 bg-indigo-50/50 dark:bg-indigo-900/20">
+            <div className="flex items-center justify-between p-6 border-b dark:border-slate-800 bg-[#FF5E3A]/8/50 dark:bg-[#FF5E3A]/10">
               <h3 className="text-lg font-bold flex items-center gap-2 dark:text-slate-100">
-                {selectedUser ? <Edit size={20} className="text-indigo-600 dark:text-indigo-400" /> : <Plus size={20} className="text-indigo-600 dark:text-indigo-400" />}
+                {selectedUser ? <Edit size={20} className="text-[#FF5E3A] dark:text-[#ff8a65]" /> : <Plus size={20} className="text-[#FF5E3A] dark:text-[#ff8a65]" />}
                 {selectedUser ? 'Chỉnh sửa người dùng' : 'Thêm người dùng mới'}
               </h3>
               <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
@@ -198,7 +198,7 @@ const UsersPage = () => {
                 <input
                   type="text" required
                   placeholder="Nhập tên đăng nhập"
-                  className="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-slate-100 transition-all"
+                  className="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-[#FF5E3A] text-slate-900 dark:text-slate-100 transition-all"
                   value={formData.username}
                   onChange={(e) => setFormData({...formData, username: e.target.value})}
                 />
@@ -210,7 +210,7 @@ const UsersPage = () => {
                   <input
                     type="email"
                     placeholder="user@example.com"
-                    className="w-full pl-10 pr-4 py-2 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-slate-100 transition-all"
+                    className="w-full pl-10 pr-4 py-2 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-[#FF5E3A] text-slate-900 dark:text-slate-100 transition-all"
                     value={formData.email}
                     onChange={(e) => setFormData({...formData, email: e.target.value})}
                   />
@@ -225,7 +225,7 @@ const UsersPage = () => {
                   <input
                     type="password" required={!selectedUser}
                     placeholder="••••••••"
-                    className="w-full pl-10 pr-4 py-2 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-slate-100 transition-all"
+                    className="w-full pl-10 pr-4 py-2 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-[#FF5E3A] text-slate-900 dark:text-slate-100 transition-all"
                     value={formData.password}
                     onChange={(e) => setFormData({...formData, password: e.target.value})}
                   />
@@ -235,7 +235,7 @@ const UsersPage = () => {
                 <div>
                   <label className="block text-sm font-bold text-gray-700 dark:text-slate-300 mb-1">Vai trò</label>
                   <select
-                    className="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 appearance-none text-slate-900 dark:text-slate-100 transition-all"
+                    className="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-[#FF5E3A] appearance-none text-slate-900 dark:text-slate-100 transition-all"
                     value={formData.role}
                     onChange={(e) => setFormData({...formData, role: e.target.value})}
                   >
@@ -246,7 +246,7 @@ const UsersPage = () => {
                 <div>
                   <label className="block text-sm font-bold text-gray-700 dark:text-slate-300 mb-1">Trạng thái</label>
                   <select
-                    className="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 appearance-none text-slate-900 dark:text-slate-100 transition-all"
+                    className="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-[#FF5E3A] appearance-none text-slate-900 dark:text-slate-100 transition-all"
                     value={formData.status}
                     onChange={(e) => setFormData({...formData, status: e.target.value})}
                   >
@@ -257,7 +257,7 @@ const UsersPage = () => {
               </div>
               <div className="flex justify-end gap-3 mt-8">
                 <button type="button" onClick={() => setIsModalOpen(false)} className="px-5 py-2.5 text-gray-600 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-xl font-bold transition-all">Hủy bỏ</button>
-                <button type="submit" className="px-6 py-2.5 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 font-bold flex items-center gap-2 shadow-lg shadow-indigo-100 dark:shadow-indigo-900/20 transition-all active:scale-95">
+                <button type="submit" className="px-6 py-2.5 bg-[#FF5E3A] text-white rounded-xl hover:bg-[#e04520] font-bold flex items-center gap-2 shadow-lg shadow-[#FF5E3A]/10 dark:shadow-[#FF5E3A]/20 transition-all active:scale-95">
                   <Save size={18} /> Lưu tài khoản
                 </button>
               </div>

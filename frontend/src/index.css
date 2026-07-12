@@ -2,12 +2,33 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* Design tokens from assets_convert */
+@theme {
+  --color-primary: #FF5E3A;
+  --color-primary-light: #ff7c5f;
+  --color-primary-dark: #e04520;
+  --color-primary-container: #ff8a65;
+  --color-on-primary: #ffffff;
+  --color-secondary: #556500;
+  --color-secondary-container: #d6ed7a;
+  --color-on-secondary: #ffffff;
+  --color-surface: #ffffff;
+  --color-surface-variant: #f4f4f4;
+  --color-on-surface: #000000;
+  --color-on-surface-variant: #555555;
+  --color-outline: #89726b;
+  --color-outline-variant: #ddc0b8;
+  --color-error: #ba1a1a;
+  --color-error-container: #ffdad6;
+  --font-family-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+}
+
 html {
   font-size: 16px;
 }
 
 :root {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   background-color: #f8fafc;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

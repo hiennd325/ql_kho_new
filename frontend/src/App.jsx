@@ -1,10 +1,10 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import MainLayout from './layouts/MainLayout';
 
 // Pages
+import WelcomePage from './pages/WelcomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
@@ -27,12 +27,13 @@ function App() {
       <Router>
         <Routes>
           {/* Public Routes */}
+          <Route path="/" element={<WelcomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
 
           {/* Protected Routes */}
           <Route element={<ProtectedRoute />}>
-            <Route path="/" element={<MainLayout><DashboardPage /></MainLayout>} />
+            <Route path="/dashboard" element={<MainLayout><DashboardPage /></MainLayout>} />
             <Route path="/products" element={<MainLayout><ProductsPage /></MainLayout>} />
             <Route path="/warehouses" element={<MainLayout><WarehousesPage /></MainLayout>} />
             <Route path="/suppliers" element={<MainLayout><SuppliersPage /></MainLayout>} />
@@ -47,7 +48,7 @@ function App() {
 
           {/* Catch-all */}
           <Route path="/404" element={<NotFoundPage />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </Router>
     </AuthProvider>

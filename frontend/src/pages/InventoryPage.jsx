@@ -305,13 +305,13 @@ const InventoryPage = () => {
         <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-lg w-full lg:w-fit overflow-x-auto scrollbar-hide">
           <button
             onClick={() => { setActiveTab('import'); setCurrentPage(1); }}
-            className={`flex-1 lg:flex-none px-4 sm:px-6 py-2 rounded-md text-xs sm:text-sm font-bold transition-all whitespace-nowrap ${activeTab === 'import' ? 'bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'}`}
+            className={`flex-1 lg:flex-none px-4 sm:px-6 py-2 rounded-md text-xs sm:text-sm font-bold transition-all whitespace-nowrap ${activeTab === 'import' ? 'bg-white dark:bg-slate-700 text-[#FF5E3A] dark:text-[#ff8a65] shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'}`}
           >
             Phiếu nhập
           </button>
           <button
             onClick={() => { setActiveTab('export'); setCurrentPage(1); }}
-            className={`flex-1 lg:flex-none px-4 sm:px-6 py-2 rounded-md text-xs sm:text-sm font-bold transition-all whitespace-nowrap ${activeTab === 'export' ? 'bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'}`}
+            className={`flex-1 lg:flex-none px-4 sm:px-6 py-2 rounded-md text-xs sm:text-sm font-bold transition-all whitespace-nowrap ${activeTab === 'export' ? 'bg-white dark:bg-slate-700 text-[#FF5E3A] dark:text-[#ff8a65] shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'}`}
           >
             Phiếu xuất
           </button>
@@ -325,11 +325,11 @@ const InventoryPage = () => {
 
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
           <div className="relative group flex-1 sm:min-w-[200px] lg:min-w-[240px]">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors" size={18} />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#FF5E3A] transition-colors" size={18} />
             <input
               type="text"
               placeholder="Tìm kiếm..."
-              className="pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white dark:focus:bg-slate-700 w-full transition-all text-sm font-medium text-slate-900 dark:text-slate-100"
+              className="pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-[#FF5E3A] focus:bg-white dark:focus:bg-slate-700 w-full transition-all text-sm font-medium text-slate-900 dark:text-slate-100"
               value={searchTerm}
               onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
             />
@@ -351,7 +351,7 @@ const InventoryPage = () => {
             <div className="relative">
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2.5 rounded-xl hover:bg-blue-700 transition-all text-xs font-black shadow-lg shadow-blue-100 dark:shadow-blue-900/20 active:scale-95"
+                className="flex items-center gap-2 bg-[#FF5E3A] text-white px-4 py-2.5 rounded-xl hover:bg-[#e04520] transition-all text-xs font-black shadow-lg shadow-[#FF5E3A]/10 dark:shadow-[#FF5E3A]/20 active:scale-95"
               >
                 <Plus size={18} strokeWidth={3} className="sm:hidden" />
                 <span className="hidden sm:inline">TẠO PHIẾU</span>
@@ -413,7 +413,7 @@ const InventoryPage = () => {
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
               {loading ? (
-                <tr><td colSpan="7" className="px-4 py-20 text-center"><div className="flex flex-col items-center gap-3"><div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div><p className="text-slate-400 dark:text-slate-500 font-bold italic">Đang tải dữ liệu...</p></div></td></tr>
+                <tr><td colSpan="7" className="px-4 py-20 text-center"><div className="flex flex-col items-center gap-3"><div className="w-10 h-10 border-4 border-[#FF5E3A] border-t-transparent rounded-full animate-spin"></div><p className="text-slate-400 dark:text-slate-500 font-bold italic">Đang tải dữ liệu...</p></div></td></tr>
               ) : activeTab === 'alerts' ? (
                 alerts.length === 0 ? (
                   <tr><td colSpan="6" className="px-4 py-20 text-center text-slate-400 dark:text-slate-500 font-medium italic">Không có cảnh báo tồn kho nào</td></tr>
@@ -423,7 +423,7 @@ const InventoryPage = () => {
                       <td className="px-4 sm:px-8 py-5">
                         <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
                           <span className="text-[10px] sm:text-xs font-black text-slate-400">SP{alert.id}</span>
-                          <span className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 font-bold group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{alert.name}</span>
+                          <span className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 font-bold group-hover:text-[#FF5E3A] dark:group-hover:text-[#ff8a65] transition-colors">{alert.name}</span>
                           <div className="md:hidden flex items-center gap-2 mt-1">
                              <span className="text-[10px] font-bold text-rose-500">Tồn: {alert.quantity}</span>
                              <span className="text-[10px] text-slate-400">/ Min: {alert.min_quantity || 10}</span>
@@ -456,16 +456,16 @@ const InventoryPage = () => {
                       if (idx > 0 && !expandedGroups[refId]) return null;
 
                       return (
-                        <tr key={idx} className={`hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors ${idx > 0 ? 'bg-slate-50/20 dark:bg-slate-800/10' : ''}`}>
+                        <tr key={idx} className={`border-b transition-all ${isDarkMode ? 'border-slate-800/60 hover:bg-[#FF5E3A]/5 hover:border-[#FF5E3A]/20' : 'border-slate-100 hover:bg-[#FF5E3A]/5 hover:border-[#FF5E3A]/20'} ${idx > 0 ? 'bg-slate-50/20 dark:bg-slate-800/10' : ''}`}>
                           {idx === 0 && (
                             <>
-                              <td className="px-4 sm:px-8 py-5 text-sm font-black text-blue-600 dark:text-blue-400" rowSpan={expandedGroups[refId] ? group.length : 1}>
+                              <td className="px-4 sm:px-8 py-5 text-sm font-black text-[#FF5E3A] dark:text-[#ff8a65]" rowSpan={expandedGroups[refId] ? group.length : 1}>
                                  <div className="flex flex-col xs:flex-row xs:items-center gap-2 xs:gap-3">
-                                   <div className="bg-blue-50 dark:bg-blue-900/20 px-2 sm:px-3 py-1 rounded-lg w-fit border border-blue-100 dark:border-blue-800 font-mono text-xs sm:text-sm">{refId}</div>
+                                   <div className="bg-[#FF5E3A]/8 dark:bg-[#FF5E3A]/10 px-2 sm:px-3 py-1 rounded-lg w-fit border border-[#FF5E3A]/15 dark:border-[#FF5E3A]/30 font-mono text-xs sm:text-sm">{refId}</div>
                                    {group.length > 1 && (
                                      <button
                                        onClick={() => toggleGroup(refId)}
-                                       className="p-1 hover:bg-blue-100 dark:hover:bg-blue-900/40 rounded-md transition-colors text-blue-500 w-fit"
+                                       className="p-1 hover:bg-[#FF5E3A]/12 dark:hover:bg-[#FF5E3A]/15 rounded-md transition-colors text-[#FF5E3A] w-fit"
                                      >
                                        {expandedGroups[refId] ? <ChevronDown size={14} strokeWidth={3} /> : <ChevronRightIcon size={14} strokeWidth={3} />}
                                      </button>
@@ -537,7 +537,7 @@ const InventoryPage = () => {
                     if (page >= 1 && page <= totalPages) setCurrentPage(page);
                     else if (e.target.value === '') setCurrentPage('');
                   }}
-                  className="w-12 py-2 text-center text-sm font-black text-blue-600 dark:text-blue-400 bg-transparent outline-none"
+                  className="w-12 py-2 text-center text-sm font-black text-[#FF5E3A] dark:text-[#ff8a65] bg-transparent outline-none"
                 />
                 <span className="pr-4 text-sm font-bold text-slate-400">/ {totalPages}</span>
               </div>

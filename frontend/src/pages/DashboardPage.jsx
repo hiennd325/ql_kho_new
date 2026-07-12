@@ -137,7 +137,7 @@ const DashboardPage = () => {
   if (loading && !chartData) {
     return (
       <div className="flex flex-col items-center justify-center h-[60vh] gap-4">
-        <RefreshCw className="animate-spin text-blue-600" size={32} />
+        <RefreshCw className="animate-spin text-[#FF5E3A]" size={32} />
         <p className="text-slate-400 font-bold text-xs uppercase tracking-[0.3em] animate-pulse">Đang đồng bộ dữ liệu...</p>
       </div>
     );
@@ -165,13 +165,13 @@ const DashboardPage = () => {
                   setActiveTab(key);
                   fetchData(key);
                 }}
-                className={`flex-1 md:flex-none px-3 sm:px-4 py-2 rounded-lg text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all ${activeTab === key ? 'bg-blue-600 text-white shadow-md shadow-blue-600/20' : 'text-slate-400 hover:text-blue-600'}`}
+                className={`flex-1 md:flex-none px-3 sm:px-4 py-2 rounded-lg text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all ${activeTab === key ? 'bg-[#FF5E3A] text-white shadow-md shadow-[#FF5E3A]/20' : 'text-slate-400 hover:text-[#FF5E3A]'}`}
               >
                 {label}
               </button>
             ))}
           </div>
-          <button onClick={() => fetchData()} className="flex items-center gap-2 bg-blue-600 px-3 sm:px-5 py-2.5 sm:py-3 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-widest text-white hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 shrink-0">
+          <button onClick={() => fetchData()} className="flex items-center gap-2 bg-[#FF5E3A] px-3 sm:px-5 py-2.5 sm:py-3 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-widest text-white hover:bg-[#e04520] transition-all shadow-lg shadow-[#FF5E3A]/20 shrink-0">
             <RefreshCw size={14} className={loading ? 'animate-spin' : ''} /> <span className="hidden xs:inline">Đồng bộ</span>
           </button>
         </div>
@@ -232,7 +232,7 @@ const DashboardPage = () => {
           <motion.div variants={item} className={`p-4 sm:p-6 rounded-2xl sm:rounded-3xl border shadow-sm ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
             <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 mb-4 sm:mb-6">
               <h3 className={`font-black flex items-center gap-2 text-sm sm:text-base ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
-                <Activity size={18} className="text-blue-600" />
+                <Activity size={18} className="text-[#FF5E3A]" />
                 Biểu đồ luân chuyển
               </h3>
               <div className="flex items-center gap-4">
@@ -295,7 +295,7 @@ const DashboardPage = () => {
           <motion.div variants={item} className={`rounded-[32px] border shadow-[0_8px_30px_rgb(0,0,0,0.02)] overflow-hidden ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
             <div className={`p-8 border-b flex flex-col md:flex-row justify-between items-start md:items-center gap-4 ${isDarkMode ? 'border-slate-800' : 'border-slate-50/50'}`}>
               <h3 className={`font-black flex items-center gap-3 text-lg tracking-tighter uppercase ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
-                <div className={`p-2 rounded-xl ${isDarkMode ? 'bg-blue-900/20 text-blue-400' : 'bg-blue-50 text-blue-600'}`}><Clock size={20} strokeWidth={2.5} /></div>
+                <div className={`p-2 rounded-xl ${isDarkMode ? 'bg-[#FF5E3A]/10 text-[#ff8a65]' : 'bg-[#FF5E3A]/10 text-[#FF5E3A]'}`}><Clock size={20} strokeWidth={2.5} /></div>
                 Hoạt động gần đây
               </h3>
                           </div>
@@ -321,7 +321,7 @@ const DashboardPage = () => {
                             <div className={`p-2 rounded-lg ${
                               activity.color === 'green' ? (isDarkMode ? 'bg-emerald-900/20 text-emerald-400' : 'bg-emerald-50 text-emerald-600') :
                               activity.color === 'red' ? (isDarkMode ? 'bg-rose-900/20 text-rose-400' : 'bg-rose-50 text-rose-600') :
-                              (isDarkMode ? 'bg-blue-900/20 text-blue-400' : 'bg-blue-50 text-blue-600')
+                              (isDarkMode ? 'bg-[#FF5E3A]/10 text-[#ff8a65]' : 'bg-[#FF5E3A]/10 text-[#FF5E3A]')
                             }`}>
                               <Package size={14} strokeWidth={3} />
                             </div>
@@ -335,7 +335,7 @@ const DashboardPage = () => {
                           <span className={`text-[10px] font-black px-2 py-1 rounded-md ${isDarkMode ? 'text-slate-400 bg-slate-800' : 'text-slate-400 bg-slate-100'}`}>{activity.time}</span>
                         </td>
                         <td className="px-6 py-4 text-center">
-                          <button className="text-slate-300 hover:text-blue-600 transition-colors"><ExternalLink size={14} /></button>
+                          <button className="text-slate-300 hover:text-[#FF5E3A] transition-colors"><ExternalLink size={14} /></button>
                         </td>
                       </tr>
                     ))
@@ -351,7 +351,7 @@ const DashboardPage = () => {
           <motion.div variants={item} className={`p-6 rounded-3xl border shadow-sm flex flex-col h-full ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
             <div className="flex justify-between items-start mb-6">
               <h3 className={`font-black flex items-center gap-2 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
-                <Activity size={18} className="text-blue-600" />
+                <Activity size={18} className="text-[#FF5E3A]" />
                 Vận hành hệ thống
               </h3>
               {getHealthBadge(alerts.systemHealth)}
@@ -359,9 +359,9 @@ const DashboardPage = () => {
 
             <div className="space-y-4 flex-1">
               {alerts.systemDetails.map((detail, idx) => (
-                <div key={idx} className={`flex items-center justify-between p-3 rounded-2xl border group transition-all ${isDarkMode ? 'bg-slate-800/50 border-slate-700 hover:border-blue-500/20' : 'bg-slate-50/50 border-slate-100 hover:border-blue-500/20'}`}>
+                <div key={idx} className={`flex items-center justify-between p-3 rounded-2xl border group transition-all ${isDarkMode ? 'bg-slate-800/50 border-slate-700 hover:border-[#FF5E3A]/20' : 'bg-slate-50/50 border-slate-100 hover:border-[#FF5E3A]/20'}`}>
                   <div className="flex items-center gap-3">
-                    <div className="w-1.5 h-1.5 bg-blue-500 rounded-full shadow-[0_0_8px_rgba(59,130,246,0.5)]"></div>
+                    <div className="w-1.5 h-1.5 bg-[#FF5E3A]/80 rounded-full shadow-[0_0_8px_rgba(59,130,246,0.5)]"></div>
                     <span className={`text-xs font-bold tracking-tight ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>{detail.split(':')[0]}</span>
                   </div>
                   <span className={`text-[10px] font-black px-2 py-1 rounded-lg border uppercase ${isDarkMode ? 'text-white bg-slate-900 border-slate-700' : 'text-slate-900 bg-white border-slate-100'}`}>{detail.split(':')[1] || 'Active'}</span>
