@@ -1,0 +1,43 @@
+<!--
+METADATA:
+{
+  "id": "73dccc4ba8c2",
+  "name": "cta-section-73dccc",
+  "type": "cta",
+  "category": "ctas",
+  "variant": "default",
+  "tags": [
+    "action",
+    "banner",
+    "cta"
+  ],
+  "path": "assets_convert/ctas/cta-section-73dccc.html",
+  "source": "horizon_vibrant_energetic_refinement",
+  "css_dependencies": [
+    "assets_convert/styles/base.css",
+    "assets_convert/styles/tailwind.config.js"
+  ]
+}
+-->
+<section class="py-section-gap px-container-padding relative overflow-hidden flex flex-col items-center justify-center min-h-[70vh] group/cta" onmousemove="this.style.setProperty('--mouse-x', event.clientX - this.getBoundingClientRect().left + 'px'); this.style.setProperty('--mouse-y', event.clientY - this.getBoundingClientRect().top + 'px');">
+ <!-- Vibrant moving gradient background -->
+ <div class="absolute inset-0 bg-surface -z-10">
+ </div>
+ <!-- Sophisticated deep gradient base -->
+ <div class="absolute inset-0 opacity-40 -z-10" style="background: radial-gradient(circle at 10% 20%, #4338CA 0%, transparent 60%), radial-gradient(circle at 90% 80%, #BE185D 0%, transparent 60%), radial-gradient(circle at 50% 50%, #0369A1 0%, transparent 70%);">
+ </div>
+ <!-- Interactive cursor-following glow -->
+ <div class="absolute inset-0 -z-10 opacity-0 group-hover/cta:opacity-50 transition-opacity duration-500" style="background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(236, 72, 153, 0.5), rgba(139, 92, 246, 0.4), transparent 60%);">
+ </div>
+ <h2 class="font-display-xl text-[54px] leading-tight mb-10 text-center relative z-10 max-w-2xl drop-shadow-sm text-on-surface">
+  So, what lorem are we building?
+ </h2>
+ <a class="inline-flex items-center gap-3 bg-white/40 backdrop-blur-md border border-white/60 font-body-md text-body-md font-medium px-6 py-2.5 rounded-full hover:bg-white/60 hover:scale-105 transition-all shadow-sm group relative z-10 text-on-surface" href="#">
+  Get started
+  <div class="w-5 h-5 flex items-center justify-center">
+   <span class="material-symbols-outlined text-on-surface text-[16px] group-hover:translate-x-0.5 transition-transform">
+    arrow_forward
+   </span>
+  </div>
+ </a>
+</section>
