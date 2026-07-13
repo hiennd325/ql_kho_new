@@ -301,7 +301,7 @@ const InventoryPage = () => {
       </div>
 
       {/* Toolbar */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-white/85 dark:bg-slate-900/80 backdrop-blur-2xl shadow-2xl border dark:border-white/10 border-white/60 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
         <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-lg w-full lg:w-fit overflow-x-auto scrollbar-hide">
           <button
             onClick={() => { setActiveTab('import'); setCurrentPage(1); }}
@@ -358,7 +358,7 @@ const InventoryPage = () => {
                 <ChevronDown size={16} />
               </button>
               {isDropdownOpen && (
-                <div className="absolute right-0 mt-3 w-56 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-700 py-3 z-30 animate-in fade-in slide-in-from-top-2 duration-200">
+                <div className="absolute right-0 mt-3 w-56 bg-white/85 dark:bg-slate-800/80 backdrop-blur-2xl shadow-2xl border dark:border-white/10 border-white/60 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-700 py-3 z-30 animate-in fade-in slide-in-from-top-2 duration-200">
                   <div className="px-4 py-2 mb-2 border-b border-slate-50 dark:border-slate-700">
                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Loại giao dịch</p>
                   </div>
@@ -384,7 +384,7 @@ const InventoryPage = () => {
       </div>
 
       {/* Content */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+      <div className="bg-white/85 dark:bg-slate-900/80 backdrop-blur-2xl shadow-2xl border dark:border-white/10 border-white/60 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
@@ -521,12 +521,12 @@ const InventoryPage = () => {
               <button
                 disabled={currentPage === 1}
                 onClick={() => setCurrentPage(prev => prev - 1)}
-                className="p-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm active:scale-90"
+                className="p-2.5 bg-white/85 dark:bg-slate-800/80 backdrop-blur-2xl shadow-2xl border dark:border-white/10 border-white/60 border border-slate-200 dark:border-slate-700 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm active:scale-90"
               >
                 <ChevronLeft size={20} strokeWidth={2.5} />
               </button>
 
-              <div className="flex items-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-sm overflow-hidden">
+              <div className="flex items-center bg-white/85 dark:bg-slate-800/80 backdrop-blur-2xl shadow-2xl border dark:border-white/10 border-white/60 border border-slate-200 dark:border-slate-700 rounded-xl shadow-sm overflow-hidden">
                 <input
                   type="number"
                   min="1"
@@ -545,7 +545,7 @@ const InventoryPage = () => {
               <button
                 disabled={currentPage === totalPages}
                 onClick={() => setCurrentPage(prev => prev + 1)}
-                className="p-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm active:scale-90"
+                className="p-2.5 bg-white/85 dark:bg-slate-800/80 backdrop-blur-2xl shadow-2xl border dark:border-white/10 border-white/60 border border-slate-200 dark:border-slate-700 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm active:scale-90"
               >
                 <ChevronRight size={20} strokeWidth={2.5} />
               </button>
@@ -557,7 +557,7 @@ const InventoryPage = () => {
       {/* Import Modal */}
       {isImportModalOpen && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-2 sm:p-4 backdrop-blur-sm overflow-y-auto">
-          <div className={`rounded-[24px] sm:rounded-[32px] shadow-2xl w-full max-w-3xl overflow-hidden animate-in fade-in zoom-in duration-200 border transition-all my-auto ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
+          <div className={`rounded-[24px] sm:rounded-[32px] shadow-2xl w-full max-w-3xl overflow-hidden animate-in fade-in zoom-in duration-200 border transition-all my-auto ${isDarkMode ? 'bg-slate-900/80 backdrop-blur-2xl border border-white/10 shadow-2xl shadow-black/40' : 'bg-white/85 backdrop-blur-2xl border border-white/60 shadow-2xl shadow-slate-200/50'}`}>
             <div className={`flex items-center justify-between p-5 sm:p-8 border-b ${isDarkMode ? 'border-slate-800 bg-emerald-950/20' : 'border-slate-100 bg-emerald-50/50'}`}>
               <div className="flex items-center gap-3 sm:gap-4">
                 <div className="bg-emerald-600 p-2 sm:p-3 rounded-xl sm:rounded-2xl text-white shadow-lg shadow-emerald-600/20">
@@ -614,7 +614,7 @@ const InventoryPage = () => {
                         <label className="block text-[8px] sm:text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1 sm:mb-2 ml-1">Sản phẩm</label>
                         <select
                           required
-                          className={`w-full px-3 sm:px-4 py-2 sm:py-3 border rounded-lg sm:rounded-xl outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold text-xs sm:text-sm ${isDarkMode ? 'bg-slate-900 border-slate-700 text-white' : 'bg-white border-slate-200 text-slate-900'}`}
+                          className={`w-full px-3 sm:px-4 py-2 sm:py-3 border rounded-lg sm:rounded-xl outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold text-xs sm:text-sm ${isDarkMode ? 'bg-slate-900 border-slate-700 text-white' : 'bg-white/85 backdrop-blur-2xl border border-white/60 shadow-2xl shadow-slate-200/50 text-slate-900'}`}
                           value={item.product_id}
                           onChange={(e) => handleImportItemChange(idx, 'product_id', e.target.value)}
                         >
@@ -627,7 +627,7 @@ const InventoryPage = () => {
                           <label className="block text-[8px] sm:text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1 sm:mb-2 ml-1">Số lượng</label>
                           <input
                             type="number" required min="1"
-                            className={`w-full px-3 sm:px-4 py-2 sm:py-3 border rounded-lg sm:rounded-xl outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-black text-center text-sm ${isDarkMode ? 'bg-slate-900 border-slate-700 text-white' : 'bg-white border-slate-200 text-slate-900'}`}
+                            className={`w-full px-3 sm:px-4 py-2 sm:py-3 border rounded-lg sm:rounded-xl outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-black text-center text-sm ${isDarkMode ? 'bg-slate-900 border-slate-700 text-white' : 'bg-white/85 backdrop-blur-2xl border border-white/60 shadow-2xl shadow-slate-200/50 text-slate-900'}`}
                             value={item.quantity}
                             onChange={(e) => handleImportItemChange(idx, 'quantity', e.target.value)}
                           />
@@ -660,7 +660,7 @@ const InventoryPage = () => {
       {/* Export Modal */}
       {isExportModalOpen && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-2 sm:p-4 backdrop-blur-sm overflow-y-auto">
-          <div className={`rounded-[24px] sm:rounded-[32px] shadow-2xl w-full max-w-3xl overflow-hidden animate-in fade-in zoom-in duration-200 border transition-all my-auto ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
+          <div className={`rounded-[24px] sm:rounded-[32px] shadow-2xl w-full max-w-3xl overflow-hidden animate-in fade-in zoom-in duration-200 border transition-all my-auto ${isDarkMode ? 'bg-slate-900/80 backdrop-blur-2xl border border-white/10 shadow-2xl shadow-black/40' : 'bg-white/85 backdrop-blur-2xl border border-white/60 shadow-2xl shadow-slate-200/50'}`}>
             <div className={`flex items-center justify-between p-5 sm:p-8 border-b ${isDarkMode ? 'border-slate-800 bg-rose-950/20' : 'border-slate-100 bg-rose-50/50'}`}>
               <div className="flex items-center gap-3 sm:gap-4">
                 <div className="bg-rose-600 p-2 sm:p-3 rounded-xl sm:rounded-2xl text-white shadow-lg shadow-rose-600/20">
@@ -721,7 +721,7 @@ const InventoryPage = () => {
                         <label className="block text-[8px] sm:text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1 sm:mb-2 ml-1">Sản phẩm xuất</label>
                         <select
                           required
-                          className={`w-full px-3 sm:px-4 py-2 sm:py-3 border rounded-lg sm:rounded-xl outline-none focus:ring-4 focus:ring-rose-500/10 transition-all font-bold text-xs sm:text-sm ${isDarkMode ? 'bg-slate-900 border-slate-700 text-white' : 'bg-white border-slate-200 text-slate-900'}`}
+                          className={`w-full px-3 sm:px-4 py-2 sm:py-3 border rounded-lg sm:rounded-xl outline-none focus:ring-4 focus:ring-rose-500/10 transition-all font-bold text-xs sm:text-sm ${isDarkMode ? 'bg-slate-900 border-slate-700 text-white' : 'bg-white/85 backdrop-blur-2xl border border-white/60 shadow-2xl shadow-slate-200/50 text-slate-900'}`}
                           value={item.product_id}
                           onChange={(e) => handleExportItemChange(idx, 'product_id', e.target.value)}
                         >
@@ -734,7 +734,7 @@ const InventoryPage = () => {
                           <label className="block text-[8px] sm:text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1 sm:mb-2 ml-1">Số lượng</label>
                           <input
                             type="number" required min="1" max={item.max_quantity || 1}
-                            className={`w-full px-3 sm:px-4 py-2 sm:py-3 border rounded-lg sm:rounded-xl outline-none focus:ring-4 focus:ring-rose-500/10 transition-all font-black text-center text-sm ${isDarkMode ? 'bg-slate-900 border-slate-700 text-white' : 'bg-white border-slate-200 text-slate-900'}`}
+                            className={`w-full px-3 sm:px-4 py-2 sm:py-3 border rounded-lg sm:rounded-xl outline-none focus:ring-4 focus:ring-rose-500/10 transition-all font-black text-center text-sm ${isDarkMode ? 'bg-slate-900 border-slate-700 text-white' : 'bg-white/85 backdrop-blur-2xl border border-white/60 shadow-2xl shadow-slate-200/50 text-slate-900'}`}
                             value={item.quantity}
                             onChange={(e) => handleExportItemChange(idx, 'quantity', e.target.value)}
                           />

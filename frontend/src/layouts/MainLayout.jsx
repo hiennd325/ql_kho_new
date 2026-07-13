@@ -53,7 +53,7 @@ const MainLayout = ({ children }) => {
     <div className={`min-h-screen flex flex-col overflow-x-hidden font-sans selection:bg-[#FF5E3A]/12 selection:text-[#FF5E3A] transition-colors duration-300 ${isDarkMode ? 'text-slate-100' : 'text-slate-900'} bg-transparent`}>
       
       {/* Top Header */}
-      <header className={`${isDarkMode ? 'bg-slate-900/80 border-slate-800' : 'bg-white/80 border-slate-200/60'} backdrop-blur-xl border-b sticky top-0 z-50 transition-colors duration-300 shadow-sm`}>
+      <header className={`${isDarkMode ? 'bg-slate-900/80 border-slate-800' : 'bg-white/80 border-slate-200/60'} backdrop-blur-xl border-b fixed w-full top-0 left-0 z-50 transition-colors duration-300 shadow-sm`}>
         <div className="flex items-center justify-between px-4 sm:px-6 lg:px-8 h-20">
           
           {/* Logo & Mobile Menu Toggle */}
@@ -201,7 +201,7 @@ const MainLayout = ({ children }) => {
       </AnimatePresence>
 
       {/* Main Content Area */}
-      <main className="flex-1 w-full flex flex-col relative">
+      <main className="flex-1 w-full flex flex-col relative pt-20">
         {/* Page Header (Title + Status) */}
         <div className="px-4 sm:px-6 lg:px-10 pt-6 pb-2 max-w-[1500px] w-full mx-auto">
           <div className="flex flex-col">

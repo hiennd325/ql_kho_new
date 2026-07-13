@@ -216,7 +216,7 @@ const ProductsPage = () => {
   return (
     <div className="space-y-6">
       {/* Stats & Actions */}
-      <div className={`flex flex-col xl:flex-row xl:items-center justify-between gap-6 sm:gap-8 p-5 sm:p-8 rounded-[24px] sm:rounded-[32px] border shadow-[0_8px_30px_rgb(0,0,0,0.02)] mb-6 sm:mb-8 transition-colors duration-300 ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
+      <div className={`flex flex-col xl:flex-row xl:items-center justify-between gap-6 sm:gap-8 p-5 sm:p-8 rounded-[24px] sm:rounded-[32px] border shadow-[0_8px_30px_rgb(0,0,0,0.02)] mb-6 sm:mb-8 transition-colors duration-300 ${isDarkMode ? 'bg-slate-900/80 backdrop-blur-2xl border border-white/10 shadow-2xl shadow-black/40' : 'bg-white/85 backdrop-blur-2xl border border-white/60 shadow-2xl shadow-slate-200/50'}`}>
         <div className="flex items-center gap-4 sm:gap-6">
           <div className="bg-gradient-to-br from-[#FF5E3A] to-[#e04520] p-3 sm:p-5 rounded-[18px] sm:rounded-[24px] text-white shadow-xl shadow-[#FF5E3A]/20">
             <Box size={28} strokeWidth={2.5} className="sm:w-9 sm:h-9" />
@@ -248,7 +248,7 @@ const ProductsPage = () => {
       </div>
 
       {/* Filters */}
-      <div className={`p-4 sm:p-5 rounded-2xl shadow-sm border flex flex-col sm:flex-row gap-4 sm:gap-5 items-stretch sm:items-center transition-colors duration-300 ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`}>
+      <div className={`p-4 sm:p-5 rounded-2xl shadow-sm border flex flex-col sm:flex-row gap-4 sm:gap-5 items-stretch sm:items-center transition-colors duration-300 ${isDarkMode ? 'bg-slate-900/80 backdrop-blur-2xl border border-white/10 shadow-2xl shadow-black/40' : 'bg-white/85 backdrop-blur-2xl border border-white/60 shadow-2xl shadow-slate-200/50'}`}>
         <div className="relative group flex-1">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#FF5E3A] transition-colors" size={20} />
           <input
@@ -276,7 +276,7 @@ const ProductsPage = () => {
       </div>
 
       {/* Table */}
-      <div className={`rounded-[32px] shadow-[0_8px_30px_rgb(0,0,0,0.02)] border overflow-hidden transition-colors duration-300 ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
+      <div className={`rounded-[32px] shadow-[0_8px_30px_rgb(0,0,0,0.02)] border overflow-hidden transition-colors duration-300 ${isDarkMode ? 'bg-slate-900/80 backdrop-blur-2xl border border-white/10 shadow-2xl shadow-black/40' : 'bg-white/85 backdrop-blur-2xl border border-white/60 shadow-2xl shadow-slate-200/50'}`}>
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
@@ -318,13 +318,13 @@ const ProductsPage = () => {
                     <td className="px-8 py-6 text-xs font-black text-slate-400 uppercase tracking-tighter">{formatDate(product.created_at)}</td>
                     <td className="px-8 py-6">
                       <div className="flex justify-center items-center gap-3">
-                        <button onClick={() => openDetailModal(product)} className={`p-3 text-slate-400 border hover:border-[#FF5E3A] hover:text-[#FF5E3A] hover:shadow-lg hover:shadow-[#FF5E3A]/10 rounded-2xl transition-all active:scale-90 ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-100'}`} title="Chi tiết">
+                        <button onClick={() => openDetailModal(product)} className={`p-3 text-slate-400 border hover:border-[#FF5E3A] hover:text-[#FF5E3A] hover:shadow-lg hover:shadow-[#FF5E3A]/10 rounded-2xl transition-all active:scale-90 ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white/85 backdrop-blur-2xl border border-white/60 shadow-2xl shadow-slate-200/50'}`} title="Chi tiết">
                           <Eye size={16} strokeWidth={2.5} />
                         </button>
-                        <button onClick={() => openEditModal(product)} className={`p-3 text-slate-400 border hover:border-amber-500 hover:text-amber-600 hover:shadow-lg hover:shadow-amber-500/10 rounded-2xl transition-all active:scale-90 ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-100'}`} title="Sửa">
+                        <button onClick={() => openEditModal(product)} className={`p-3 text-slate-400 border hover:border-amber-500 hover:text-amber-600 hover:shadow-lg hover:shadow-amber-500/10 rounded-2xl transition-all active:scale-90 ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white/85 backdrop-blur-2xl border border-white/60 shadow-2xl shadow-slate-200/50'}`} title="Sửa">
                           <Edit size={16} strokeWidth={2.5} />
                         </button>
-                        <button onClick={() => handleDelete(product.id)} className={`p-3 text-slate-400 border hover:border-rose-500 hover:text-rose-600 hover:shadow-lg hover:shadow-rose-500/10 rounded-2xl transition-all active:scale-90 ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-100'}`} title="Xóa">
+                        <button onClick={() => handleDelete(product.id)} className={`p-3 text-slate-400 border hover:border-rose-500 hover:text-rose-600 hover:shadow-lg hover:shadow-rose-500/10 rounded-2xl transition-all active:scale-90 ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white/85 backdrop-blur-2xl border border-white/60 shadow-2xl shadow-slate-200/50'}`} title="Xóa">
                           <Trash2 size={16} strokeWidth={2.5} />
                         </button>
                       </div>
@@ -345,17 +345,17 @@ const ProductsPage = () => {
             <button
               disabled={currentPage === 1}
               onClick={() => setCurrentPage(prev => prev - 1)}
-              className={`p-2.5 border rounded-xl hover:bg-slate-50 text-slate-600 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm active:scale-90 ${isDarkMode ? 'bg-slate-800 border-slate-700 text-slate-400 hover:bg-slate-700' : 'bg-white border-slate-200'}`}
+              className={`p-2.5 border rounded-xl hover:bg-slate-50 text-slate-600 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm active:scale-90 ${isDarkMode ? 'bg-slate-800 border-slate-700 text-slate-400 hover:bg-slate-700' : 'bg-white/85 backdrop-blur-2xl border border-white/60 shadow-2xl shadow-slate-200/50'}`}
             >
               <ChevronLeft size={20} strokeWidth={2.5} />
             </button>
-            <div className={`border px-5 py-2 rounded-xl text-sm font-black shadow-sm ${isDarkMode ? 'bg-slate-800 border-slate-700 text-slate-300' : 'bg-white border-slate-200 text-slate-700'}`}>
+            <div className={`border px-5 py-2 rounded-xl text-sm font-black shadow-sm ${isDarkMode ? 'bg-slate-800 border-slate-700 text-slate-300' : 'bg-white/85 backdrop-blur-2xl border border-white/60 shadow-2xl shadow-slate-200/50 text-slate-700'}`}>
                Trang {currentPage} / {totalPages}
             </div>
             <button
               disabled={currentPage === totalPages}
               onClick={() => setCurrentPage(prev => prev + 1)}
-              className={`p-2.5 border rounded-xl hover:bg-slate-50 text-slate-600 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm active:scale-90 ${isDarkMode ? 'bg-slate-800 border-slate-700 text-slate-400 hover:bg-slate-700' : 'bg-white border-slate-200'}`}
+              className={`p-2.5 border rounded-xl hover:bg-slate-50 text-slate-600 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm active:scale-90 ${isDarkMode ? 'bg-slate-800 border-slate-700 text-slate-400 hover:bg-slate-700' : 'bg-white/85 backdrop-blur-2xl border border-white/60 shadow-2xl shadow-slate-200/50'}`}
             >
               <ChevronRight size={20} strokeWidth={2.5} />
             </button>
@@ -366,7 +366,7 @@ const ProductsPage = () => {
       {/* Add Modal */}
       {isAddModalOpen && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className={`rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden border transition-all ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
+          <div className={`rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden border transition-all ${isDarkMode ? 'bg-slate-900/80 backdrop-blur-2xl border border-white/10 shadow-2xl shadow-black/40' : 'bg-white/85 backdrop-blur-2xl border border-white/60 shadow-2xl shadow-slate-200/50'}`}>
             <div className={`flex items-center justify-between p-6 border-b ${isDarkMode ? 'border-slate-800' : 'border-slate-100'}`}>
               <div className="flex items-center gap-3">
                 <div className="bg-[#FF5E3A] p-2 rounded-xl text-white">
@@ -472,7 +472,7 @@ const ProductsPage = () => {
       {/* Edit Modal */}
       {isEditModalOpen && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className={`rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden border transition-all ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
+          <div className={`rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden border transition-all ${isDarkMode ? 'bg-slate-900/80 backdrop-blur-2xl border border-white/10 shadow-2xl shadow-black/40' : 'bg-white/85 backdrop-blur-2xl border border-white/60 shadow-2xl shadow-slate-200/50'}`}>
             <div className={`flex items-center justify-between p-6 border-b ${isDarkMode ? 'border-slate-800' : 'border-slate-100'}`}>
               <div className="flex items-center gap-3">
                 <div className="bg-amber-500 p-2 rounded-xl text-white">
@@ -571,7 +571,7 @@ const ProductsPage = () => {
       {/* Detail Modal */}
       {isDetailModalOpen && selectedProduct && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className={`rounded-[32px] shadow-2xl w-full max-w-2xl overflow-hidden border transition-all ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
+          <div className={`rounded-[32px] shadow-2xl w-full max-w-2xl overflow-hidden border transition-all ${isDarkMode ? 'bg-slate-900/80 backdrop-blur-2xl border border-white/10 shadow-2xl shadow-black/40' : 'bg-white/85 backdrop-blur-2xl border border-white/60 shadow-2xl shadow-slate-200/50'}`}>
             <div className={`flex items-center justify-between p-8 border-b ${isDarkMode ? 'border-slate-800' : 'border-slate-100'}`}>
               <div className="flex items-center gap-4">
                 <div className="bg-[#FF5E3A] p-3 rounded-2xl text-white shadow-lg shadow-[#FF5E3A]/20">

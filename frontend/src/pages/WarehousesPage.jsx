@@ -274,7 +274,7 @@ const WarehousesPage = () => {
       />
 
       {/* Stats */}
-      <div className={`p-6 rounded-2xl border shadow-sm grid grid-cols-1 md:grid-cols-3 gap-6 transition-colors duration-300 ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`}>
+      <div className={`p-6 rounded-2xl border shadow-sm grid grid-cols-1 md:grid-cols-3 gap-6 transition-colors duration-300 ${isDarkMode ? 'bg-slate-900/80 backdrop-blur-2xl border border-white/10 shadow-2xl shadow-black/40' : 'bg-white/85 backdrop-blur-2xl border border-white/60 shadow-2xl shadow-slate-200/50'}`}>
         <div className={`flex items-center gap-5 px-4`}>
           <div className={`p-4 rounded-2xl ${isDarkMode ? 'bg-[#FF5E3A]/10 text-[#ff8a65]' : 'bg-[#FF5E3A]/8 text-[#FF5E3A]'}`}>
             <Warehouse size={32} strokeWidth={2.5} />
@@ -311,7 +311,7 @@ const WarehousesPage = () => {
       </div>
 
       {/* Tabs & Search */}
-      <div className={`flex flex-col xl:flex-row xl:items-center justify-between gap-6 p-4 rounded-2xl border shadow-sm transition-colors duration-300 ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`}>
+      <div className={`flex flex-col xl:flex-row xl:items-center justify-between gap-6 p-4 rounded-2xl border shadow-sm transition-colors duration-300 ${isDarkMode ? 'bg-slate-900/80 backdrop-blur-2xl border border-white/10 shadow-2xl shadow-black/40' : 'bg-white/85 backdrop-blur-2xl border border-white/60 shadow-2xl shadow-slate-200/50'}`}>
         <div className={`flex p-1.5 rounded-xl w-fit ${isDarkMode ? 'bg-slate-800' : 'bg-slate-100'}`}>
           <button
             onClick={() => setActiveTab('list')}
@@ -356,7 +356,7 @@ const WarehousesPage = () => {
       </div>
 
       {activeTab === 'list' ? (
-        <div className={`rounded-2xl shadow-sm border overflow-hidden transition-colors duration-300 ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`}>
+        <div className={`rounded-2xl shadow-sm border overflow-hidden transition-colors duration-300 ${isDarkMode ? 'bg-slate-900/80 backdrop-blur-2xl border border-white/10 shadow-2xl shadow-black/40' : 'bg-white/85 backdrop-blur-2xl border border-white/60 shadow-2xl shadow-slate-200/50'}`}>
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
@@ -473,7 +473,7 @@ const WarehousesPage = () => {
           </div>
         </div>
       ) : (
-        <div className={`rounded-2xl shadow-sm border overflow-hidden transition-colors duration-300 ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`}>
+        <div className={`rounded-2xl shadow-sm border overflow-hidden transition-colors duration-300 ${isDarkMode ? 'bg-slate-900/80 backdrop-blur-2xl border border-white/10 shadow-2xl shadow-black/40' : 'bg-white/85 backdrop-blur-2xl border border-white/60 shadow-2xl shadow-slate-200/50'}`}>
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
@@ -570,7 +570,7 @@ const WarehousesPage = () => {
       {/* Add/Edit Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className={`rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden border transition-all ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
+          <div className={`rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden border transition-all ${isDarkMode ? 'bg-slate-900/80 backdrop-blur-2xl border border-white/10 shadow-2xl shadow-black/40' : 'bg-white/85 backdrop-blur-2xl border border-white/60 shadow-2xl shadow-slate-200/50'}`}>
             <div className={`flex items-center justify-between p-6 border-b ${isDarkMode ? 'border-slate-800' : 'border-slate-100'}`}>
               <div className="flex items-center gap-3">
                 <div className="bg-[#FF5E3A] p-2 rounded-xl text-white shadow-lg shadow-[#FF5E3A]/20">
@@ -649,7 +649,7 @@ const WarehousesPage = () => {
       {/* Transfer Modal */}
       {isTransferModalOpen && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className={`rounded-[32px] shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden border flex flex-col transition-all ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
+          <div className={`rounded-[32px] shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden border flex flex-col transition-all ${isDarkMode ? 'bg-slate-900/80 backdrop-blur-2xl border border-white/10 shadow-2xl shadow-black/40' : 'bg-white/85 backdrop-blur-2xl border border-white/60 shadow-2xl shadow-slate-200/50'}`}>
             <div className={`flex items-center justify-between p-6 border-b ${isDarkMode ? 'border-slate-800' : 'border-slate-100'}`}>
               <div className="flex items-center gap-3">
                 <div className="bg-emerald-600 p-2 rounded-xl text-white shadow-lg shadow-emerald-600/20">
@@ -789,7 +789,7 @@ const WarehousesPage = () => {
       {/* Detail Modal */}
       {isDetailOpen && selectedWarehouse && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className={`rounded-[32px] shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden border flex flex-col transition-all ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
+          <div className={`rounded-[32px] shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden border flex flex-col transition-all ${isDarkMode ? 'bg-slate-900/80 backdrop-blur-2xl border border-white/10 shadow-2xl shadow-black/40' : 'bg-white/85 backdrop-blur-2xl border border-white/60 shadow-2xl shadow-slate-200/50'}`}>
             <div className={`flex items-center justify-between p-8 border-b ${isDarkMode ? 'border-slate-800' : 'border-slate-100'}`}>
               <div className="flex items-center gap-4">
                 <div className="bg-[#FF5E3A] p-3 rounded-2xl text-white shadow-lg shadow-[#FF5E3A]/20">
@@ -854,7 +854,7 @@ const WarehousesPage = () => {
                   </div>
                   Danh mục hàng hóa hiện có
                 </h4>
-                <div className={`rounded-2xl border overflow-hidden transition-colors ${isDarkMode ? 'bg-slate-800/30 border-slate-800' : 'bg-white border-slate-100'}`}>
+                <div className={`rounded-2xl border overflow-hidden transition-colors ${isDarkMode ? 'bg-slate-800/30 border-slate-800' : 'bg-white/85 backdrop-blur-2xl border border-white/60 shadow-2xl shadow-slate-200/50'}`}>
                   <table className="w-full text-left border-collapse">
                     <thead>
                       <tr className={`border-b ${isDarkMode ? 'bg-slate-800/50 border-slate-800' : 'bg-slate-50 border-slate-100'}`}>

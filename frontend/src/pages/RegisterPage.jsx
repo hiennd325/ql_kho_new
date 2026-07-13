@@ -61,7 +61,7 @@ const RegisterPage = () => {
         transition={{ duration: 0.8, ease: 'easeOut' }}
         className="max-w-md w-full relative z-10 p-4"
       >
-        <div className={`backdrop-blur-xl border rounded-[2.5rem] shadow-2xl p-10 overflow-hidden relative group transition-colors duration-300 ${isDarkMode ? 'bg-white/[0.03] border-white/10' : 'bg-white border-slate-200'}`}>
+        <div className={`backdrop-blur-xl border rounded-[2.5rem] shadow-2xl p-10 overflow-hidden relative group transition-colors duration-300 ${isDarkMode ? 'bg-white/[0.03] border-white/10' : 'bg-white/85 backdrop-blur-2xl border border-white/60 shadow-2xl shadow-slate-200/50'}`}>
           <div className="absolute inset-0 bg-gradient-to-br from-[#FF5E3A]/5 to-transparent pointer-events-none"></div>
 
           <div className="text-center mb-10">

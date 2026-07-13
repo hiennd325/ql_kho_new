@@ -59,7 +59,7 @@ const WelcomePage = () => {
           initial={{ opacity: 0, y: -15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className={`inline-flex items-center gap-2 border rounded-full px-4 py-2 mb-8 backdrop-blur-xl ${isDarkMode ? 'bg-white/5 border-white/10' : 'bg-white border-slate-200 shadow-sm'}`}
+          className={`inline-flex items-center gap-2 border rounded-full px-4 py-2 mb-8 backdrop-blur-xl ${isDarkMode ? 'bg-white/5 border-white/10' : 'bg-white/85 backdrop-blur-2xl border border-white/60 shadow-2xl shadow-slate-200/50 shadow-sm'}`}
         >
           <span className="bg-[#FF5E3A]/10 text-[#FF5E3A] text-[10px] font-black tracking-widest px-2 py-0.5 rounded-full uppercase">
             v2.0
@@ -145,7 +145,7 @@ const WelcomePage = () => {
                 className={`p-8 rounded-3xl border transition-all hover:scale-[1.02] duration-300 ${
                   isDarkMode 
                     ? 'bg-white/[0.02] border-white/5 hover:border-[#FF5E3A]/20 hover:bg-white/[0.04]' 
-                    : 'bg-white border-slate-100 shadow-sm hover:border-[#FF5E3A]/20 hover:shadow-md'
+                    : 'bg-white/85 backdrop-blur-2xl border border-white/60 shadow-2xl shadow-slate-200/50 shadow-sm hover:border-[#FF5E3A]/20 hover:shadow-md'
                 }`}
               >
                 <div className="w-12 h-12 rounded-2xl bg-[#FF5E3A]/10 text-[#FF5E3A] flex items-center justify-center mb-6">

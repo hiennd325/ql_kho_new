@@ -199,7 +199,7 @@ const SuppliersPage = () => {
       {/* Add/Edit Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className={`rounded-[32px] shadow-2xl w-full max-w-2xl overflow-hidden border transition-all ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
+          <div className={`rounded-[32px] shadow-2xl w-full max-w-2xl overflow-hidden border transition-all ${isDarkMode ? 'bg-slate-900/80 backdrop-blur-2xl border border-white/10 shadow-2xl shadow-black/40' : 'bg-white/85 backdrop-blur-2xl border border-white/60 shadow-2xl shadow-slate-200/50'}`}>
             <div className={`flex items-center justify-between p-8 border-b ${isDarkMode ? 'border-slate-800' : 'border-slate-100'}`}>
               <div className="flex items-center gap-4">
                 <div className="bg-orange-600 p-3 rounded-2xl text-white shadow-lg shadow-orange-600/20">

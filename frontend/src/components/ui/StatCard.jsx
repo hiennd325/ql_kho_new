@@ -33,10 +33,10 @@ const StatCard = ({ label, value, icon: Icon, color = 'primary', trend, detail, 
           flex: isExpanded ? 2 : 1
         }}
         onClick={onExpand}
-        className={`p-6 rounded-[24px] border-2 shadow-xl flex items-center justify-between gap-6 transition-all group relative overflow-hidden min-w-0 cursor-pointer ${
+        className={`p-6 rounded-[24px] border-2 shadow-2xl flex items-center justify-between gap-6 transition-all group relative overflow-hidden min-w-0 cursor-pointer backdrop-blur-2xl ${
           isDarkMode
-          ? `bg-slate-900 ${isExpanded ? 'border-[#FF5E3A]/50' : 'border-slate-800'} shadow-[#FF5E3A]/5`
-          : `bg-white ${isExpanded ? 'border-[#FF5E3A]/30' : 'border-slate-100'} shadow-slate-200/50`
+          ? `bg-slate-900/80 ${isExpanded ? 'border-[#FF5E3A]/50' : 'border-white/10'} shadow-black/40`
+          : `bg-white/85 ${isExpanded ? 'border-[#FF5E3A]/30' : 'border-white/60'} shadow-slate-200/50`
         }`}
       >
         {/* Animated Background Glow */}
@@ -84,8 +84,8 @@ const StatCard = ({ label, value, icon: Icon, color = 'primary', trend, detail, 
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`p-5 rounded-2xl border shadow-sm flex flex-col gap-3 hover:shadow-md transition-all group relative overflow-hidden ${
-        isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'
+      className={`p-5 rounded-2xl border shadow-2xl flex flex-col gap-3 hover:shadow-md transition-all group relative overflow-hidden backdrop-blur-2xl ${
+        isDarkMode ? 'bg-slate-900/80 border-white/10 shadow-black/40' : 'bg-white/85 border-white/60 shadow-slate-200/50'
       }`}
     >
       <div className={`absolute top-0 right-0 w-20 h-20 blur-2xl -mr-10 -mt-10 transition-opacity duration-500 opacity-0 group-hover:opacity-20 ${glowColors[color]}`}></div>

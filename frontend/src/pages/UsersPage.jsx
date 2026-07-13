@@ -117,7 +117,7 @@ const UsersPage = () => {
         </button>
       </div>
 
-      <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-gray-100 dark:border-slate-800 overflow-hidden">
+      <div className="bg-white/85 dark:bg-slate-900/80 backdrop-blur-2xl shadow-2xl border dark:border-white/10 border-white/60 rounded-xl shadow-sm border border-gray-100 dark:border-slate-800 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
@@ -182,7 +182,7 @@ const UsersPage = () => {
       {/* Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border dark:border-slate-800">
+          <div className="bg-white/85 dark:bg-slate-900/80 backdrop-blur-2xl shadow-2xl border dark:border-white/10 border-white/60 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border dark:border-slate-800">
             <div className="flex items-center justify-between p-6 border-b dark:border-slate-800 bg-[#FF5E3A]/8/50 dark:bg-[#FF5E3A]/10">
               <h3 className="text-lg font-bold flex items-center gap-2 dark:text-slate-100">
                 {selectedUser ? <Edit size={20} className="text-[#FF5E3A] dark:text-[#ff8a65]" /> : <Plus size={20} className="text-[#FF5E3A] dark:text-[#ff8a65]" />}
@@ -198,7 +198,7 @@ const UsersPage = () => {
                 <input
                   type="text" required
                   placeholder="Nhập tên đăng nhập"
-                  className="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-[#FF5E3A] text-slate-900 dark:text-slate-100 transition-all"
+                  className="w-full px-4 py-2 bg-white/85 dark:bg-slate-800/80 backdrop-blur-2xl shadow-2xl border dark:border-white/10 border-white/60 border border-gray-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-[#FF5E3A] text-slate-900 dark:text-slate-100 transition-all"
                   value={formData.username}
                   onChange={(e) => setFormData({...formData, username: e.target.value})}
                 />
@@ -210,7 +210,7 @@ const UsersPage = () => {
                   <input
                     type="email"
                     placeholder="user@example.com"
-                    className="w-full pl-10 pr-4 py-2 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-[#FF5E3A] text-slate-900 dark:text-slate-100 transition-all"
+                    className="w-full pl-10 pr-4 py-2 bg-white/85 dark:bg-slate-800/80 backdrop-blur-2xl shadow-2xl border dark:border-white/10 border-white/60 border border-gray-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-[#FF5E3A] text-slate-900 dark:text-slate-100 transition-all"
                     value={formData.email}
                     onChange={(e) => setFormData({...formData, email: e.target.value})}
                   />
@@ -225,7 +225,7 @@ const UsersPage = () => {
                   <input
                     type="password" required={!selectedUser}
                     placeholder="••••••••"
-                    className="w-full pl-10 pr-4 py-2 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-[#FF5E3A] text-slate-900 dark:text-slate-100 transition-all"
+                    className="w-full pl-10 pr-4 py-2 bg-white/85 dark:bg-slate-800/80 backdrop-blur-2xl shadow-2xl border dark:border-white/10 border-white/60 border border-gray-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-[#FF5E3A] text-slate-900 dark:text-slate-100 transition-all"
                     value={formData.password}
                     onChange={(e) => setFormData({...formData, password: e.target.value})}
                   />
@@ -235,7 +235,7 @@ const UsersPage = () => {
                 <div>
                   <label className="block text-sm font-bold text-gray-700 dark:text-slate-300 mb-1">Vai trò</label>
                   <select
-                    className="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-[#FF5E3A] appearance-none text-slate-900 dark:text-slate-100 transition-all"
+                    className="w-full px-4 py-2 bg-white/85 dark:bg-slate-800/80 backdrop-blur-2xl shadow-2xl border dark:border-white/10 border-white/60 border border-gray-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-[#FF5E3A] appearance-none text-slate-900 dark:text-slate-100 transition-all"
                     value={formData.role}
                     onChange={(e) => setFormData({...formData, role: e.target.value})}
                   >
@@ -246,7 +246,7 @@ const UsersPage = () => {
                 <div>
                   <label className="block text-sm font-bold text-gray-700 dark:text-slate-300 mb-1">Trạng thái</label>
                   <select
-                    className="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-[#FF5E3A] appearance-none text-slate-900 dark:text-slate-100 transition-all"
+                    className="w-full px-4 py-2 bg-white/85 dark:bg-slate-800/80 backdrop-blur-2xl shadow-2xl border dark:border-white/10 border-white/60 border border-gray-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-[#FF5E3A] appearance-none text-slate-900 dark:text-slate-100 transition-all"
                     value={formData.status}
                     onChange={(e) => setFormData({...formData, status: e.target.value})}
                   >

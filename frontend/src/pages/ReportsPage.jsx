@@ -252,7 +252,7 @@ const ReportsPage = () => {
   return (
     <div className="space-y-6">
       {/* Tab Switcher */}
-      <div className="flex bg-white dark:bg-slate-900 p-1 rounded-xl border border-gray-200 dark:border-slate-800 w-full sm:w-fit shadow-sm overflow-x-auto scrollbar-hide">
+      <div className="flex bg-white/85 dark:bg-slate-900/80 backdrop-blur-2xl shadow-2xl border dark:border-white/10 border-white/60 p-1 rounded-xl border border-gray-200 dark:border-slate-800 w-full sm:w-fit shadow-sm overflow-x-auto scrollbar-hide">
         <button
           onClick={() => setActiveTab('audits')}
           className={`flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all whitespace-nowrap ${activeTab === 'audits' ? 'bg-[#FF5E3A] text-white shadow-md shadow-[#FF5E3A]/20' : 'text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800'}`}
@@ -268,7 +268,7 @@ const ReportsPage = () => {
       </div>
 
       {/* Filters (only for audits and inventory) */}
-      <div className="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-slate-800 flex flex-wrap gap-4 items-end">
+      <div className="bg-white/85 dark:bg-slate-900/80 backdrop-blur-2xl shadow-2xl border dark:border-white/10 border-white/60 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-slate-800 flex flex-wrap gap-4 items-end">
           <div className="flex-1 min-w-[200px] space-y-1">
             <label className="text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest ml-1">Tìm kiếm</label>
             <div className="relative">
@@ -276,7 +276,7 @@ const ReportsPage = () => {
               <input
                 type="text"
                 placeholder="Mã phiếu, người tạo..."
-                className="w-full pl-9 pr-4 py-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg outline-none focus:ring-2 focus:ring-[#FF5E3A] text-sm text-slate-900 dark:text-slate-100 transition-all"
+                className="w-full pl-9 pr-4 py-2 bg-white/85 dark:bg-slate-800/80 backdrop-blur-2xl shadow-2xl border dark:border-white/10 border-white/60 border border-gray-200 dark:border-slate-700 rounded-lg outline-none focus:ring-2 focus:ring-[#FF5E3A] text-sm text-slate-900 dark:text-slate-100 transition-all"
                 value={searchTerm}
                 onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
               />
@@ -286,7 +286,7 @@ const ReportsPage = () => {
           <div className="space-y-1">
             <label className="text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest ml-1">Kho bãi</label>
             <select
-              className="border border-gray-200 dark:border-slate-700 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-[#FF5E3A] text-sm bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 min-w-[150px] transition-all"
+              className="border border-gray-200 dark:border-slate-700 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-[#FF5E3A] text-sm bg-white/85 dark:bg-slate-800/80 backdrop-blur-2xl shadow-2xl border dark:border-white/10 border-white/60 text-slate-700 dark:text-slate-200 min-w-[150px] transition-all"
               value={warehouseFilter}
               onChange={(e) => { setWarehouseFilter(e.target.value); setCurrentPage(1); }}
             >
@@ -302,7 +302,7 @@ const ReportsPage = () => {
                 <input
                   type="date"
                   max={dateRange.end || new Date().toISOString().split('T')[0]}
-                  className="border border-gray-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-[#FF5E3A] bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 transition-all"
+                  className="border border-gray-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-[#FF5E3A] bg-white/85 dark:bg-slate-800/80 backdrop-blur-2xl shadow-2xl border dark:border-white/10 border-white/60 text-slate-700 dark:text-slate-200 transition-all"
                   value={dateRange.start}
                   onChange={(e) => setDateRange({...dateRange, start: e.target.value})}
                 />
@@ -311,7 +311,7 @@ const ReportsPage = () => {
                   type="date"
                   min={dateRange.start}
                   max={new Date().toISOString().split('T')[0]}
-                  className="border border-gray-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-[#FF5E3A] bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 transition-all"
+                  className="border border-gray-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-[#FF5E3A] bg-white/85 dark:bg-slate-800/80 backdrop-blur-2xl shadow-2xl border dark:border-white/10 border-white/60 text-slate-700 dark:text-slate-200 transition-all"
                   value={dateRange.end}
                   onChange={(e) => setDateRange({...dateRange, end: e.target.value})}
                 />
@@ -338,7 +338,7 @@ const ReportsPage = () => {
         </div>
 
       {/* Main Content Area */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 overflow-hidden min-h-[400px]">
+      <div className="bg-white/85 dark:bg-slate-900/80 backdrop-blur-2xl shadow-2xl border dark:border-white/10 border-white/60 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 overflow-hidden min-h-[400px]">
         {loading ? (
           <div className="flex items-center justify-center h-64 text-gray-400 italic dark:text-slate-500">Đang tải báo cáo...</div>
         ) : activeTab === 'audits' ? (
@@ -385,8 +385,8 @@ const ReportsPage = () => {
             <div className="px-6 py-4 border-t border-gray-100 dark:border-slate-800 flex items-center justify-between bg-gray-50/30 dark:bg-slate-800/30">
               <span className="text-xs text-gray-500 dark:text-slate-400 font-medium">Trang {currentPage} trên {totalPages}</span>
               <div className="flex gap-2">
-                <button disabled={currentPage === 1} onClick={() => setCurrentPage(prev => prev - 1)} className="p-2 border dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 disabled:opacity-50 shadow-sm transition-all"><ChevronLeft size={16} /></button>
-                <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(prev => prev + 1)} className="p-2 border dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 disabled:opacity-50 shadow-sm transition-all"><ChevronRight size={16} /></button>
+                <button disabled={currentPage === 1} onClick={() => setCurrentPage(prev => prev - 1)} className="p-2 border dark:border-slate-700 rounded-lg bg-white/85 dark:bg-slate-800/80 backdrop-blur-2xl shadow-2xl border dark:border-white/10 border-white/60 text-slate-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 disabled:opacity-50 shadow-sm transition-all"><ChevronLeft size={16} /></button>
+                <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(prev => prev + 1)} className="p-2 border dark:border-slate-700 rounded-lg bg-white/85 dark:bg-slate-800/80 backdrop-blur-2xl shadow-2xl border dark:border-white/10 border-white/60 text-slate-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 disabled:opacity-50 shadow-sm transition-all"><ChevronRight size={16} /></button>
               </div>
             </div>
           </div>
@@ -425,7 +425,7 @@ const ReportsPage = () => {
       {/* Add Audit Modal */}
       {isAuditModalOpen && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col animate-in fade-in zoom-in duration-200 border dark:border-slate-800">
+          <div className="bg-white/85 dark:bg-slate-900/80 backdrop-blur-2xl shadow-2xl border dark:border-white/10 border-white/60 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col animate-in fade-in zoom-in duration-200 border dark:border-slate-800">
             <div className="flex items-center justify-between p-6 border-b dark:border-slate-800 bg-[#FF5E3A]/8/50 dark:bg-[#FF5E3A]/10">
               <h3 className="text-xl font-bold text-[#e04520] dark:text-[#ff8a65] flex items-center gap-2">
                 <ClipboardList size={24} /> Lập phiếu kiểm kê hàng hóa
@@ -436,7 +436,7 @@ const ReportsPage = () => {
             </div>
 
             <form onSubmit={handleAuditSubmit} className="flex-1 overflow-hidden flex flex-col">
-              <div className="p-6 overflow-y-auto space-y-6 bg-white dark:bg-slate-900">
+              <div className="p-6 overflow-y-auto space-y-6 bg-white/85 dark:bg-slate-900/80 backdrop-blur-2xl shadow-2xl border dark:border-white/10 border-white/60">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="space-y-1">
                     <label className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase ml-1">Mã phiếu</label>
@@ -444,11 +444,11 @@ const ReportsPage = () => {
                   </div>
                   <div className="space-y-1">
                     <label className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase ml-1">Ngày lập *</label>
-                    <input type="date" required className="w-full px-4 py-2.5 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-[#FF5E3A] text-slate-900 dark:text-slate-100 transition-all" value={auditForm.date} onChange={e => setAuditForm({...auditForm, date: e.target.value})} />
+                    <input type="date" required className="w-full px-4 py-2.5 bg-white/85 dark:bg-slate-800/80 backdrop-blur-2xl shadow-2xl border dark:border-white/10 border-white/60 border border-gray-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-[#FF5E3A] text-slate-900 dark:text-slate-100 transition-all" value={auditForm.date} onChange={e => setAuditForm({...auditForm, date: e.target.value})} />
                   </div>
                   <div className="space-y-1">
                     <label className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase ml-1">Kho kiểm kê *</label>
-                    <select required className="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-[#FF5E3A] bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 transition-all" value={auditForm.warehouse_id} onChange={e => setAuditForm({...auditForm, warehouse_id: e.target.value})}>
+                    <select required className="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-[#FF5E3A] bg-white/85 dark:bg-slate-800/80 backdrop-blur-2xl shadow-2xl border dark:border-white/10 border-white/60 text-slate-900 dark:text-slate-100 transition-all" value={auditForm.warehouse_id} onChange={e => setAuditForm({...auditForm, warehouse_id: e.target.value})}>
                       <option value="" className="dark:bg-slate-800">-- Chọn kho --</option>
                       {warehouses.map(w => <option key={w.custom_id} value={w.custom_id} className="dark:bg-slate-800">{w.name}</option>)}
                     </select>
@@ -458,11 +458,11 @@ const ReportsPage = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-1">
                     <label className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase ml-1">Người kiểm kê *</label>
-                    <input type="text" required placeholder="Nhập tên người kiểm" className="w-full px-4 py-2.5 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-[#FF5E3A] text-slate-900 dark:text-slate-100 transition-all" value={auditForm.checker} onChange={e => setAuditForm({...auditForm, checker: e.target.value})} />
+                    <input type="text" required placeholder="Nhập tên người kiểm" className="w-full px-4 py-2.5 bg-white/85 dark:bg-slate-800/80 backdrop-blur-2xl shadow-2xl border dark:border-white/10 border-white/60 border border-gray-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-[#FF5E3A] text-slate-900 dark:text-slate-100 transition-all" value={auditForm.checker} onChange={e => setAuditForm({...auditForm, checker: e.target.value})} />
                   </div>
                   <div className="space-y-1">
                     <label className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase ml-1">Ghi chú</label>
-                    <input type="text" placeholder="Ghi chú thêm (nếu có)" className="w-full px-4 py-2.5 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-[#FF5E3A] text-slate-900 dark:text-slate-100 transition-all" value={auditForm.notes} onChange={e => setAuditForm({...auditForm, notes: e.target.value})} />
+                    <input type="text" placeholder="Ghi chú thêm (nếu có)" className="w-full px-4 py-2.5 bg-white/85 dark:bg-slate-800/80 backdrop-blur-2xl shadow-2xl border dark:border-white/10 border-white/60 border border-gray-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-[#FF5E3A] text-slate-900 dark:text-slate-100 transition-all" value={auditForm.notes} onChange={e => setAuditForm({...auditForm, notes: e.target.value})} />
                   </div>
                 </div>
 
@@ -471,7 +471,7 @@ const ReportsPage = () => {
                     <h4 className="font-bold text-gray-800 dark:text-slate-100 flex items-center gap-2"><Package size={18} className="text-[#FF5E3A] dark:text-[#ff8a65]" /> Chi tiết hàng hóa</h4>
                     <div className="flex gap-2">
                       <select
-                        className="text-sm border border-gray-300 dark:border-slate-700 rounded-lg px-3 py-1.5 outline-none focus:ring-2 focus:ring-[#FF5E3A] bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 min-w-[200px] transition-all"
+                        className="text-sm border border-gray-300 dark:border-slate-700 rounded-lg px-3 py-1.5 outline-none focus:ring-2 focus:ring-[#FF5E3A] bg-white/85 dark:bg-slate-800/80 backdrop-blur-2xl shadow-2xl border dark:border-white/10 border-white/60 text-slate-900 dark:text-slate-100 min-w-[200px] transition-all"
                         onChange={(e) => { addAuditItem(e.target.value); e.target.value = ''; }}
                         value=""
                       >
@@ -506,7 +506,7 @@ const ReportsPage = () => {
                               <td className="px-4 py-3 text-center">
                                 <input
                                   type="number" min="0"
-                                  className="w-20 px-2 py-1.5 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-lg text-center font-bold focus:ring-2 focus:ring-[#FF5E3A] outline-none text-slate-900 dark:text-slate-100 transition-all"
+                                  className="w-20 px-2 py-1.5 bg-white/85 dark:bg-slate-800/80 backdrop-blur-2xl shadow-2xl border dark:border-white/10 border-white/60 border border-gray-300 dark:border-slate-700 rounded-lg text-center font-bold focus:ring-2 focus:ring-[#FF5E3A] outline-none text-slate-900 dark:text-slate-100 transition-all"
                                   value={item.actual_quantity}
                                   onChange={(e) => updateAuditItem(idx, e.target.value)}
                                 />

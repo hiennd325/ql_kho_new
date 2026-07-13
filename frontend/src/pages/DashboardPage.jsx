@@ -157,7 +157,7 @@ const DashboardPage = () => {
           </p>
         </div>
         <div className="flex items-center gap-2 sm:gap-3 w-full md:w-auto">
-          <div className={`border p-1 rounded-xl flex shadow-sm flex-1 md:flex-none ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`}>
+          <div className={`border p-1 rounded-xl flex shadow-sm flex-1 md:flex-none backdrop-blur-xl ${isDarkMode ? 'bg-slate-900/60 border-slate-800/50' : 'bg-white/60 border-white/50'}`}>
             {Object.entries(periodMap).map(([key, label]) => (
               <button
                 key={key}
@@ -229,7 +229,7 @@ const DashboardPage = () => {
         {/* Left Column: Chart & Recent Activity (Table) */}
         <div className="lg:col-span-8 space-y-6">
           {/* Chart Section */}
-          <motion.div variants={item} className={`p-4 sm:p-6 rounded-2xl sm:rounded-3xl border shadow-sm ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
+          <motion.div variants={item} className={`p-4 sm:p-6 rounded-2xl sm:rounded-3xl border shadow-sm backdrop-blur-xl ${isDarkMode ? 'bg-slate-900/60 border-slate-800/50' : 'bg-white/60 border-white/50'}`}>
             <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 mb-4 sm:mb-6">
               <h3 className={`font-black flex items-center gap-2 text-sm sm:text-base ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
                 <Activity size={18} className="text-[#FF5E3A]" />
@@ -292,8 +292,8 @@ const DashboardPage = () => {
           </motion.div>
 
           {/* Recent Activity Section - Desktop Table Optimization */}
-          <motion.div variants={item} className={`rounded-[32px] border shadow-[0_8px_30px_rgb(0,0,0,0.02)] overflow-hidden ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
-            <div className={`p-8 border-b flex flex-col md:flex-row justify-between items-start md:items-center gap-4 ${isDarkMode ? 'border-slate-800' : 'border-slate-50/50'}`}>
+          <motion.div variants={item} className={`rounded-[32px] border shadow-[0_8px_30px_rgb(0,0,0,0.02)] overflow-hidden backdrop-blur-xl ${isDarkMode ? 'bg-slate-900/60 border-slate-800/50' : 'bg-white/60 border-white/50'}`}>
+            <div className={`p-8 border-b flex flex-col md:flex-row justify-between items-start md:items-center gap-4 ${isDarkMode ? 'border-slate-800/50' : 'border-white/50'}`}>
               <h3 className={`font-black flex items-center gap-3 text-lg tracking-tighter uppercase ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
                 <div className={`p-2 rounded-xl ${isDarkMode ? 'bg-[#FF5E3A]/10 text-[#ff8a65]' : 'bg-[#FF5E3A]/10 text-[#FF5E3A]'}`}><Clock size={20} strokeWidth={2.5} /></div>
                 Hoạt động gần đây
@@ -348,7 +348,7 @@ const DashboardPage = () => {
 
         {/* Right Column: System Status & Alerts */}
         <div className="lg:col-span-4 space-y-6">
-          <motion.div variants={item} className={`p-6 rounded-3xl border shadow-sm flex flex-col h-full ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
+          <motion.div variants={item} className={`p-6 rounded-3xl border shadow-sm flex flex-col h-full backdrop-blur-xl ${isDarkMode ? 'bg-slate-900/60 border-slate-800/50' : 'bg-white/60 border-white/50'}`}>
             <div className="flex justify-between items-start mb-6">
               <h3 className={`font-black flex items-center gap-2 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
                 <Activity size={18} className="text-[#FF5E3A]" />
@@ -364,7 +364,7 @@ const DashboardPage = () => {
                     <div className="w-1.5 h-1.5 bg-[#FF5E3A]/80 rounded-full shadow-[0_0_8px_rgba(59,130,246,0.5)]"></div>
                     <span className={`text-xs font-bold tracking-tight ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>{detail.split(':')[0]}</span>
                   </div>
-                  <span className={`text-[10px] font-black px-2 py-1 rounded-lg border uppercase ${isDarkMode ? 'text-white bg-slate-900 border-slate-700' : 'text-slate-900 bg-white border-slate-100'}`}>{detail.split(':')[1] || 'Active'}</span>
+                  <span className={`text-[10px] font-black px-2 py-1 rounded-lg border uppercase ${isDarkMode ? 'text-white bg-slate-900 border-slate-700' : 'text-slate-900 bg-white/85 backdrop-blur-2xl border border-white/60 shadow-2xl shadow-slate-200/50'}`}>{detail.split(':')[1] || 'Active'}</span>
                 </div>
               ))}
             </div>
