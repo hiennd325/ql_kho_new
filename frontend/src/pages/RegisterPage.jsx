@@ -39,7 +39,7 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className={`min-h-screen flex items-center justify-center relative overflow-hidden font-sans transition-colors duration-300 ${isDarkMode ? 'bg-[#0a0a0a]' : 'bg-slate-50'}`}>
+    <div className={`min-h-screen flex items-center justify-center relative overflow-hidden font-sans transition-colors duration-300 bg-transparent`}>
       {/* Theme Toggle */}
       <div className="absolute top-6 right-6 z-20">
         <button

@@ -8,7 +8,7 @@ const WelcomePage = () => {
   const navigate = useNavigate();
 
   return (
-    <div className={`min-h-screen relative overflow-hidden font-sans transition-colors duration-300 ${isDarkMode ? 'bg-[#0a0a0a] text-white' : 'bg-slate-50 text-slate-900'}`}>
+    <div className={`min-h-screen relative overflow-hidden font-sans transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-slate-900'} bg-transparent`}>
       
       {/* Background radial gradient glow (similar to horizon_dynamic_vibrant_glassmorphism_1 style) */}
       <div 
