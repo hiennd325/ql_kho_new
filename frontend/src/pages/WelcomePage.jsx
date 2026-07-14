@@ -25,8 +25,8 @@ const WelcomePage = () => {
       <div className={`absolute bottom-[5%] right-[-5%] w-[40%] h-[40%] rounded-full blur-[140px] animate-pulse pointer-events-none ${isDarkMode ? 'bg-[#e04520]/8' : 'bg-[#e04520]/3'}`} style={{ animationDelay: '2s' }} />
 
       {/* Header / Navbar */}
-      <header className={`border-b backdrop-blur-md sticky top-0 z-50 transition-colors ${isDarkMode ? 'border-white/5 bg-black/20' : 'border-slate-200/60 bg-white/60'}`}>
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+      <header className="sticky top-4 z-50 px-4 sm:px-6">
+        <div className={`max-w-7xl mx-auto px-6 h-20 flex items-center justify-between border backdrop-blur-md rounded-2xl transition-all duration-300 ${isDarkMode ? 'border-white/5 bg-black/40' : 'border-slate-200/60 bg-white/80'}`}>
           <div className="flex items-center gap-3">
             <div className="bg-gradient-to-br from-[#FF5E3A] to-[#e04520] p-2.5 rounded-2xl shadow-lg shadow-[#FF5E3A]/20">
               <Package size={22} className="text-white" strokeWidth={2.5} />
@@ -54,21 +54,6 @@ const WelcomePage = () => {
       {/* Hero Section */}
       <main className="max-w-7xl mx-auto px-6 pt-20 pb-24 flex flex-col items-center justify-center text-center relative">
         
-        {/* Badge Pill tag */}
-        <motion.div 
-          initial={{ opacity: 0, y: -15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className={`inline-flex items-center gap-2 border rounded-full px-4 py-2 mb-8 backdrop-blur-xl ${isDarkMode ? 'bg-white/5 border-white/10' : 'bg-white/85 backdrop-blur-2xl border border-white/60 shadow-2xl shadow-slate-200/50 shadow-sm'}`}
-        >
-          <span className="bg-[#FF5E3A]/10 text-[#FF5E3A] text-[10px] font-black tracking-widest px-2 py-0.5 rounded-full uppercase">
-            v2.0
-          </span>
-          <span className="text-xs font-bold opacity-80">
-            Hệ thống quản lý kho thế hệ mới
-          </span>
-        </motion.div>
-
         {/* Heading */}
         <motion.h1 
           initial={{ opacity: 0, y: 20 }}
@@ -78,16 +63,6 @@ const WelcomePage = () => {
         >
           Vận hành kho hàng <span className="bg-gradient-to-r from-[#FF5E3A] to-[#ff8a65] bg-clip-text text-transparent">thông minh & tối ưu</span>
         </motion.h1>
-
-        {/* Subtitle */}
-        <motion.p 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-base sm:text-lg opacity-70 max-w-2xl mb-12 font-medium leading-relaxed"
-        >
-          Giao diện tối giản thiết kế theo ngôn ngữ Horizon Glassmorphism. Hỗ trợ giám sát tồn kho thực tế, chuyển kho bảo mật cao chống double-spending, xuất báo cáo tự động nhanh chóng.
-        </motion.p>
 
         {/* CTAs */}
         <motion.div 

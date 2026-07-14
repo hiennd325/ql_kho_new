@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import {
   Package,
@@ -46,6 +47,7 @@ ChartJS.register(
 
 const DashboardPage = () => {
   const { isDarkMode } = useTheme();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('month');
   const [expandedCard, setExpandedCard] = useState(null);
   const [stats, setStats] = useState({
@@ -355,12 +357,11 @@ const DashboardPage = () => {
                   <th className="px-6 py-3 text-[10px] font-black text-slate-450 uppercase tracking-widest">Loại giao dịch</th>
                   <th className="px-6 py-3 text-[10px] font-black text-slate-450 uppercase tracking-widest">Sản phẩm & Chi tiết</th>
                   <th className="px-6 py-3 text-[10px] font-black text-slate-455 uppercase tracking-widest text-right">Thời gian</th>
-                  <th className="px-6 py-3 text-[10px] font-black text-slate-455 uppercase tracking-widest text-center">Tác vụ</th>
                 </tr>
               </thead>
               <tbody className={`divide-y ${isDarkMode ? 'divide-white/5' : 'divide-slate-50'}`}>
                 {activities.length === 0 ? (
-                  <tr><td colSpan="4" className="py-20 text-center text-slate-350 font-bold text-xs uppercase tracking-widest">Dữ liệu trống</td></tr>
+                  <tr><td colSpan="3" className="py-20 text-center text-slate-350 font-bold text-xs uppercase tracking-widest">Dữ liệu trống</td></tr>
                 ) : (
                   activities.map((activity, idx) => (
                     <tr key={idx} className={`transition-colors group ${isDarkMode ? 'hover:bg-white/[0.03]' : 'hover:bg-slate-50/40'}`}>
@@ -381,9 +382,6 @@ const DashboardPage = () => {
                       </td>
                       <td className="px-6 py-4 text-right whitespace-nowrap">
                         <span className={`text-[10px] font-black px-2 py-1 rounded-md ${isDarkMode ? 'text-slate-400 bg-slate-900 border border-white/5' : 'text-slate-400 bg-slate-100'}`}>{activity.time}</span>
-                      </td>
-                      <td className="px-6 py-4 text-center">
-                        <button className="text-slate-400 hover:text-[#FF5E3A] transition-colors"><ExternalLink size={14} /></button>
                       </td>
                     </tr>
                   ))

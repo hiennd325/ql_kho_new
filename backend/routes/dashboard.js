@@ -335,6 +335,8 @@ router.get('/recent-activities', async (req, res) => {
         const activities = await new Promise((resolve, reject) => {
             db.all(`
                 SELECT
+                    it.reference_id,
+                    it.type,
                     CASE
                         WHEN type = 'nhap' THEN 'Nhập kho'  -- Tiêu đề cho giao dịch nhập
                         WHEN type = 'xuat' THEN 'Xuất kho'  -- Tiêu đề cho giao dịch xuất

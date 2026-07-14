@@ -21,12 +21,20 @@ import {
   ShoppingBag,
   Save
 } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
 import api from '../services/api';
 import { useTheme } from '../context/ThemeContext';
 import StatCard from '../components/ui/StatCard';
 
 const InventoryPage = () => {
   const { isDarkMode } = useTheme();
+  const location = useLocation();
+
+  // Parse query params to initialize/sync activeTab and searchTerm
+  const queryParams = useMemo(() => new URLSearchParams(location.search), [location.search]);
+  const initialTab = queryParams.get('type') === 'xuat' ? 'export' : 'import';
+  const initialSearch = queryParams.get('search') || '';
+
   const [transactions, setTransactions] = useState([]);
   const [stats, setStats] = useState({});
   const [alerts, setAlerts] = useState([]);
@@ -36,14 +44,27 @@ const InventoryPage = () => {
   const [loading, setLoading] = useState(true);
   
   // Filters
-  const [activeTab, setActiveTab] = useState('import'); // 'import', 'export', 'alerts'
-  const [searchTerm, setSearchTerm] = useState('');
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+  const [activeTab, setActiveTab] = useState(initialTab); // 'import', 'export', 'alerts'
+  const [searchTerm, setSearchTerm] = useState(initialSearch);
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(initialSearch);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [warehouseFilter, setWarehouseFilter] = useState('');
   const limit = 10;
+
+  // Sync state if query params change
+  useEffect(() => {
+    const type = queryParams.get('type');
+    const search = queryParams.get('search');
+    if (type) {
+      setActiveTab(type === 'xuat' ? 'export' : 'import');
+    }
+    if (search !== null && search !== undefined) {
+      setSearchTerm(search);
+      setDebouncedSearchTerm(search);
+    }
+  }, [queryParams]);
 
   // Debounce search logic
   useEffect(() => {
