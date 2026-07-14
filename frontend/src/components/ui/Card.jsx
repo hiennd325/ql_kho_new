@@ -7,9 +7,11 @@ const Card = ({ children, className = '', noPadding = false, hover = true }) => 
 
   return (
     <motion.div
-      whileHover={hover ? { y: -4, shadow: '0 20px 25px -5px rgb(0 0 0 / 0.1)' } : {}}
-      className={`rounded-[32px] border shadow-sm transition-all duration-300 ${
-        isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'
+      whileHover={hover ? { y: -6, transition: { duration: 0.2, ease: "easeOut" } } : {}}
+      className={`rounded-[28px] border backdrop-blur-xl transition-all duration-300 ${
+        isDarkMode 
+          ? 'bg-slate-950/40 border-white/5 shadow-black/40 shadow-xl hover:shadow-black/60 hover:border-[#FF5E3A]/20' 
+          : 'bg-white/40 border-white/50 shadow-slate-200/30 shadow-lg hover:shadow-slate-200/55 hover:border-[#FF5E3A]/20'
       } ${noPadding ? '' : 'p-6'} ${className}`}
     >
       {children}

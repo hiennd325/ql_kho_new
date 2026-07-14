@@ -24,6 +24,19 @@ const MainLayout = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+  const [isScrolled, setIsScrolled] = React.useState(false);
+
+  React.useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 15) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleLogout = () => {
     logout();
@@ -52,15 +65,27 @@ const MainLayout = ({ children }) => {
   return (
     <div className={`min-h-screen flex flex-col overflow-x-hidden font-sans selection:bg-[#FF5E3A]/12 selection:text-[#FF5E3A] transition-colors duration-300 ${isDarkMode ? 'text-slate-100' : 'text-slate-900'} bg-transparent`}>
       
-      {/* Top Header */}
-      <header className={`${isDarkMode ? 'bg-slate-900/80 border-slate-800' : 'bg-white/80 border-slate-200/60'} backdrop-blur-xl border-b fixed w-full top-0 left-0 z-50 transition-colors duration-300 shadow-sm`}>
-        <div className="flex items-center justify-between px-4 sm:px-6 lg:px-8 h-20">
+      {/* Floating Header */}
+      <header className={`fixed z-50 transition-all duration-500 ease-in-out left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-[1500px] border shadow-2xl ${
+        isScrolled 
+          ? `top-2 rounded-2xl backdrop-blur-2xl ${
+              isDarkMode 
+                ? 'bg-slate-950/70 border-white/5 shadow-black/50' 
+                : 'bg-white/70 border-[#FF5E3A]/10 shadow-slate-200/40'
+            }`
+          : `top-4 rounded-[24px] backdrop-blur-xl ${
+              isDarkMode 
+                ? 'bg-slate-900/40 border-white/5 shadow-black/30' 
+                : 'bg-white/40 border-white/40 shadow-slate-200/20'
+            }`
+      }`}>
+        <div className={`flex items-center justify-between px-4 sm:px-6 lg:px-8 transition-all duration-500 ${isScrolled ? 'h-16' : 'h-20'}`}>
           
           {/* Logo & Mobile Menu Toggle */}
           <div className="flex items-center gap-4">
             <button
               onClick={() => setIsMobileMenuOpen(true)}
-              className="lg:hidden p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
+              className="lg:hidden p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:scale-105 active:scale-95 transition-transform"
             >
               <Menu size={20} />
             </button>
@@ -83,15 +108,15 @@ const MainLayout = ({ children }) => {
                 <Link
                   key={item.path}
                   to={item.path}
-                  className={`group relative flex items-center px-4 py-2.5 rounded-xl transition-all duration-200 ${
+                  className={`group relative flex items-center px-4 py-2.5 rounded-xl transition-all duration-300 ${
                     isActive
-                    ? 'bg-[#FF5E3A] text-white shadow-md shadow-[#FF5E3A]/20'
+                    ? 'bg-gradient-to-r from-[#FF5E3A] to-[#e04520] text-white shadow-lg shadow-[#FF5E3A]/25 scale-[1.03]'
                     : isDarkMode
-                      ? 'text-slate-400 hover:bg-slate-800 hover:text-white'
-                      : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900'
+                      ? 'text-slate-450 hover:bg-white/5 hover:text-white'
+                      : 'text-slate-600 hover:bg-black/5 hover:text-slate-900'
                   }`}
                 >
-                  <div className={`${isActive ? 'text-white' : 'text-slate-400 group-hover:text-[#FF5E3A] transition-colors'}`}>
+                  <div className={`${isActive ? 'text-white' : 'text-slate-400 group-hover:text-[#FF5E3A] transition-colors duration-305'}`}>
                     {item.icon}
                   </div>
                   <span className="ml-2.5 font-bold tracking-tight text-sm whitespace-nowrap">
@@ -106,7 +131,7 @@ const MainLayout = ({ children }) => {
           <div className="flex items-center gap-3 sm:gap-4">
             <button
               onClick={toggleTheme}
-              className={`p-2.5 rounded-xl transition-all duration-300 ${isDarkMode ? 'bg-slate-800 text-yellow-400 hover:bg-slate-700' : 'bg-[#FF5E3A]/10 text-[#FF5E3A] hover:bg-[#FF5E3A]/20'}`}
+              className={`p-2.5 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 ${isDarkMode ? 'bg-slate-800 text-yellow-400 hover:bg-slate-700' : 'bg-[#FF5E3A]/10 text-[#FF5E3A] hover:bg-[#FF5E3A]/20'}`}
               title={isDarkMode ? "Chuyển sang chế độ sáng" : "Chuyển sang chế độ tối"}
             >
               {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
@@ -124,7 +149,7 @@ const MainLayout = ({ children }) => {
 
             <button
               onClick={handleLogout}
-              className={`p-2.5 rounded-xl transition-all ${isDarkMode ? 'text-slate-400 hover:bg-rose-900/30 hover:text-rose-400' : 'text-slate-500 hover:bg-rose-50 hover:text-rose-600'}`}
+              className={`p-2.5 rounded-xl transition-all hover:scale-105 active:scale-95 ${isDarkMode ? 'text-slate-400 hover:bg-rose-900/30 hover:text-rose-450' : 'text-slate-550 hover:bg-rose-50 hover:text-rose-600'}`}
               title="Đăng xuất"
             >
               <LogOut size={18} />
@@ -150,23 +175,27 @@ const MainLayout = ({ children }) => {
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className={`fixed top-0 left-0 h-screen w-72 z-50 flex flex-col shadow-2xl ${isDarkMode ? 'bg-slate-900 border-r border-slate-800' : 'bg-white border-r border-slate-200'}`}
+              className={`fixed top-0 left-0 h-screen w-72 z-50 flex flex-col shadow-2xl backdrop-blur-2xl ${
+                isDarkMode 
+                  ? 'bg-slate-950/70 border-r border-white/5' 
+                  : 'bg-white/70 border-r border-slate-200/50'
+              }`}
             >
-              <div className={`h-20 flex items-center justify-between px-6 border-b ${isDarkMode ? 'border-slate-800' : 'border-slate-100'}`}>
+              <div className={`h-20 flex items-center justify-between px-6 border-b ${isDarkMode ? 'border-white/5' : 'border-slate-100'}`}>
                 <span className={`font-black text-xl tracking-tighter ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>QL KHO <span className="text-[#FF5E3A]">PRO</span></span>
-                <button onClick={closeMobileMenu} className="p-2 text-slate-400">
+                <button onClick={closeMobileMenu} className="p-2 text-slate-400 hover:scale-110 active:scale-90 transition-transform">
                   <X size={20} />
                 </button>
               </div>
 
-              <div className="p-6 pb-2 border-b border-slate-100 dark:border-slate-800">
+              <div className={`p-6 pb-2 border-b ${isDarkMode ? 'border-white/5' : 'border-slate-100'}`}>
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-12 h-12 bg-gradient-to-br from-[#FF5E3A] to-[#e04520] rounded-xl flex items-center justify-center text-white text-lg font-black shadow-md">
                     {user?.username?.[0].toUpperCase()}
                   </div>
                   <div>
                     <p className={`font-black ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{user?.username}</p>
-                    <p className="text-xs text-slate-400 font-bold uppercase">{user?.role}</p>
+                    <p className="text-xs text-slate-455 font-bold uppercase">{user?.role}</p>
                   </div>
                 </div>
               </div>
@@ -183,7 +212,7 @@ const MainLayout = ({ children }) => {
                         isActive
                         ? 'bg-[#FF5E3A] text-white shadow-md'
                         : isDarkMode
-                          ? 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                          ? 'text-slate-400 hover:bg-white/5 hover:text-white'
                           : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
                       }`}
                     >
@@ -201,7 +230,7 @@ const MainLayout = ({ children }) => {
       </AnimatePresence>
 
       {/* Main Content Area */}
-      <main className="flex-1 w-full flex flex-col relative pt-20">
+      <main className="flex-1 w-full flex flex-col relative pt-28">
         {/* Page Header (Title + Status) */}
         <div className="px-4 sm:px-6 lg:px-10 pt-6 pb-2 max-w-[1500px] w-full mx-auto">
           <div className="flex flex-col">
