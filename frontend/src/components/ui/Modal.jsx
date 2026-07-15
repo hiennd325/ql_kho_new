@@ -26,7 +26,7 @@ const Modal = ({ isOpen, onClose, title, children, maxWidth = 'md' }) => {
             className="absolute inset-0 bg-black/60 backdrop-blur-md"
           />
           {/* Ambient orange aura behind modal */}
-          <div className="absolute w-72 h-72 bg-[#FF5E3A]/20 rounded-full blur-[100px] pointer-events-none" />
+          <div className="absolute w-72 h-72 bg-[#000000]/20 rounded-full blur-[100px] pointer-events-none" />
 
           <motion.div
             initial={{ opacity: 0, scale: 0.94, y: 16 }}
@@ -34,10 +34,10 @@ const Modal = ({ isOpen, onClose, title, children, maxWidth = 'md' }) => {
             exit={{ opacity: 0, scale: 0.94, y: 16 }}
             transition={{ type: 'spring', damping: 26, stiffness: 320 }}
             className={`relative rounded-[32px] shadow-2xl w-full ${maxWidthClasses[maxWidth] || maxWidthClasses.md} overflow-hidden border backdrop-blur-xl transition-all ${
-              isDarkMode ? 'bg-slate-900/90 border-white/10 shadow-[#FF5E3A]/5' : 'bg-white/95 border-slate-200/80 shadow-2xl'
+              isDarkMode ? 'bg-slate-900/90 border-white/10 shadow-[#000000]/5' : 'bg-white/95 border-slate-200/80 shadow-2xl'
             }`}
           >
-            <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-[#FF5E3A] to-transparent opacity-60" />
+            <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-[#000000] to-transparent opacity-60" />
 
             <div className={`flex items-center justify-between p-6 border-b ${isDarkMode ? 'border-white/10' : 'border-slate-100'}`}>
               <h3 className={`text-xl font-black tracking-tight ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{title}</h3>

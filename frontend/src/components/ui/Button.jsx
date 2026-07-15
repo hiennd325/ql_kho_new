@@ -14,7 +14,7 @@ const Button = ({
   const { isDarkMode } = useTheme();
 
   const variants = {
-    primary: 'bg-gradient-to-r from-[#FF5E3A] to-[#e04520] text-white hover:scale-[1.02] shadow-lg shadow-[#FF5E3A]/25 border border-[#FF5E3A]/30',
+    primary: 'bg-gradient-to-r from-[#000000] to-[#000000] text-white hover:scale-[1.02] shadow-lg shadow-[#000000]/25 border border-[#000000]/30',
     secondary: isDarkMode ? 'bg-white/5 text-slate-200 hover:bg-white/10 border-white/15 backdrop-blur-md' : 'bg-white text-slate-700 hover:bg-slate-50 border-slate-200 shadow-sm',
     danger: isDarkMode ? 'bg-rose-900/30 text-rose-300 hover:bg-rose-600 hover:text-white border-rose-500/30' : 'bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white border-rose-200',
     ghost: isDarkMode ? 'text-slate-400 hover:bg-white/5 hover:text-white' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900',

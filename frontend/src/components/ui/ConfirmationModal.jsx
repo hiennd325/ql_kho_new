@@ -27,9 +27,9 @@ const ConfirmationModal = ({
       button: 'bg-amber-600 hover:bg-amber-700 shadow-amber-600/25'
     },
     info: {
-      icon: <AlertCircle className="text-[#FF5E3A]" size={32} />,
-      bg: isDarkMode ? 'bg-[#FF5E3A]/15' : 'bg-[#FF5E3A]/10',
-      button: 'bg-gradient-to-r from-[#FF5E3A] to-[#e04520] hover:scale-105 shadow-[#FF5E3A]/25'
+      icon: <AlertCircle className="text-[#000000]" size={32} />,
+      bg: isDarkMode ? 'bg-[#000000]/15' : 'bg-[#000000]/10',
+      button: 'bg-gradient-to-r from-[#000000] to-[#000000] hover:scale-105 shadow-[#000000]/25'
     }
   };
 
@@ -46,17 +46,17 @@ const ConfirmationModal = ({
             onClick={onClose}
             className="absolute inset-0 bg-black/60 backdrop-blur-md"
           />
-          <div className="absolute w-64 h-64 bg-[#FF5E3A]/20 rounded-full blur-[100px] pointer-events-none" />
+          <div className="absolute w-64 h-64 bg-[#000000]/20 rounded-full blur-[100px] pointer-events-none" />
 
           <motion.div
             initial={{ opacity: 0, scale: 0.92, y: 16 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.92, y: 16 }}
             className={`relative rounded-[32px] shadow-2xl w-full max-w-sm overflow-hidden border backdrop-blur-xl transition-all ${
-              isDarkMode ? 'bg-slate-900/90 border-white/10 shadow-[#FF5E3A]/5' : 'bg-white/95 border-slate-200/80'
+              isDarkMode ? 'bg-slate-900/90 border-white/10 shadow-[#000000]/5' : 'bg-white/95 border-slate-200/80'
             }`}
           >
-            <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-[#FF5E3A] to-transparent opacity-60" />
+            <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-[#000000] to-transparent opacity-60" />
 
             <div className="p-8 flex flex-col items-center text-center">
               <div className={`p-4 rounded-3xl mb-6 shadow-inner ${style.bg}`}>

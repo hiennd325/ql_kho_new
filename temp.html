@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Journal — Blog Template</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        primary: '#000000',
+        'on-primary': '#ffffff',
+        background: '#fdf8f8',
+        surface: '#fdf8f8',
+        'surface-variant': '#e5e2e1',
+        'on-surface': '#1c1b1b',
+        'on-surface-variant': '#444748',
+        outline: '#747878',
+        'outline-variant': '#c4c7c7',
+        secondary: '#5e5e5e',
+        'card-auralis': '#FCFCFB',
+        'panel-auralis': '#F3F2EF',
+      },
+      fontFamily: {
+        h1: ['Inter', 'sans-serif'],
+        h2: ['Inter', 'sans-serif'],
+        h3: ['Inter', 'sans-serif'],
+        body: ['Inter', 'sans-serif'],
+        label: ['Inter', 'sans-serif'],
+      },
+      fontSize: {
+        h1: ['84px', { lineHeight: '1.05', letterSpacing: '-0.04em', fontWeight: '600' }],
+        h2: ['64px', { lineHeight: '1.1', letterSpacing: '-0.03em', fontWeight: '600' }],
+        h3: ['32px', { lineHeight: '1.2', letterSpacing: '-0.02em', fontWeight: '600' }],
+        'body-md': ['16px', { lineHeight: '1.5', letterSpacing: '0', fontWeight: '400' }],
+        'body-lg': ['18px', { lineHeight: '1.6', letterSpacing: '-0.01em', fontWeight: '400' }],
+        'label-caps': ['12px', { lineHeight: '1', letterSpacing: '0.1em', fontWeight: '600' }],
+      },
+    }
+  }
+}
+</script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background-color: #fdf8f8; color: #1c1b1b; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  .filled-icon { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  .screen { scroll-margin-top: 100px; }
+
+  /* Mesh Gradient — animated multi-color blend */
+  .mesh {
+    position:fixed; inset:-15%; z-index:-2; pointer-events:none;
+    background-color:#fdf8f8;
+    background-image:
+      radial-gradient(circle at 18% 22%, rgba(129,140,248,.42), transparent 45%),
+      radial-gradient(circle at 82% 14%, rgba(244,114,182,.36), transparent 45%),
+      radial-gradient(circle at 76% 82%, rgba(45,212,191,.34), transparent 48%),
+      radial-gradient(circle at 12% 88%, rgba(250,204,21,.28), transparent 45%),
+      radial-gradient(circle at 50% 52%, rgba(167,139,250,.24), transparent 55%);
+    background-size:160% 160%;
+    animation:meshDrift 26s ease-in-out infinite;
+    filter:saturate(1.08);
+  }
+  @keyframes meshDrift {
+    0%   { background-position:0% 0%; }
+    33%  { background-position:100% 22%; }
+    66%  { background-position:18% 100%; }
+    100% { background-position:0% 0%; }
+  }
+
+  /* Glassmorphism — light & frosted */
+  .glass {
+    background:rgba(255,255,255,.45);
+    backdrop-filter:blur(20px) saturate(1.5);
+    -webkit-backdrop-filter:blur(20px) saturate(1.5);
+    border:1px solid rgba(255,255,255,.6);
+    box-shadow:0 8px 32px rgba(31,38,135,.10);
+  }
+  .glass-pill { border-radius:9999px; }
+  .glass-card {
+    background:rgba(255,255,255,.42);
+    backdrop-filter:blur(22px) saturate(1.5);
+    -webkit-backdrop-filter:blur(22px) saturate(1.5);
+    border:1px solid rgba(255,255,255,.55);
+    box-shadow:0 8px 32px rgba(31,38,135,.10);
+    border-radius:1.5rem;
+    transition:box-shadow .3s ease, transform .3s ease, background .3s ease;
+  }
+  .glass-card:hover { background:rgba(255,255,255,.6); box-shadow:0 14px 44px rgba(31,38,135,.16); transform:translateY(-3px); }
+  .glass-inset {
+    background:rgba(255,255,255,.35);
+    backdrop-filter:blur(10px) saturate(1.3);
+    -webkit-backdrop-filter:blur(10px) saturate(1.3);
+    border:1px solid rgba(255,255,255,.5);
+  }
+  .glass-stat {
+    background:rgba(255,255,255,.4);
+    backdrop-filter:blur(14px) saturate(1.4);
+    -webkit-backdrop-filter:blur(14px) saturate(1.4);
+    border:1px solid rgba(255,255,255,.5);
+    box-shadow:0 6px 22px rgba(31,38,135,.07);
+  }
+
+  /* Floating Elements */
+  .float { animation:floaty 6s ease-in-out infinite; }
+  .float-slow { animation:floaty 9s ease-in-out infinite; }
+  .float-delay { animation-delay:-3s; }
+  .float-delay-2 { animation-delay:-5s; }
+  .float-tilt { animation:floatyTilt 7s ease-in-out infinite; }
+  @keyframes floaty { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
+  @keyframes floatyTilt { 0%,100%{transform:translateY(0) rotate(0deg)} 50%{transform:translateY(-10px) rotate(3deg)} }
+
+  /* Fog gradient for cards */
+  .fog-gradient { background: radial-gradient(circle at top left, rgba(230,240,255,0.35) 0%, transparent 40%), radial-gradient(circle at bottom right, rgba(255,230,240,0.35) 0%, transparent 40%), radial-gradient(circle at center, rgba(240,255,230,0.25) 0%, transparent 50%); }
+
+  /* Smooth scroll */
+  html { scroll-behavior: smooth; }
+
+  /* Nav link active */
+  .nav-link { position:relative; }
+  .nav-link::after { content:''; position:absolute; bottom:-2px; left:0; width:0; height:1.5px; background:#000; transition:width 0.25s ease; }
+  .nav-link:hover::after { width:100%; }
+  .nav-link.active { color:#000; }
+  .nav-link.active::after { width:100%; }
+
+  /* Post image placeholder */
+  .img-placeholder { background: linear-gradient(135deg, #e5e2e1 0%, #f3f2ef 50%, #e5e2e1 100%); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mesh, .float, .float-slow, .float-tilt { animation:none !important; }
+  }
+</style>
+</head>
+<body class="font-body">
+
+<!-- Aurora Background -->
+<div class="mesh"></div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- FLOATING NAVIGATION -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<nav class="fixed top-5 left-1/2 -translate-x-1/2 z-50 w-[min(960px,calc(100%-2rem))] glass glass-pill">
+  <div class="flex justify-between items-center px-6 py-3">
+    <a href="#home" class="font-h1 text-[18px] font-bold tracking-tighter text-primary">The Journal</a>
+    <div class="hidden md:flex items-center gap-6">
+      <a href="#home" data-nav class="nav-link font-label text-[13px] font-medium text-secondary hover:text-primary transition-colors">Home</a>
+      <a href="#post" data-nav class="nav-link font-label text-[13px] font-medium text-secondary hover:text-primary transition-colors">Post</a>
+      <a href="#category" data-nav class="nav-link font-label text-[13px] font-medium text-secondary hover:text-primary transition-colors">Categories</a>
+      <a href="#about" data-nav class="nav-link font-label text-[13px] font-medium text-secondary hover:text-primary transition-colors">About</a>
+    </div>
+    <a href="#newsletter" class="bg-primary text-on-primary px-5 py-2 rounded-full text-[13px] font-medium transition-all hover:opacity-80">Subscribe</a>
+  </div>
+</nav>
+
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SCREEN 1: HOME -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section id="home" class="screen pt-32 pb-8">
+
+  <!-- Hero -->
+  <div class="max-w-[1280px] mx-auto px-6 md:px-10 mb-[140px] relative">
+    <!-- Floating decorative elements -->
+    <div class="float absolute -top-4 right-10 hidden lg:block">
+      <div class="glass rounded-2xl w-14 h-14 flex items-center justify-center">
+        <span class="material-symbols-outlined text-primary">auto_awesome</span>
+      </div>
+    </div>
+    <div class="float-slow float-delay absolute bottom-10 -left-2 hidden lg:block">
+      <div class="glass rounded-2xl w-12 h-12 flex items-center justify-center">
+        <span class="material-symbols-outlined text-secondary text-[20px]">bolt</span>
+      </div>
+    </div>
+    <div class="float-tilt float-delay-2 absolute top-20 right-[30%] hidden xl:block">
+      <div class="glass rounded-full w-10 h-10 flex items-center justify-center">
+        <span class="material-symbols-outlined text-[18px] text-outline">pen_size_1</span>
+      </div>
+    </div>
+    <div class="float-slow absolute -bottom-2 right-16 hidden lg:block">
+      <div class="glass rounded-full w-11 h-11 flex items-center justify-center">
+        <span class="material-symbols-outlined text-[19px] text-secondary">lightbulb</span>
+      </div>
+    </div>
+
+    <span class="font-label text-label-caps uppercase tracking-[0.1em] text-on-surface-variant block mb-6">Featured</span>
+    <h1 class="font-h1 text-h1 text-primary mb-8 max-w-[900px]">
+      Thoughts on design,<br>technology & craft
+    </h1>
+    <p class="font-body text-body-lg text-on-surface-variant max-w-[560px] mb-10">
+      Long-form essays on building products, the art of minimal design, and the quiet discipline of making things that last.
+    </p>
+    <div class="flex items-center gap-4">
+      <a href="#post" class="bg-primary text-on-primary px-7 py-3 rounded-full font-medium text-[15px] transition-all hover:opacity-80">Read Latest</a>
+      <a href="#about" class="border border-outline-variant text-primary px-7 py-3 rounded-full font-medium text-[15px] transition-all hover:bg-surface-variant/50">About Us</a>
+    </div>
+  </div>
+
+  <!-- Featured Post (Large Card) -->
+  <div class="max-w-[1280px] mx-auto px-6 md:px-10 mb-[140px]">
+    <a href="#post" class="group block glass-card rounded-3xl p-4">
+      <div class="w-full aspect-[21/9] rounded-2xl overflow-hidden mb-6 relative">
+        <div class="w-full h-full img-placeholder flex items-center justify-center fog-gradient group-hover:scale-[1.02] transition-transform duration-700">
+          <span class="material-symbols-outlined text-6xl text-outline-variant">image</span>
+        </div>
+      </div>
+      <div class="max-w-[820px]">
+        <span class="font-label text-label-caps uppercase tracking-[0.1em] text-on-surface-variant block mb-3">Design Systems</span>
+        <h2 class="font-h2 text-[48px] md:text-h2 text-primary leading-[1.1] mb-4 group-hover:opacity-60 transition-opacity">
+          The discipline of invisible systems
+        </h2>
+        <p class="font-body text-body-lg text-on-surface-variant max-w-[640px]">
+          How the best design systems disappear — becoming so natural that no one notices they exist. A deep dive into token architecture, component contracts, and the art of restraint.
+        </p>
+      </div>
+    </a>
+  </div>
+
+  <!-- Latest Posts Grid (Large Cards, 2-col) -->
+  <div class="max-w-[1280px] mx-auto px-6 md:px-10 mb-[140px]">
+    <div class="flex items-center justify-between mb-10">
+      <h2 class="font-h3 text-h3 text-primary">Latest</h2>
+      <a href="#category" class="text-[14px] font-medium text-primary inline-flex items-center gap-1 hover:opacity-60 transition-opacity">
+        View all <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+      </a>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-4 auto-rows-[minmax(220px,1fr)] gap-5">
+      <!-- Post 1 — large feature (2x2) -->
+      <a href="#post" class="group glass-card md:col-span-2 md:row-span-2 rounded-2xl overflow-hidden flex flex-col p-0 h-full">
+        <div class="flex-1 min-h-[200px] overflow-hidden">
+          <div class="w-full h-full img-placeholder flex items-center justify-center fog-gradient group-hover:scale-[1.03] transition-transform duration-500">
+            <span class="material-symbols-outlined text-6xl text-outline-variant">image</span>
+          </div>
+        </div>
+        <div class="p-6">
+          <span class="font-label text-label-caps uppercase tracking-[0.1em] text-on-surface-variant block mb-2">Engineering</span>
+          <h3 class="font-h3 text-[24px] text-primary mb-2 group-hover:opacity-60 transition-opacity">Building for silence</h3>
+          <p class="font-body text-body-md text-on-surface-variant mb-3">Why the best interfaces are the ones you never think about. A meditation on invisible UX.</p>
+          <span class="text-[13px] text-outline">Jan 12, 2025 · 8 min read</span>
+        </div>
+      </a>
+      <!-- Post 2 — wide (2 cols) -->
+      <a href="#post" class="group glass-card md:col-span-2 rounded-2xl overflow-hidden flex flex-col p-0 h-full">
+        <div class="flex-1 min-h-[140px] overflow-hidden">
+          <div class="w-full h-full img-placeholder flex items-center justify-center fog-gradient group-hover:scale-[1.03] transition-transform duration-500">
+            <span class="material-symbols-outlined text-5xl text-outline-variant">image</span>
+          </div>
+        </div>
+        <div class="p-5">
+          <span class="font-label text-label-caps uppercase tracking-[0.1em] text-on-surface-variant block mb-2">Typography</span>
+          <h3 class="font-h3 text-[22px] text-primary mb-1 group-hover:opacity-60 transition-opacity">The weight of words</h3>
+          <span class="text-[13px] text-outline">Jan 5, 2025 · 6 min read</span>
+        </div>
+      </a>
+      <!-- Post 3 — small -->
+      <a href="#post" class="group glass-card rounded-2xl overflow-hidden flex flex-col p-0 h-full">
+        <div class="flex-1 min-h-[120px] overflow-hidden">
+          <div class="w-full h-full img-placeholder flex items-center justify-center fog-gradient group-hover:scale-[1.03] transition-transform duration-500">
+            <span class="material-symbols-outlined text-4xl text-outline-variant">image</span>
+          </div>
+        </div>
+        <div class="p-4">
+          <span class="font-label text-label-caps uppercase tracking-[0.1em] text-on-surface-variant block mb-1">Process</span>
+          <h3 class="text-[16px] font-semibold text-primary mb-1 group-hover:opacity-60 transition-opacity">Lessons from a hundred ships</h3>
+          <span class="text-[12px] text-outline">Dec 28, 2024</span>
+        </div>
+      </a>
+      <!-- Post 4 — small -->
+      <a href="#post" class="group glass-card rounded-2xl overflow-hidden flex flex-col p-0 h-full">
+        <div class="flex-1 min-h-[120px] overflow-hidden">
+          <div class="w-full h-full img-placeholder flex items-center justify-center fog-gradient group-hover:scale-[1.03] transition-transform duration-500">
+            <span class="material-symbols-outlined text-4xl text-outline-variant">image</span>
+          </div>
+        </div>
+        <div class="p-4">
+          <span class="font-label text-label-caps uppercase tracking-[0.1em] text-on-surface-variant block mb-1">Culture</span>
+          <h3 class="text-[16px] font-semibold text-primary mb-1 group-hover:opacity-60 transition-opacity">The craft of slow software</h3>
+          <span class="text-[12px] text-outline">Dec 18, 2024</span>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- Newsletter CTA -->
+  <div id="newsletter" class="max-w-[800px] mx-auto text-center px-8 mb-[160px] relative">
+    <div class="float absolute -top-6 -right-4 hidden lg:block">
+      <div class="glass rounded-2xl w-12 h-12 flex items-center justify-center">
+        <span class="material-symbols-outlined text-[20px] text-secondary">mail</span>
+      </div>
+    </div>
+    <div class="float-tilt float-delay absolute top-0 -left-6 hidden xl:block">
+      <div class="glass rounded-full w-9 h-9 flex items-center justify-center">
+        <span class="material-symbols-outlined text-[16px] text-outline">notifications</span>
+      </div>
+    </div>
+    <h2 class="font-h2 text-[48px] text-primary mb-4">Stay in the loop</h2>
+    <p class="font-body text-body-lg text-on-surface-variant mb-8 max-w-[480px] mx-auto">
+      One email per month. Long-form essays on design, engineering, and the craft of building.
+    </p>
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-[440px] mx-auto">
+      <input type="email" placeholder="your@email.com" class="w-full sm:flex-1 glass-inset rounded-full px-5 py-3 text-[14px] font-body text-primary placeholder:text-outline focus:outline-none focus:ring-1 focus:ring-primary/30 transition-all">
+      <button class="glass bg-primary text-on-primary px-6 py-3 glass-pill text-[14px] font-medium transition-all hover:opacity-80 whitespace-nowrap">Subscribe</button>
+    </div>
+  </div>
+
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SCREEN 2: SINGLE POST -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section id="post" class="screen py-20 border-t border-outline-variant/40">
+
+  <div class="max-w-[1280px] mx-auto px-6 md:px-10">
+
+    <!-- Post Header -->
+    <div class="max-w-[780px] mx-auto text-center mb-[80px] relative">
+      <div class="float absolute -top-6 right-0 hidden lg:block">
+        <div class="glass rounded-2xl w-11 h-11 flex items-center justify-center">
+          <span class="material-symbols-outlined text-[19px] text-secondary">bookmark</span>
+        </div>
+      </div>
+      <span class="font-label text-label-caps uppercase tracking-[0.1em] text-on-surface-variant block mb-4">Design Systems</span>
+      <h1 class="font-h1 text-[56px] md:text-h1 text-primary leading-[1.05] mb-6">The discipline of invisible systems</h1>
+      <div class="flex items-center justify-center gap-4 text-[14px] text-outline">
+        <span>Ava Chen</span>
+        <span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+        <span>Jan 18, 2025</span>
+        <span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+        <span>14 min read</span>
+      </div>
+    </div>
+
+    <!-- Hero Image -->
+    <div class="w-full aspect-[21/9] rounded-3xl overflow-hidden mb-[80px] glass-card">
+      <div class="w-full h-full img-placeholder flex items-center justify-center fog-gradient">
+        <span class="material-symbols-outlined text-6xl text-outline-variant">image</span>
+      </div>
+    </div>
+
+    <!-- Article Content -->
+    <div class="max-w-[720px] mx-auto mb-[100px]">
+      <p class="font-body text-[19px] leading-[1.7] text-on-surface mb-8">
+        The best design systems are the ones nobody talks about. They don't announce themselves with bold brand colors or clever component names. They simply exist — quietly governing the visual language of a product so naturally that users never suspect their presence.
+      </p>
+      <h2 class="font-h3 text-[28px] text-primary mb-4 mt-12">The paradox of visibility</h2>
+      <p class="font-body text-[19px] leading-[1.7] text-on-surface mb-8">
+        We often celebrate design systems for their comprehensiveness — the number of components, the depth of documentation, the rigor of their token architecture. But the true measure of a system is how little attention it demands. When a designer reaches for a button and it just works, when a developer implements a layout without consulting the docs, the system has achieved its purpose.
+      </p>
+      <h2 class="font-h3 text-[28px] text-primary mb-4 mt-12">Tokens as living language</h2>
+      <p class="font-body text-[19px] leading-[1.7] text-on-surface mb-8">
+        A token is not a variable — it's a decision. Every color, every spacing unit, every type scale encodes a choice about hierarchy, rhythm, and intent. The most elegant token systems are those where each value tells a story about why it exists, not just what it does.
+      </p>
+      <blockquote class="border-l-2 border-primary pl-6 my-10">
+        <p class="font-body text-[20px] italic leading-[1.6] text-on-surface">"A system that requires constant explanation has already failed. The best systems teach through use."</p>
+      </blockquote>
+      <p class="font-body text-[19px] leading-[1.7] text-on-surface mb-8">
+        The discipline lies in restraint. In saying no to the clever gradient that doesn't serve a hierarchy. In choosing the boring spacing scale over the interesting one. In letting the content breathe instead of filling every pixel with decoration.
+      </p>
+      <h2 class="font-h3 text-[28px] text-primary mb-4 mt-12">Building for the long term</h2>
+      <p class="font-body text-[19px] leading-[1.7] text-on-surface mb-8">
+        Systems outlive their creators. The tokens you define today will be inherited by engineers you'll never meet. This demands a kind of humility — designing not for your own cleverness but for someone else's clarity. Name things plainly. Document the why, not just the what. Leave the codebase cleaner than you found it.
+      </p>
+      <p class="font-body text-[19px] leading-[1.7] text-on-surface">
+        The invisible system is the one that makes everyone else's work visible. That's the standard worth pursuing.
+      </p>
+    </div>
+
+    <!-- Author Bio -->
+    <div class="max-w-[720px] mx-auto flex items-start gap-5 p-6 rounded-2xl glass-card mb-[100px]">
+      <div class="w-14 h-14 rounded-full glass flex-shrink-0 flex items-center justify-center">
+        <span class="material-symbols-outlined text-xl text-outline">person</span>
+      </div>
+      <div>
+        <span class="font-label text-[14px] font-semibold text-primary block mb-1">Ava Chen</span>
+        <p class="font-body text-[14px] leading-relaxed text-on-surface-variant">
+          Design engineer at The Journal. Writes about systems thinking, interface craft, and the quiet discipline of building well. Previously at Linear, Stripe.
+        </p>
+      </div>
+    </div>
+
+    <!-- Related Posts -->
+    <div class="max-w-[1280px] mx-auto">
+      <h2 class="font-h3 text-h3 text-primary mb-10">Continue reading</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <a href="#" class="group">
+          <div class="w-full aspect-[16/10] rounded-2xl overflow-hidden mb-4">
+            <div class="w-full h-full img-placeholder flex items-center justify-center fog-gradient group-hover:scale-[1.03] transition-transform duration-500">
+              <span class="material-symbols-outlined text-4xl text-outline-variant">image</span>
+            </div>
+          </div>
+          <span class="font-label text-label-caps uppercase tracking-[0.1em] text-on-surface-variant block mb-2">Engineering</span>
+          <h3 class="text-[18px] font-semibold text-primary mb-1 group-hover:opacity-60 transition-opacity">Building for silence</h3>
+          <span class="text-[13px] text-outline">8 min read</span>
+        </a>
+        <a href="#" class="group">
+          <div class="w-full aspect-[16/10] rounded-2xl overflow-hidden mb-4">
+            <div class="w-full h-full img-placeholder flex items-center justify-center fog-gradient group-hover:scale-[1.03] transition-transform duration-500">
+              <span class="material-symbols-outlined text-4xl text-outline-variant">image</span>
+            </div>
+          </div>
+          <span class="font-label text-label-caps uppercase tracking-[0.1em] text-on-surface-variant block mb-2">Typography</span>
+          <h3 class="text-[18px] font-semibold text-primary mb-1 group-hover:opacity-60 transition-opacity">The weight of words</h3>
+          <span class="text-[13px] text-outline">6 min read</span>
+        </a>
+        <a href="#" class="group">
+          <div class="w-full aspect-[16/10] rounded-2xl overflow-hidden mb-4">
+            <div class="w-full h-full img-placeholder flex items-center justify-center fog-gradient group-hover:scale-[1.03] transition-transform duration-500">
+              <span class="material-symbols-outlined text-4xl text-outline-variant">image</span>
+            </div>
+          </div>
+          <span class="font-label text-label-caps uppercase tracking-[0.1em] text-on-surface-variant block mb-2">Culture</span>
+          <h3 class="text-[18px] font-semibold text-primary mb-1 group-hover:opacity-60 transition-opacity">The craft of slow software</h3>
+          <span class="text-[13px] text-outline">10 min read</span>
+        </a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SCREEN 3: CATEGORIES -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section id="category" class="screen py-20 border-t border-outline-variant/40">
+
+  <div class="max-w-[1280px] mx-auto px-6 md:px-10">
+
+    <!-- Header -->
+    <div class="mb-[60px] relative">
+      <div class="float-tilt float-delay absolute -top-2 right-20 hidden lg:block">
+        <div class="glass rounded-full w-10 h-10 flex items-center justify-center">
+          <span class="material-symbols-outlined text-[18px] text-outline">filter_list</span>
+        </div>
+      </div>
+      <h1 class="font-h1 text-[56px] md:text-h1 text-primary mb-4">Categories</h1>
+      <p class="font-body text-body-lg text-on-surface-variant max-w-[480px]">Browse essays by topic. Every piece is a deep dive.</p>
+    </div>
+
+    <!-- Filter Chips -->
+    <div class="flex flex-wrap gap-3 mb-12">
+      <button class="bg-primary text-on-primary px-5 py-2 glass-pill text-[13px] font-medium transition-all">All</button>
+      <button class="glass glass-pill px-5 py-2 text-[13px] font-medium text-on-surface-variant hover:text-primary transition-all">Design</button>
+      <button class="glass glass-pill px-5 py-2 text-[13px] font-medium text-on-surface-variant hover:text-primary transition-all">Engineering</button>
+      <button class="glass glass-pill px-5 py-2 text-[13px] font-medium text-on-surface-variant hover:text-primary transition-all">Typography</button>
+      <button class="glass glass-pill px-5 py-2 text-[13px] font-medium text-on-surface-variant hover:text-primary transition-all">Process</button>
+      <button class="glass glass-pill px-5 py-2 text-[13px] font-medium text-on-surface-variant hover:text-primary transition-all">Culture</button>
+      <button class="glass glass-pill px-5 py-2 text-[13px] font-medium text-on-surface-variant hover:text-primary transition-all">AI</button>
+    </div>
+
+    <!-- Category Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-10 mb-[120px]">
+      <a href="#post" class="group glass-card rounded-2xl p-4">
+        <div class="w-full aspect-[16/10] rounded-xl overflow-hidden mb-5">
+          <div class="w-full h-full img-placeholder flex items-center justify-center fog-gradient group-hover:scale-[1.03] transition-transform duration-500">
+            <span class="material-symbols-outlined text-5xl text-outline-variant">image</span>
+          </div>
+        </div>
+        <span class="font-label text-label-caps uppercase tracking-[0.1em] text-on-surface-variant block mb-2">Design</span>
+        <h3 class="font-h3 text-[24px] text-primary mb-2 group-hover:opacity-60 transition-opacity">Whitespace is not empty</h3>
+        <p class="font-body text-body-md text-on-surface-variant mb-3">A defense of negative space as a design element — not absence, but presence. How emptiness shapes meaning.</p>
+        <span class="text-[13px] text-outline">Dec 10, 2024 · 9 min read</span>
+      </a>
+      <a href="#post" class="group glass-card rounded-2xl p-4">
+        <div class="w-full aspect-[16/10] rounded-xl overflow-hidden mb-5">
+          <div class="w-full h-full img-placeholder flex items-center justify-center fog-gradient group-hover:scale-[1.03] transition-transform duration-500">
+            <span class="material-symbols-outlined text-5xl text-outline-variant">image</span>
+          </div>
+        </div>
+        <span class="font-label text-label-caps uppercase tracking-[0.1em] text-on-surface-variant block mb-2">AI</span>
+        <h3 class="font-h3 text-[24px] text-primary mb-2 group-hover:opacity-60 transition-opacity">When machines dream in pixels</h3>
+        <p class="font-body text-body-md text-on-surface-variant mb-3">Generative AI meets interface design. What happens when the computer becomes a co-creator?</p>
+        <span class="text-[13px] text-outline">Nov 22, 2024 · 11 min read</span>
+      </a>
+      <a href="#post" class="group glass-card rounded-2xl p-4">
+        <div class="w-full aspect-[16/10] rounded-xl overflow-hidden mb-5">
+          <div class="w-full h-full img-placeholder flex items-center justify-center fog-gradient group-hover:scale-[1.03] transition-transform duration-500">
+            <span class="material-symbols-outlined text-5xl text-outline-variant">image</span>
+          </div>
+        </div>
+        <span class="font-label text-label-caps uppercase tracking-[0.1em] text-on-surface-variant block mb-2">Process</span>
+        <h3 class="font-h3 text-[24px] text-primary mb-2 group-hover:opacity-60 transition-opacity">The meeting-free manifesto</h3>
+        <p class="font-body text-body-md text-on-surface-variant mb-3">How eliminating recurring meetings doubled our throughput. Async-first communication and its discontents.</p>
+        <span class="text-[13px] text-outline">Nov 8, 2024 · 7 min read</span>
+      </a>
+      <a href="#post" class="group glass-card rounded-2xl p-4">
+        <div class="w-full aspect-[16/10] rounded-xl overflow-hidden mb-5">
+          <div class="w-full h-full img-placeholder flex items-center justify-center fog-gradient group-hover:scale-[1.03] transition-transform duration-500">
+            <span class="material-symbols-outlined text-5xl text-outline-variant">image</span>
+          </div>
+        </div>
+        <span class="font-label text-label-caps uppercase tracking-[0.1em] text-on-surface-variant block mb-2">Typography</span>
+        <h3 class="font-h3 text-[24px] text-primary mb-2 group-hover:opacity-60 transition-opacity">Variable fonts changed everything</h3>
+        <p class="font-body text-body-md text-on-surface-variant mb-3">The shift from static to variable typography. Weight, width, and optical size as design parameters, not presets.</p>
+        <span class="text-[13px] text-outline">Oct 30, 2024 · 8 min read</span>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SCREEN 4: ABOUT -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section id="about" class="screen py-20 border-t border-outline-variant/40">
+
+  <div class="max-w-[1280px] mx-auto px-6 md:px-10">
+
+    <!-- About Hero -->
+    <div class="max-w-[780px] mb-[120px] relative">
+      <div class="float absolute -top-4 -right-4 hidden lg:block">
+        <div class="glass rounded-full w-10 h-10 flex items-center justify-center">
+          <span class="material-symbols-outlined text-[18px] text-secondary">favorite</span>
+        </div>
+      </div>
+      <span class="font-label text-label-caps uppercase tracking-[0.1em] text-on-surface-variant block mb-6">About</span>
+      <h1 class="font-h1 text-[56px] md:text-h1 text-primary leading-[1.05] mb-6">A small publication with big ambitions</h1>
+      <p class="font-body text-body-lg text-on-surface-variant max-w-[560px]">
+        We write about the intersection of design, engineering, and craft. Long-form essays, deep dives, and quiet observations about building products that matter.
+      </p>
+    </div>
+
+    <!-- Stats -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-[120px] border-y border-outline-variant/30 py-[60px]">
+      <div class="text-center glass-stat rounded-2xl py-6 px-4">
+        <span class="font-h2 text-[48px] text-primary block mb-1">42</span>
+        <span class="font-label text-label-caps uppercase tracking-[0.1em] text-on-surface-variant">Essays Published</span>
+      </div>
+      <div class="text-center glass-stat rounded-2xl py-6 px-4">
+        <span class="font-h2 text-[48px] text-primary block mb-1">6</span>
+        <span class="font-label text-label-caps uppercase tracking-[0.1em] text-on-surface-variant">Writers</span>
+      </div>
+      <div class="text-center glass-stat rounded-2xl py-6 px-4">
+        <span class="font-h2 text-[48px] text-primary block mb-1">12k</span>
+        <span class="font-label text-label-caps uppercase tracking-[0.1em] text-on-surface-variant">Subscribers</span>
+      </div>
+      <div class="text-center glass-stat rounded-2xl py-6 px-4">
+        <span class="font-h2 text-[48px] text-primary block mb-1">2023</span>
+        <span class="font-label text-label-caps uppercase tracking-[0.1em] text-on-surface-variant">Founded</span>
+      </div>
+    </div>
+
+    <!-- Writers -->
+    <div class="mb-[120px]">
+      <h2 class="font-h3 text-h3 text-primary mb-10">Writers</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Writer 1 -->
+        <div class="group glass-card rounded-2xl p-4">
+          <div class="w-full aspect-[4/3] rounded-xl overflow-hidden mb-5">
+            <div class="w-full h-full img-placeholder flex items-center justify-center fog-gradient group-hover:scale-[1.03] transition-transform duration-500">
+              <span class="material-symbols-outlined text-5xl text-outline-variant">person</span>
+            </div>
+          </div>
+          <h3 class="text-[18px] font-semibold text-primary mb-1">Ava Chen</h3>
+          <p class="font-body text-[14px] text-on-surface-variant mb-2">Design Engineer</p>
+          <p class="font-body text-[14px] text-outline leading-relaxed">Writes about systems thinking, interface craft, and the discipline of invisible design.</p>
+        </div>
+        <!-- Writer 2 -->
+        <div class="group glass-card rounded-2xl p-4">
+          <div class="w-full aspect-[4/3] rounded-xl overflow-hidden mb-5">
+            <div class="w-full h-full img-placeholder flex items-center justify-center fog-gradient group-hover:scale-[1.03] transition-transform duration-500">
+              <span class="material-symbols-outlined text-5xl text-outline-variant">person</span>
+            </div>
+          </div>
+          <h3 class="text-[18px] font-semibold text-primary mb-1">Marcus Webb</h3>
+          <p class="font-body text-[14px] text-on-surface-variant mb-2">Staff Engineer</p>
+          <p class="font-body text-[14px] text-outline leading-relaxed">Distributed systems, performance engineering, and the beauty of well-tuned architectures.</p>
+        </div>
+        <!-- Writer 3 -->
+        <div class="group glass-card rounded-2xl p-4">
+          <div class="w-full aspect-[4/3] rounded-xl overflow-hidden mb-5">
+            <div class="w-full h-full img-placeholder flex items-center justify-center fog-gradient group-hover:scale-[1.03] transition-transform duration-500">
+              <span class="material-symbols-outlined text-5xl text-outline-variant">person</span>
+            </div>
+          </div>
+          <h3 class="text-[18px] font-semibold text-primary mb-1">Lina Park</h3>
+          <p class="font-body text-[14px] text-on-surface-variant mb-2">Creative Director</p>
+          <p class="font-body text-[14px] text-outline leading-relaxed">Typography, brand systems, and the intersection of aesthetics and function.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Philosophy / Timeline (repurposed from asset timeline section) -->
+    <div class="max-w-[1440px] mx-auto mb-[120px]">
+      <div class="flex flex-row items-start border-t border-outline-variant/30 pt-16">
+        <div class="w-[240px] flex-shrink-0 hidden md:block">
+          <h2 class="text-[44px] leading-[1.1] text-primary font-semibold">Philosophy</h2>
+        </div>
+        <div class="flex-1 md:pl-12">
+          <div class="flex flex-col gap-12 border-l border-outline-variant/30 md:pl-8 relative">
+            <div class="relative">
+              <div class="absolute -left-[37px] top-2 w-3 h-3 rounded-full bg-primary border-4 border-background box-content"></div>
+              <span class="text-[14px] text-on-surface-variant font-medium block mb-2">Craft over speed</span>
+              <p class="text-on-surface-variant font-body text-[16px] leading-relaxed">Every word is edited at least three times. We believe in the slow craft of writing — not content marketing, but genuine essays that reward careful reading.</p>
+            </div>
+            <div class="relative">
+              <div class="absolute -left-[37px] top-2 w-3 h-3 rounded-full bg-outline-variant border-4 border-background box-content"></div>
+              <span class="text-[14px] text-on-surface-variant font-medium block mb-2">Depth over breadth</span>
+              <p class="text-on-surface-variant font-body text-[16px] leading-relaxed">One essay per writer per month. We'd rather publish twelve exceptional pieces than fifty forgettable ones. Quality is the only growth strategy that compounds.</p>
+            </div>
+            <div class="relative">
+              <div class="absolute -left-[37px] top-2 w-3 h-3 rounded-full bg-outline-variant border-4 border-background box-content"></div>
+              <span class="text-[14px] text-on-surface-variant font-medium block mb-2">Open by default</span>
+              <p class="text-on-surface-variant font-body text-[16px] leading-relaxed">No paywalls. No gated content. Knowledge should flow freely. We sustain the publication through sponsorships and the generosity of our community.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- FOOTER -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<footer class="w-full border-t border-outline-variant/30 bg-white/40 backdrop-blur-xl mt-auto">
+  <div class="max-w-[1240px] mx-auto px-8 py-20 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-12">
+    <div class="col-span-2 flex flex-col gap-6">
+      <span class="font-h1 text-[20px] font-bold text-primary">The Journal</span>
+      <p class="font-body text-[14px] leading-relaxed text-outline max-w-xs">
+        © 2025 The Journal. Long-form essays on design, engineering, and craft.
+      </p>
+    </div>
+    <div class="flex flex-col gap-4">
+      <h4 class="font-label text-label-caps text-[12px] text-primary uppercase tracking-[0.1em] mb-2">Content</h4>
+      <a class="font-body text-[14px] leading-relaxed text-outline hover:text-primary transition-opacity duration-150" href="#home">Latest</a>
+      <a class="font-body text-[14px] leading-relaxed text-outline hover:text-primary transition-opacity duration-150" href="#category">Categories</a>
+      <a class="font-body text-[14px] leading-relaxed text-outline hover:text-primary transition-opacity duration-150" href="#">Archive</a>
+    </div>
+    <div class="flex flex-col gap-4">
+      <h4 class="font-label text-label-caps text-[12px] text-primary uppercase tracking-[0.1em] mb-2">About</h4>
+      <a class="font-body text-[14px] leading-relaxed text-outline hover:text-primary transition-opacity duration-150" href="#about">Writers</a>
+      <a class="font-body text-[14px] leading-relaxed text-outline hover:text-primary transition-opacity duration-150" href="#about">Philosophy</a>
+      <a class="font-body text-[14px] leading-relaxed text-outline hover:text-primary transition-opacity duration-150" href="#">Contact</a>
+    </div>
+    <div class="flex flex-col gap-4">
+      <h4 class="font-label text-label-caps text-[12px] text-primary uppercase tracking-[0.1em] mb-2">Social</h4>
+      <a class="font-body text-[14px] leading-relaxed text-outline hover:text-primary transition-opacity duration-150" href="#">Twitter</a>
+      <a class="font-body text-[14px] leading-relaxed text-outline hover:text-primary transition-opacity duration-150" href="#">RSS</a>
+      <a class="font-body text-[14px] leading-relaxed text-outline hover:text-primary transition-opacity duration-150" href="#">GitHub</a>
+    </div>
+    <div class="flex flex-col gap-4">
+      <h4 class="font-label text-label-caps text-[12px] text-primary uppercase tracking-[0.1em] mb-2">Legal</h4>
+      <a class="font-body text-[14px] leading-relaxed text-outline hover:text-primary transition-opacity duration-150" href="#">Privacy</a>
+      <a class="font-body text-[14px] leading-relaxed text-outline hover:text-primary transition-opacity duration-150" href="#">Terms</a>
+    </div>
+  </div>
+</footer>
+
+
+<script>
+  // Scroll-spy: highlight active nav link
+  (function () {
+    var links = Array.prototype.slice.call(document.querySelectorAll('[data-nav]'));
+    var map = {};
+    links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
+    var ids = Object.keys(map);
+    var sections = ids.map(function (id) { return document.getElementById(id); }).filter(Boolean);
+    if (!('IntersectionObserver' in window) || !sections.length) return;
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          links.forEach(function (l) { l.classList.remove('active'); });
+          var active = map[e.target.id];
+          if (active) active.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+    sections.forEach(function (s) { obs.observe(s); });
+  })();
+</script>
+</body>
+</html>

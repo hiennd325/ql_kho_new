@@ -9,7 +9,7 @@ const ConfirmModal = ({ isOpen, onClose, onConfirm, title, message, confirmText 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={title} maxWidth="sm">
       <div className="p-6 text-center space-y-6">
-        <div className={`mx-auto w-16 h-16 rounded-3xl flex items-center justify-center shadow-inner ${variant === 'danger' ? (isDarkMode ? 'bg-rose-900/30 text-rose-400' : 'bg-rose-50 text-rose-600') : (isDarkMode ? 'bg-[#FF5E3A]/15 text-[#FF5E3A]' : 'bg-[#FF5E3A]/10 text-[#FF5E3A]')}`}>
+        <div className={`mx-auto w-16 h-16 rounded-3xl flex items-center justify-center shadow-inner ${variant === 'danger' ? (isDarkMode ? 'bg-rose-900/30 text-rose-400' : 'bg-rose-50 text-rose-600') : (isDarkMode ? 'bg-[#000000]/15 text-[#000000]' : 'bg-[#000000]/10 text-[#000000]')}`}>
           <AlertTriangle size={32} strokeWidth={2.5} />
         </div>
         <p className={`text-sm font-bold leading-relaxed ${isDarkMode ? 'text-slate-300' : 'text-slate-600'}`}>
@@ -27,7 +27,7 @@ const ConfirmModal = ({ isOpen, onClose, onConfirm, title, message, confirmText 
               onConfirm();
               onClose();
             }}
-            className={`px-6 py-3 rounded-full text-xs font-black uppercase tracking-widest text-white transition-all shadow-lg active:scale-95 ${variant === 'danger' ? 'bg-rose-600 hover:bg-rose-700 shadow-rose-600/25' : 'bg-gradient-to-r from-[#FF5E3A] to-[#e04520] hover:scale-105 shadow-[#FF5E3A]/25'}`}
+            className={`px-6 py-3 rounded-full text-xs font-black uppercase tracking-widest text-white transition-all shadow-lg active:scale-95 ${variant === 'danger' ? 'bg-rose-600 hover:bg-rose-700 shadow-rose-600/25' : 'bg-gradient-to-r from-[#000000] to-[#000000] hover:scale-105 shadow-[#000000]/25'}`}
           >
             {confirmText}
           </button>

@@ -63,7 +63,7 @@ const MainLayout = ({ children }) => {
   const currentPageName = navItems.find(item => item.path === location.pathname)?.name || 'Trang chủ';
 
   return (
-    <div className={`min-h-screen flex flex-col overflow-x-hidden font-sans selection:bg-[#FF5E3A]/12 selection:text-[#FF5E3A] transition-colors duration-300 ${isDarkMode ? 'text-slate-100' : 'text-slate-900'} bg-transparent`}>
+    <div className={`min-h-screen flex flex-col overflow-x-hidden font-sans selection:bg-[#000000]/12 selection:text-[#000000] transition-colors duration-300 ${isDarkMode ? 'text-slate-100' : 'text-slate-900'} bg-transparent`}>
       
       {/* Floating Header */}
       <header className={`fixed z-50 transition-all duration-500 ease-in-out left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-[1500px] border shadow-2xl ${
@@ -71,7 +71,7 @@ const MainLayout = ({ children }) => {
           ? `top-2 rounded-2xl backdrop-blur-2xl ${
               isDarkMode 
                 ? 'bg-slate-950/70 border-white/5 shadow-black/50' 
-                : 'bg-white/70 border-[#FF5E3A]/10 shadow-slate-200/40'
+                : 'bg-white/70 border-[#000000]/10 shadow-slate-200/40'
             }`
           : `top-4 rounded-[24px] backdrop-blur-xl ${
               isDarkMode 
@@ -91,11 +91,11 @@ const MainLayout = ({ children }) => {
             </button>
 
             <Link to="/dashboard" className="flex items-center gap-3">
-              <div className="bg-gradient-to-br from-[#FF5E3A] to-[#e04520] p-2.5 rounded-xl shadow-lg shadow-[#FF5E3A]/20">
+              <div className="bg-gradient-to-br from-[#000000] to-[#000000] p-2.5 rounded-xl shadow-lg shadow-[#000000]/20">
                 <Package size={20} className="text-white" strokeWidth={2.5} />
               </div>
               <span className={`font-black text-xl tracking-tighter whitespace-nowrap hidden sm:block ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
-                QL KHO <span className="text-[#FF5E3A]">PRO</span>
+                QL KHO <span className="text-[#000000]">PRO</span>
               </span>
             </Link>
           </div>
@@ -110,13 +110,13 @@ const MainLayout = ({ children }) => {
                   to={item.path}
                   className={`group relative flex items-center px-4 py-2.5 rounded-xl transition-all duration-300 ${
                     isActive
-                    ? 'bg-gradient-to-r from-[#FF5E3A] to-[#e04520] text-white shadow-lg shadow-[#FF5E3A]/25 scale-[1.03]'
+                    ? 'bg-gradient-to-r from-[#000000] to-[#000000] text-white shadow-lg shadow-[#000000]/25 scale-[1.03]'
                     : isDarkMode
                       ? 'text-slate-450 hover:bg-white/5 hover:text-white'
                       : 'text-slate-600 hover:bg-black/5 hover:text-slate-900'
                   }`}
                 >
-                  <div className={`${isActive ? 'text-white' : 'text-slate-400 group-hover:text-[#FF5E3A] transition-colors duration-305'}`}>
+                  <div className={`${isActive ? 'text-white' : 'text-slate-400 group-hover:text-[#000000] transition-colors duration-305'}`}>
                     {item.icon}
                   </div>
                   <span className="ml-2.5 font-bold tracking-tight text-sm whitespace-nowrap">
@@ -131,7 +131,7 @@ const MainLayout = ({ children }) => {
           <div className="flex items-center gap-3 sm:gap-4">
             <button
               onClick={toggleTheme}
-              className={`p-2.5 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 ${isDarkMode ? 'bg-slate-800 text-yellow-400 hover:bg-slate-700' : 'bg-[#FF5E3A]/10 text-[#FF5E3A] hover:bg-[#FF5E3A]/20'}`}
+              className={`p-2.5 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 ${isDarkMode ? 'bg-slate-800 text-yellow-400 hover:bg-slate-700' : 'bg-[#000000]/10 text-[#000000] hover:bg-[#000000]/20'}`}
               title={isDarkMode ? "Chuyển sang chế độ sáng" : "Chuyển sang chế độ tối"}
             >
               {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
@@ -139,10 +139,10 @@ const MainLayout = ({ children }) => {
 
             <div className="hidden sm:flex items-center gap-3 group">
               <div className="text-right">
-                <p className={`text-sm font-black leading-none group-hover:text-[#FF5E3A] transition-colors ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{user?.username}</p>
+                <p className={`text-sm font-black leading-none group-hover:text-[#000000] transition-colors ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{user?.username}</p>
                 <p className={`text-[10px] mt-1 font-black uppercase tracking-tighter px-1.5 py-0.5 rounded inline-block ${isDarkMode ? 'bg-slate-800 text-slate-400' : 'bg-slate-100 text-slate-400'}`}>{user?.role}</p>
               </div>
-              <div className="w-10 h-10 bg-gradient-to-br from-[#FF5E3A] to-[#e04520] rounded-xl flex items-center justify-center text-white font-black shadow-md ring-2 ring-white/50">
+              <div className="w-10 h-10 bg-gradient-to-br from-[#000000] to-[#000000] rounded-xl flex items-center justify-center text-white font-black shadow-md ring-2 ring-white/50">
                 {user?.username?.[0].toUpperCase()}
               </div>
             </div>
@@ -182,7 +182,7 @@ const MainLayout = ({ children }) => {
               }`}
             >
               <div className={`h-20 flex items-center justify-between px-6 border-b ${isDarkMode ? 'border-white/5' : 'border-slate-100'}`}>
-                <span className={`font-black text-xl tracking-tighter ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>QL KHO <span className="text-[#FF5E3A]">PRO</span></span>
+                <span className={`font-black text-xl tracking-tighter ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>QL KHO <span className="text-[#000000]">PRO</span></span>
                 <button onClick={closeMobileMenu} className="p-2 text-slate-400 hover:scale-110 active:scale-90 transition-transform">
                   <X size={20} />
                 </button>
@@ -190,7 +190,7 @@ const MainLayout = ({ children }) => {
 
               <div className={`p-6 pb-2 border-b ${isDarkMode ? 'border-white/5' : 'border-slate-100'}`}>
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-[#FF5E3A] to-[#e04520] rounded-xl flex items-center justify-center text-white text-lg font-black shadow-md">
+                  <div className="w-12 h-12 bg-gradient-to-br from-[#000000] to-[#000000] rounded-xl flex items-center justify-center text-white text-lg font-black shadow-md">
                     {user?.username?.[0].toUpperCase()}
                   </div>
                   <div>
@@ -210,7 +210,7 @@ const MainLayout = ({ children }) => {
                       onClick={closeMobileMenu}
                       className={`flex items-center px-4 py-3 rounded-xl transition-all ${
                         isActive
-                        ? 'bg-[#FF5E3A] text-white shadow-md'
+                        ? 'bg-[#000000] text-white shadow-md'
                         : isDarkMode
                           ? 'text-slate-400 hover:bg-white/5 hover:text-white'
                           : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'

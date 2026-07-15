@@ -8,16 +8,16 @@ const StatCard = ({ label, value, icon: Icon, color = 'primary', trend, detail, 
 
   // Map legacy color names to new brand tokens
   const colors = {
-    blue: isDarkMode ? 'bg-[#FF5E3A]/10 text-[#ff8a65]' : 'bg-[#FF5E3A]/10 text-[#FF5E3A]',
-    primary: isDarkMode ? 'bg-[#FF5E3A]/10 text-[#ff8a65]' : 'bg-[#FF5E3A]/10 text-[#FF5E3A]',
+    blue: isDarkMode ? 'bg-[#000000]/10 text-[#ffffff]' : 'bg-[#000000]/10 text-[#000000]',
+    primary: isDarkMode ? 'bg-[#000000]/10 text-[#ffffff]' : 'bg-[#000000]/10 text-[#000000]',
     emerald: isDarkMode ? 'bg-emerald-900/20 text-emerald-400' : 'bg-emerald-50 text-emerald-600',
     rose: isDarkMode ? 'bg-rose-900/20 text-rose-400' : 'bg-rose-50 text-rose-600',
     amber: isDarkMode ? 'bg-amber-900/20 text-amber-400' : 'bg-amber-50 text-amber-600',
   };
 
   const glowColors = {
-    blue: 'bg-[#FF5E3A]',
-    primary: 'bg-[#FF5E3A]',
+    blue: 'bg-[#000000]',
+    primary: 'bg-[#000000]',
     emerald: 'bg-emerald-600',
     rose: 'bg-rose-600',
     amber: 'bg-amber-600',
@@ -35,8 +35,8 @@ const StatCard = ({ label, value, icon: Icon, color = 'primary', trend, detail, 
         onClick={onExpand}
         className={`p-6 rounded-[24px] border shadow-xl flex items-center justify-between gap-6 transition-all group relative overflow-hidden min-w-0 cursor-pointer backdrop-blur-2xl ${
           isDarkMode
-          ? `bg-slate-950/40 ${isExpanded ? 'border-[#FF5E3A]/40' : 'border-white/5'} shadow-black/40`
-          : `bg-white/40 ${isExpanded ? 'border-[#FF5E3A]/30' : 'border-white/50'} shadow-slate-200/30`
+          ? `bg-slate-950/40 ${isExpanded ? 'border-[#000000]/40' : 'border-white/5'} shadow-black/40`
+          : `bg-white/40 ${isExpanded ? 'border-[#000000]/30' : 'border-white/50'} shadow-slate-200/30`
         }`}
       >
         {/* Animated Background Glow */}

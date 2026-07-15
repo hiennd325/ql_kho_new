@@ -21,17 +21,17 @@ const WelcomePage = () => {
       />
 
       {/* Floating abstract decorative objects */}
-      <div className={`absolute top-[10%] left-[-5%] w-[35%] h-[35%] rounded-full blur-[140px] animate-pulse pointer-events-none ${isDarkMode ? 'bg-[#FF5E3A]/10' : 'bg-[#FF5E3A]/5'}`} />
-      <div className={`absolute bottom-[5%] right-[-5%] w-[40%] h-[40%] rounded-full blur-[140px] animate-pulse pointer-events-none ${isDarkMode ? 'bg-[#e04520]/8' : 'bg-[#e04520]/3'}`} style={{ animationDelay: '2s' }} />
+      <div className={`absolute top-[10%] left-[-5%] w-[35%] h-[35%] rounded-full blur-[140px] animate-pulse pointer-events-none ${isDarkMode ? 'bg-[#000000]/10' : 'bg-[#000000]/5'}`} />
+      <div className={`absolute bottom-[5%] right-[-5%] w-[40%] h-[40%] rounded-full blur-[140px] animate-pulse pointer-events-none ${isDarkMode ? 'bg-[#000000]/8' : 'bg-[#000000]/3'}`} style={{ animationDelay: '2s' }} />
 
       {/* Header / Navbar */}
       <header className="sticky top-4 z-50 px-4 sm:px-6">
         <div className={`max-w-7xl mx-auto px-6 h-20 flex items-center justify-between border backdrop-blur-md rounded-2xl transition-all duration-300 ${isDarkMode ? 'border-white/5 bg-black/40' : 'border-slate-200/60 bg-white/80'}`}>
           <div className="flex items-center gap-3">
-            <div className="bg-gradient-to-br from-[#FF5E3A] to-[#e04520] p-2.5 rounded-2xl shadow-lg shadow-[#FF5E3A]/20">
+            <div className="bg-gradient-to-br from-[#000000] to-[#000000] p-2.5 rounded-2xl shadow-lg shadow-[#000000]/20">
               <Package size={22} className="text-white" strokeWidth={2.5} />
             </div>
-            <span className="font-black text-xl tracking-tighter">QL KHO <span className="text-[#FF5E3A]">PRO</span></span>
+            <span className="font-black text-xl tracking-tighter">QL KHO <span className="text-[#000000]">PRO</span></span>
           </div>
 
           <div className="flex items-center gap-4">
@@ -43,7 +43,7 @@ const WelcomePage = () => {
             </button>
             <button
               onClick={() => navigate('/login')}
-              className="bg-[#FF5E3A] hover:bg-[#e04520] text-white px-5 py-2.5 rounded-full text-xs font-black uppercase tracking-wider transition-all shadow-md shadow-[#FF5E3A]/20 hover:scale-[1.02] active:scale-95"
+              className="bg-[#000000] hover:bg-[#000000] text-white px-5 py-2.5 rounded-full text-xs font-black uppercase tracking-wider transition-all shadow-md shadow-[#000000]/20 hover:scale-[1.02] active:scale-95"
             >
               Đăng nhập
             </button>
@@ -61,7 +61,7 @@ const WelcomePage = () => {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="text-4xl sm:text-6xl font-black tracking-tighter max-w-4xl mb-6 leading-tight"
         >
-          Vận hành kho hàng <span className="bg-gradient-to-r from-[#FF5E3A] to-[#ff8a65] bg-clip-text text-transparent">thông minh & tối ưu</span>
+          Vận hành kho hàng <span className="bg-gradient-to-r from-[#000000] to-[#6b7280] bg-clip-text text-transparent">thông minh & tối ưu</span>
         </motion.h1>
 
         {/* CTAs */}
@@ -73,7 +73,7 @@ const WelcomePage = () => {
         >
           <button 
             onClick={() => navigate('/login')}
-            className="inline-flex items-center gap-3 bg-gradient-to-r from-[#FF5E3A] to-[#e04520] text-white font-bold px-8 py-4 rounded-full hover:scale-105 transition-all shadow-lg shadow-[#FF5E3A]/30 group"
+            className="inline-flex items-center gap-3 bg-gradient-to-r from-[#000000] to-[#000000] text-white font-bold px-8 py-4 rounded-full hover:scale-105 transition-all shadow-lg shadow-[#000000]/30 group"
           >
             Bắt đầu sử dụng
             <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center">
@@ -83,7 +83,7 @@ const WelcomePage = () => {
 
           <button 
             onClick={() => navigate('/register')}
-            className={`font-bold px-8 py-4 rounded-full border transition-all hover:bg-[#FF5E3A]/5 hover:border-[#FF5E3A]/50 ${isDarkMode ? 'border-white/10 bg-white/5 text-white' : 'border-slate-200 bg-white text-slate-700 shadow-sm'}`}
+            className={`font-bold px-8 py-4 rounded-full border transition-all hover:bg-[#000000]/5 hover:border-[#000000]/50 ${isDarkMode ? 'border-white/10 bg-white/5 text-white' : 'border-slate-200 bg-white text-slate-700 shadow-sm'}`}
           >
             Yêu cầu tài khoản
           </button>
@@ -119,11 +119,11 @@ const WelcomePage = () => {
                 key={index}
                 className={`p-8 rounded-3xl border transition-all hover:scale-[1.02] duration-300 ${
                   isDarkMode 
-                    ? 'bg-white/[0.02] border-white/5 hover:border-[#FF5E3A]/20 hover:bg-white/[0.04]' 
-                    : 'bg-white/85 backdrop-blur-2xl border border-white/60 shadow-2xl shadow-slate-200/50 shadow-sm hover:border-[#FF5E3A]/20 hover:shadow-md'
+                    ? 'bg-white/[0.02] border-white/5 hover:border-[#000000]/20 hover:bg-white/[0.04]' 
+                    : 'bg-white/85 backdrop-blur-2xl border border-white/60 shadow-2xl shadow-slate-200/50 shadow-sm hover:border-[#000000]/20 hover:shadow-md'
                 }`}
               >
-                <div className="w-12 h-12 rounded-2xl bg-[#FF5E3A]/10 text-[#FF5E3A] flex items-center justify-center mb-6">
+                <div className="w-12 h-12 rounded-2xl bg-[#000000]/10 text-[#000000] flex items-center justify-center mb-6">
                   <Icon size={24} strokeWidth={2} />
                 </div>
                 <h3 className="font-extrabold text-lg mb-2">{feat.title}</h3>

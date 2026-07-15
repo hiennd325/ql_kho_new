@@ -167,7 +167,7 @@ const SuppliersPage = () => {
                     </div>
                   </div>
                   <div className="flex gap-1">
-                    <button onClick={() => openEditModal(supplier)} className={`p-2 rounded-lg transition-colors ${isDarkMode ? 'text-[#ff8a65] hover:bg-[#FF5E3A]/10' : 'text-[#FF5E3A] hover:bg-[#FF5E3A]/8'}`} title="Sửa">
+                    <button onClick={() => openEditModal(supplier)} className={`p-2 rounded-lg transition-colors ${isDarkMode ? 'text-[#ffffff] hover:bg-[#000000]/10' : 'text-[#000000] hover:bg-[#000000]/8'}`} title="Sửa">
                       <Edit size={18} />
                     </button>
                     <button onClick={() => handleDelete(supplier.id)} className={`p-2 rounded-lg transition-colors ${isDarkMode ? 'text-red-400 hover:bg-red-900/20' : 'text-red-600 hover:bg-red-50'}`} title="Xóa">
@@ -202,7 +202,7 @@ const SuppliersPage = () => {
           <div className={`rounded-[32px] shadow-2xl w-full max-w-2xl overflow-hidden border transition-all ${isDarkMode ? 'bg-slate-900/80 backdrop-blur-2xl border border-white/10 shadow-2xl shadow-black/40' : 'bg-white/85 backdrop-blur-2xl border border-white/60 shadow-2xl shadow-slate-200/50'}`}>
             <div className={`flex items-center justify-between p-8 border-b ${isDarkMode ? 'border-slate-800' : 'border-slate-100'}`}>
               <div className="flex items-center gap-4">
-                <div className="bg-orange-600 p-3 rounded-2xl text-white shadow-lg shadow-orange-600/20">
+                <div className="bg-[#000000] p-3 rounded-2xl text-white shadow-lg shadow-[#000000]/20">
                   <Truck size={24} strokeWidth={2.5} />
                 </div>
                 <h3 className={`text-2xl font-black tracking-tight ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{selectedSupplier ? 'Chỉnh sửa đối tác' : 'Thêm nhà cung cấp'}</h3>
@@ -281,7 +281,7 @@ const SuppliersPage = () => {
 
               <div className="flex justify-end gap-4 pt-6">
                 <button type="button" onClick={() => setIsModalOpen(false)} className={`px-8 py-4 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${isDarkMode ? 'text-slate-400 hover:bg-slate-800' : 'text-slate-500 hover:bg-slate-50'}`}>Đóng lại</button>
-                <button type="submit" className="px-12 py-4 bg-orange-600 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-orange-700 shadow-xl shadow-orange-600/20 transition-all active:scale-95 flex items-center gap-3">
+                <button type="submit" className="px-12 py-4 bg-[#000000] text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-[#333333] shadow-xl shadow-[#000000]/20 transition-all active:scale-95 flex items-center gap-3">
                   <Save size={18} strokeWidth={3} /> Xác nhận lưu
                 </button>
               </div>

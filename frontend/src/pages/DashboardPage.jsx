@@ -140,7 +140,7 @@ const DashboardPage = () => {
   if (loading && !chartData) {
     return (
       <div className="flex flex-col items-center justify-center h-[60vh] gap-4">
-        <RefreshCw className="animate-spin text-[#FF5E3A]" size={32} />
+        <RefreshCw className="animate-spin text-[#000000]" size={32} />
         <p className="text-slate-400 font-bold text-xs uppercase tracking-[0.3em] animate-pulse">Đang đồng bộ dữ liệu...</p>
       </div>
     );
@@ -168,13 +168,13 @@ const DashboardPage = () => {
                   setActiveTab(key);
                   fetchData(key);
                 }}
-                className={`flex-1 md:flex-none px-3 sm:px-4 py-2 rounded-lg text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all ${activeTab === key ? 'bg-gradient-to-r from-[#FF5E3A] to-[#e04520] text-white shadow-md shadow-[#FF5E3A]/25' : 'text-slate-400 hover:text-[#FF5E3A]'}`}
+                className={`flex-1 md:flex-none px-3 sm:px-4 py-2 rounded-lg text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all ${activeTab === key ? 'bg-gradient-to-r from-[#000000] to-[#000000] text-white shadow-md shadow-[#000000]/25' : 'text-slate-400 hover:text-[#000000]'}`}
               >
                 {label}
               </button>
             ))}
           </div>
-          <button onClick={() => fetchData()} className="flex items-center gap-2 bg-[#FF5E3A] px-3 sm:px-5 py-2.5 sm:py-3 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-widest text-white hover:bg-[#e04520] transition-all shadow-lg shadow-[#FF5E3A]/20 shrink-0">
+          <button onClick={() => fetchData()} className="flex items-center gap-2 bg-[#000000] px-3 sm:px-5 py-2.5 sm:py-3 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-widest text-white hover:bg-[#000000] transition-all shadow-lg shadow-[#000000]/20 shrink-0">
             <RefreshCw size={14} className={loading ? 'animate-spin' : ''} /> <span className="hidden xs:inline">Đồng bộ</span>
           </button>
         </div>
@@ -243,13 +243,13 @@ const DashboardPage = () => {
         {/* Main Chart Section - spans 8 cols on desktop, 2 cols on tablet */}
         <motion.div 
           variants={item} 
-          className={`col-span-1 md:col-span-2 lg:col-span-8 p-4 sm:p-6 rounded-[28px] border shadow-xl backdrop-blur-xl transition-all duration-300 hover:border-[#FF5E3A]/20 ${
+          className={`col-span-1 md:col-span-2 lg:col-span-8 p-4 sm:p-6 rounded-[28px] border shadow-xl backdrop-blur-xl transition-all duration-300 hover:border-[#000000]/20 ${
             isDarkMode ? 'bg-slate-950/40 border-white/5 shadow-black/40' : 'bg-white/40 border-white/50 shadow-slate-200/30'
           }`}
         >
           <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 mb-4 sm:mb-6">
             <h3 className={`font-black flex items-center gap-2 text-sm sm:text-base ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
-              <Activity size={18} className="text-[#FF5E3A]" />
+              <Activity size={18} className="text-[#000000]" />
               Biểu đồ luân chuyển
             </h3>
             <div className="flex items-center gap-4">
@@ -311,13 +311,13 @@ const DashboardPage = () => {
         {/* System Health Status - spans 4 cols on desktop, 1 col on tablet */}
         <motion.div 
           variants={item} 
-          className={`col-span-1 md:col-span-1 lg:col-span-4 p-6 rounded-[28px] border shadow-xl flex flex-col justify-between backdrop-blur-xl transition-all duration-300 hover:border-[#FF5E3A]/20 ${
+          className={`col-span-1 md:col-span-1 lg:col-span-4 p-6 rounded-[28px] border shadow-xl flex flex-col justify-between backdrop-blur-xl transition-all duration-300 hover:border-[#000000]/20 ${
             isDarkMode ? 'bg-slate-950/40 border-white/5 shadow-black/40' : 'bg-white/40 border-white/50 shadow-slate-200/30'
           }`}
         >
           <div className="flex justify-between items-start mb-6">
             <h3 className={`font-black flex items-center gap-2 text-sm sm:text-base ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
-              <Activity size={18} className="text-[#FF5E3A]" />
+              <Activity size={18} className="text-[#000000]" />
               Vận hành hệ thống
             </h3>
             {getHealthBadge(alerts.systemHealth)}
@@ -325,9 +325,9 @@ const DashboardPage = () => {
 
           <div className="space-y-4 flex-1">
             {alerts.systemDetails.map((detail, idx) => (
-              <div key={idx} className={`flex items-center justify-between p-3 rounded-2xl border group transition-all duration-300 ${isDarkMode ? 'bg-slate-900/40 border-white/5 hover:border-[#FF5E3A]/20' : 'bg-slate-50 border-slate-100 hover:border-[#FF5E3A]/20'}`}>
+              <div key={idx} className={`flex items-center justify-between p-3 rounded-2xl border group transition-all duration-300 ${isDarkMode ? 'bg-slate-900/40 border-white/5 hover:border-[#000000]/20' : 'bg-slate-50 border-slate-100 hover:border-[#000000]/20'}`}>
                 <div className="flex items-center gap-3">
-                  <div className="w-1.5 h-1.5 bg-[#FF5E3A]/80 rounded-full shadow-[0_0_8px_rgba(255,94,58,0.5)]"></div>
+                  <div className="w-1.5 h-1.5 bg-[#000000]/80 rounded-full shadow-[0_0_8px_rgba(255,94,58,0.5)]"></div>
                   <span className={`text-xs font-bold tracking-tight ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>{detail.split(':')[0]}</span>
                 </div>
                 <span className={`text-[10px] font-black px-2 py-1 rounded-lg border uppercase ${isDarkMode ? 'text-white bg-slate-900 border-white/5' : 'text-slate-900 bg-white border border-slate-200/50 shadow-md'}`}>{detail.split(':')[1] || 'Active'}</span>
@@ -339,13 +339,13 @@ const DashboardPage = () => {
         {/* Recent Activity Table Section - spans 8 cols on desktop, 2 cols on tablet */}
         <motion.div 
           variants={item} 
-          className={`col-span-1 md:col-span-2 lg:col-span-8 rounded-[28px] border shadow-xl overflow-hidden backdrop-blur-xl transition-all duration-300 hover:border-[#FF5E3A]/20 ${
+          className={`col-span-1 md:col-span-2 lg:col-span-8 rounded-[28px] border shadow-xl overflow-hidden backdrop-blur-xl transition-all duration-300 hover:border-[#000000]/20 ${
             isDarkMode ? 'bg-slate-950/40 border-white/5 shadow-black/40' : 'bg-white/40 border-white/50 shadow-slate-200/30'
           }`}
         >
           <div className={`p-6 border-b flex flex-col md:flex-row justify-between items-start md:items-center gap-4 ${isDarkMode ? 'border-white/5' : 'border-slate-100'}`}>
             <h3 className={`font-black flex items-center gap-3 text-sm sm:text-base tracking-tighter uppercase ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
-              <div className={`p-2 rounded-xl ${isDarkMode ? 'bg-[#FF5E3A]/10 text-[#ff8a65]' : 'bg-[#FF5E3A]/10 text-[#FF5E3A]'}`}><Clock size={18} strokeWidth={2.5} /></div>
+              <div className={`p-2 rounded-xl ${isDarkMode ? 'bg-[#000000]/10 text-[#ffffff]' : 'bg-[#000000]/10 text-[#000000]'}`}><Clock size={18} strokeWidth={2.5} /></div>
               Hoạt động gần đây
             </h3>
           </div>
@@ -370,7 +370,7 @@ const DashboardPage = () => {
                           <div className={`p-2 rounded-lg ${
                             activity.color === 'green' ? (isDarkMode ? 'bg-emerald-950/30 text-emerald-400 border border-emerald-500/10' : 'bg-emerald-50 text-emerald-600 border border-emerald-100') :
                             activity.color === 'red' ? (isDarkMode ? 'bg-rose-950/30 text-rose-400 border border-rose-500/10' : 'bg-rose-50 text-rose-600 border border-rose-100') :
-                            (isDarkMode ? 'bg-[#FF5E3A]/10 text-[#ff8a65]' : 'bg-[#FF5E3A]/10 text-[#FF5E3A]')
+                            (isDarkMode ? 'bg-[#000000]/10 text-[#ffffff]' : 'bg-[#000000]/10 text-[#000000]')
                           }`}>
                             <Package size={14} strokeWidth={3} />
                           </div>
@@ -394,25 +394,25 @@ const DashboardPage = () => {
         {/* Warehouse Capacity & Storage Occupancy Widget - spans 4 cols on desktop, 1 col on tablet */}
         <motion.div 
           variants={item} 
-          className={`col-span-1 md:col-span-1 lg:col-span-4 p-6 rounded-[28px] border shadow-xl flex flex-col justify-between backdrop-blur-xl transition-all duration-300 hover:border-[#FF5E3A]/20 ${
+          className={`col-span-1 md:col-span-1 lg:col-span-4 p-6 rounded-[28px] border shadow-xl flex flex-col justify-between backdrop-blur-xl transition-all duration-300 hover:border-[#000000]/20 ${
             isDarkMode ? 'bg-slate-950/40 border-white/5 shadow-black/40' : 'bg-white/40 border-white/50 shadow-slate-200/30'
           }`}
         >
           <h3 className={`font-black flex items-center gap-2 text-sm sm:text-base ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
-            <Warehouse size={18} className="text-[#FF5E3A]" />
+            <Warehouse size={18} className="text-[#000000]" />
             Sức chứa kho bãi
           </h3>
           
           <div className="space-y-4 my-auto py-2">
             {[
-              { name: "Kho Trung Tâm", percent: 84, color: "from-[#FF5E3A] to-[#ff7c5f]", count: "4,200 / 5,000 sp" },
+              { name: "Kho Trung Tâm", percent: 84, color: "from-[#000000] to-[#6b7280]", count: "4,200 / 5,000 sp" },
               { name: "Kho Đông Lạnh", percent: 62, color: "from-emerald-500 to-teal-400", count: "1,860 / 3,000 sp" },
               { name: "Kho Ký Gửi", percent: 28, color: "from-blue-500 to-indigo-400", count: "560 / 2,000 sp" }
             ].map((w, idx) => (
               <div key={idx} className="space-y-1">
                 <div className="flex justify-between text-xs font-bold">
                   <span className={isDarkMode ? 'text-slate-350' : 'text-slate-700'}>{w.name}</span>
-                  <span className="text-[#FF5E3A] font-black">{w.percent}%</span>
+                  <span className="text-[#000000] font-black">{w.percent}%</span>
                 </div>
                 <div className={`w-full h-2.5 rounded-full overflow-hidden p-[2px] ${isDarkMode ? 'bg-slate-900/80 border border-white/5' : 'bg-slate-100 border border-slate-200/50'}`}>
                   <motion.div 
