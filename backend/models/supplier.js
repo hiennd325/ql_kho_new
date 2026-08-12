@@ -186,11 +186,11 @@ const getTopSuppliers = async (limit = 3) => {
         return await new Promise((resolve, reject) => {
             const sql = `
                 SELECT s.*, 
-                COUNT(o.id) as order_count,
-                COALESCE(SUM(o.total_amount), 0) as total_value
+                COUNT(it.id) as order_count,
+                COALESCE(SUM(it.quantity), 0) as total_value
                 FROM suppliers s
-                LEFT JOIN orders o ON s.id = o.supplier_id
-                GROUP BY s.id, s.name, s.contact_person, s.phone, s.email, s.address, s.created_at
+                LEFT JOIN inventory_transactions it ON s.id = it.supplier_id AND it.type = 'nhap'
+                GROUP BY s.id, s.code, s.name, s.contact_person, s.phone, s.email, s.address, s.created_at
                 ORDER BY order_count DESC, total_value DESC
                 LIMIT ?
             `;

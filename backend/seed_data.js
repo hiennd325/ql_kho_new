@@ -77,10 +77,11 @@ const CUSTOMER_NAMES = ['Nguyễn Văn A', 'Trần Thị B', 'Lê Văn C', 'Ph�
 
 async function main() {
     await RUN('PRAGMA foreign_keys = OFF');
+    await RUN('BEGIN TRANSACTION');
 
     // 1) Xóa sạch (giữ schema) — reset cả autoincrement
     const tables = ['audits', 'audit_items', 'sales_order_items', 'sales_orders', 'transfers',
-        'inventory_transactions', 'order_items', 'orders', 'inventory', 'products', 'suppliers',
+        'inventory_transactions', 'inventory', 'products', 'suppliers',
         'warehouses', 'users'];
     for (const t of tables) {
         await RUN(`DELETE FROM ${t}`);
@@ -141,8 +142,8 @@ async function main() {
                 const customId = brand.slice(0, 3).toUpperCase() + '-' + String(++pcount).padStart(4, '0');
                 const price = round2(randInt(20, 4000) * 1000 + randInt(0, 999));
                 const desc = `${cat} ${brand}, model ${model}. Bảo hành 12 tháng.`;
-                await RUN(`INSERT INTO products (custom_id,name,description,price,brand,category,supplier_id,created_at) VALUES (?,?,?,?,?,?,?,?)`,
-                    [customId, name, desc, price, brand, cat, pick(suppliers).id, isoDaysAgo(randInt(330, 360))]);
+                await RUN(`INSERT INTO products (custom_id,name,description,price,brand,category,created_at) VALUES (?,?,?,?,?,?,?)`,
+                    [customId, name, desc, price, brand, cat, isoDaysAgo(randInt(330, 360))]);
                 products.push({ id: customId, name, price, brand, cat });
             }
         }
@@ -210,33 +211,7 @@ async function main() {
     }
     console.log(`Inventory rows (current stock): ${invRows}`);
 
-    // 7) Orders (mua từ NCC) — song song với inbound, ít hơn
-    const orderCount = 220;
-    for (let i = 0; i < orderCount; i++) {
-        const sup = pick(suppliers);
-        const user = pick(activeUsers);
-        const itemN = randInt(1, 4);
-        const items = [];
-        let total = 0;
-        for (let j = 0; j < itemN; j++) {
-            const p = pick(products);
-            const qty = randInt(10, 100);
-            items.push({ p, qty, price: p.price });
-            total += p.price * qty;
-        }
-        total = round2(total);
-        const status = pick(['pending', 'completed', 'completed', 'cancelled']);
-        const daysAgo = randomDayOffset();
-        const r = await RUN(`INSERT INTO orders (user_id,supplier_id,total_amount,status,created_at) VALUES (?,?,?,?,?)`,
-            [user.id, sup.id, total, status, isoDaysAgo(daysAgo)]);
-        for (const it of items) {
-            await RUN(`INSERT INTO order_items (order_id,product_id,quantity,price) VALUES (?,?,?,?)`,
-                [r.lastID, it.p.id, it.qty, it.price]);
-        }
-    }
-    console.log(`Orders: ${orderCount}`);
-
-    // 8) Sales orders (bán cho khách) — nhiều, mô phỏng doanh thu
+    // 7) Sales orders (bán cho khách) — nhiều, mô phỏng doanh thu
     const salesCount = 1400;
     for (let i = 0; i < salesCount; i++) {
         const user = pick(activeUsers);
@@ -305,7 +280,7 @@ async function main() {
     console.log('\n=== SPAN giao dịch ===');
     console.log('Từ:', span.minD, '->', span.maxD);
     for (const t of ['users', 'warehouses', 'suppliers', 'products', 'inventory',
-        'inventory_transactions', 'orders', 'order_items', 'sales_orders',
+        'inventory_transactions', 'sales_orders',
         'sales_order_items', 'transfers', 'audits', 'audit_items']) {
         const c = await GET(`SELECT COUNT(*) c FROM ${t}`);
         console.log(`  ${t}: ${c.c}`);
@@ -313,6 +288,7 @@ async function main() {
     const rev = await GET(`SELECT COALESCE(SUM(total_amount),0) rev FROM sales_orders WHERE status='completed'`);
     console.log('Doanh thu (sales completed):', round2(rev.rev).toLocaleString('vi-VN'), 'VND');
 
+    await RUN('COMMIT');
     await RUN('PRAGMA foreign_keys = ON');
     db.close();
     console.log('\nXONG. Dữ liệu 2 năm đã tạo.');

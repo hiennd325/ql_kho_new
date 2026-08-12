@@ -17,7 +17,6 @@ const dashboardRoutes = require('./dashboard');
 const warehouseRoutes = require('./warehouse');
 const transferRoutes = require('./transfers');
 const supplierRoutes = require('./supplier');
-const ordersRoutes = require('./orders');
 const notificationRoutes = require('./notifications');
 const aiRoutes = require('./ai');
 
@@ -38,7 +37,6 @@ router.use('/dashboard', authenticate, dashboardRoutes);
 router.use('/warehouses', authenticate, warehouseRoutes);
 router.use('/transfers', authenticate, transferRoutes);
 router.use('/suppliers', authenticate, supplierRoutes);
-router.use('/orders', authenticate, ordersRoutes);
 router.use('/notifications', authenticate, notificationRoutes);
 router.use('/ai', authenticate, aiRoutes);
 

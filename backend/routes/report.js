@@ -73,12 +73,11 @@ router.get('/sales', async (req, res) => {
         // Truy vấn thống kê bán hàng 30 ngày qua
         const sales = await new Promise((resolve, reject) => {
             db.all(`
-                SELECT p.name, SUM(oi.quantity) as total_quantity, SUM(oi.price * oi.quantity) as total_sales
-                FROM order_items oi
-                JOIN products p ON oi.product_id = p.id
-                JOIN orders o ON oi.order_id = o.id
-                WHERE o.created_at >= datetime('now', '-30 days')
-                GROUP BY p.id
+                SELECT p.name, COALESCE(SUM(it.quantity), 0) as total_quantity, COALESCE(SUM(it.quantity * p.price), 0) as total_sales
+                FROM inventory_transactions it
+                JOIN products p ON it.product_id = p.custom_id
+                WHERE it.type = 'xuat' AND it.transaction_date >= datetime('now', '-30 days')
+                GROUP BY p.custom_id, p.name
             `, (err, rows) => {
                 if (err) reject(err);
                 else resolve(rows);

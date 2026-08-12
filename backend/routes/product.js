@@ -10,7 +10,7 @@ const createProductLimiter = rateLimiter(100, 60 * 1000);
 router.get('/', async (req, res) => {
     try {
         // Lấy các tham số từ query string
-        const { search, category, brand, supplier, page = 1, limit = 10 } = req.query;
+        const { search, category, brand, page = 1, limit = 10 } = req.query;
         const pageNum = parseInt(page);
         const limitNum = parseInt(limit);
 
@@ -24,7 +24,7 @@ router.get('/', async (req, res) => {
         }
 
         // Gọi model để lấy danh sách sản phẩm với bộ lọc
-        const result = await productModel.getProducts(search, category, brand, supplier, pageNum, limitNum);
+        const result = await productModel.getProducts(search, category, brand, pageNum, limitNum);
         res.json(result);
     } catch (err) {
         res.status(500).json({ error: 'Failed to get products' });
@@ -51,18 +51,18 @@ router.get('/count', async (req, res) => {
  * Route xuất danh sách sản phẩm ra file CSV
  * Phương thức: GET
  * Đường dẫn: /products/export
- * Query parameters: search, category, brand, supplier
+ * Query parameters: search, category, brand
  * Lưu ý: Route này phải được định nghĩa trước /:id
  */
 router.get('/export', async (req, res) => {
     try {
         // Lấy tham số bộ lọc từ query
-        const { search, category, brand, supplier } = req.query;
+        const { search, category, brand } = req.query;
         // Lấy tất cả sản phẩm (tối đa 1000) với bộ lọc
-        const products = await productModel.getProducts(search, category, brand, supplier, 1, 1000);
+        const products = await productModel.getProducts(search, category, brand, 1, 1000);
 
         // Tạo header cho CSV với tiếng Việt
-        const csvHeaders = ['ID', 'Tên sản phẩm', 'Mô tả', 'Giá', 'Danh mục', 'Thương hiệu', 'Nhà cung cấp', 'Số lượng', 'Ngày tạo'];
+        const csvHeaders = ['ID', 'Tên sản phẩm', 'Mô tả', 'Giá', 'Danh mục', 'Thương hiệu', 'Số lượng', 'Ngày tạo'];
         let csvContent = csvHeaders.join(',') + '\n';
 
         // Thêm từng dòng dữ liệu sản phẩm
@@ -74,7 +74,6 @@ router.get('/export', async (req, res) => {
                 product.price,
                 `"${product.category || ''}"`,
                 `"${product.brand || ''}"`,
-                `"${product.supplier_name || ''}"`,
                 product.quantity || 0,
                 product.created_at
             ];
@@ -131,11 +130,11 @@ router.get('/:id', async (req, res) => {
  * Route tạo sản phẩm mới
  * Phương thức: POST
  * Đường dẫn: /products
- * Body: { name, description, price, category, brand, supplierId, customId }
+ * Body: { name, description, price, category, brand, customId }
  */
 router.post('/', createProductLimiter, async (req, res) => {
     try {
-        const { name, description, price, category, brand, supplierId, customId } = req.body;
+        const { name, description, price, category, brand, customId } = req.body;
         
         // Kiểm tra giá sản phẩm (phải là số và >= 0)
         if (price !== undefined) {
@@ -145,7 +144,7 @@ router.post('/', createProductLimiter, async (req, res) => {
             }
         }
         
-        const product = await productModel.createProduct(name, description, price, category, brand, supplierId, customId);
+        const product = await productModel.createProduct(name, description, price, category, brand, customId);
         res.status(201).json(product);
     } catch (err) {
         // Xử lý lỗi cụ thể từ model
@@ -164,11 +163,11 @@ router.post('/', createProductLimiter, async (req, res) => {
  * Route cập nhật thông tin sản phẩm
  * Phương thức: PUT
  * Đường dẫn: /products/:id
- * Body: { name, description, price, category, brand, supplierId, customId }
+ * Body: { name, description, price, category, brand, customId }
  */
 router.put('/:id', async (req, res) => {
     try {
-        const { name, description, price, category, brand, supplierId, customId } = req.body;
+        const { name, description, price, category, brand, customId } = req.body;
         
         // Kiểm tra giá sản phẩm (phải là số và >= 0)
         if (price !== undefined) {
@@ -178,7 +177,7 @@ router.put('/:id', async (req, res) => {
             }
         }
         
-        const updates = { name, description, price, category, brand, supplierId, customId };
+        const updates = { name, description, price, category, brand, customId };
         const updatedProduct = await productModel.updateProduct(req.params.id, updates);
         res.json(updatedProduct);
     } catch (err) {

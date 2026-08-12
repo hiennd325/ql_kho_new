@@ -21,10 +21,9 @@ const db = new sqlite3.Database(path.join(__dirname, '../database.db'), (err) =>
 // - price: Giá sản phẩm
 // - category: Danh mục sản phẩm
 // - brand: Thương hiệu
-// - supplierId: ID nhà cung cấp
 // - customId: Mã sản phẩm tùy chỉnh (tùy chọn)
 // Trả về: Đối tượng chứa ID của sản phẩm vừa tạo
-const createProduct = async (name, description, price, category, brand, supplierId, customId) => {
+const createProduct = async (name, description, price, category, brand, customId) => {
     try {
         // Xử lý customId: loại bỏ khoảng trắng đầu cuối, chuyển thành chuỗi nếu cần
         const trimmedCustomId = customId ? customId.toString().trim() : '';
@@ -50,11 +49,11 @@ const createProduct = async (name, description, price, category, brand, supplier
         const result = await new Promise((resolve, reject) => {
             // Xây dựng query động dựa trên có customId hay không
             const query = trimmedCustomId
-                ? 'INSERT INTO products (custom_id, name, description, price, category, brand, supplier_id) VALUES (?, ?, ?, ?, ?, ?, ?)'
-                : 'INSERT INTO products (name, description, price, category, brand, supplier_id) VALUES (?, ?, ?, ?, ?, ?)';
+                ? 'INSERT INTO products (custom_id, name, description, price, category, brand) VALUES (?, ?, ?, ?, ?, ?)'
+                : 'INSERT INTO products (name, description, price, category, brand) VALUES (?, ?, ?, ?, ?)';
             const params = trimmedCustomId
-                ? [trimmedCustomId, dbName, description, price, category, brand, supplierId]
-                : [dbName, description, price, category, brand, supplierId];
+                ? [trimmedCustomId, dbName, description, price, category, brand]
+                : [dbName, description, price, category, brand];
 
             db.run(query, params, function(err) {
                 if (err) {
@@ -73,14 +72,13 @@ const createProduct = async (name, description, price, category, brand, supplier
 
 // Hàm lấy danh sách sản phẩm với bộ lọc và phân trang
 // Tham số:
-// - search: Từ khóa tìm kiếm (trong tên, mã, mô tả, thương hiệu, tên NCC)
+// - search: Từ khóa tìm kiếm (trong tên, mã, mô tả, thương hiệu)
 // - category: Lọc theo danh mục
 // - brand: Lọc theo thương hiệu
-// - supplier: Lọc theo ID nhà cung cấp
 // - page: Trang hiện tại (mặc định 1)
 // - limit: Số sản phẩm mỗi trang (mặc định 10)
 // Trả về: Đối tượng chứa danh sách sản phẩm, tổng số, tổng trang, trang hiện tại
-const getProducts = async (search = '', category = '', brand = '', supplier = '', page = 1, limit = 10) => {
+const getProducts = async (search = '', category = '', brand = '', page = 1, limit = 10) => {
     try {
         // Tính offset cho phân trang
         const offset = (page - 1) * limit;
@@ -89,13 +87,13 @@ const getProducts = async (search = '', category = '', brand = '', supplier = ''
         let whereClause = '';
         const whereParams = [];
 
-        if (search || category || brand || supplier) {
+        if (search || category || brand) {
             const conditions = [];
 
             if (search) {
                 // Tìm kiếm trong nhiều trường với LIKE
-                conditions.push('(p.name LIKE ? OR p.custom_id LIKE ? OR p.description LIKE ? OR p.brand LIKE ? OR s.name LIKE ?)');
-                whereParams.push(`%${search}%`, `%${search}%`, `%${search}%`, `%${search}%`, `%${search}%`);
+                conditions.push('(p.name LIKE ? OR p.custom_id LIKE ? OR p.description LIKE ? OR p.brand LIKE ?)');
+                whereParams.push(`%${search}%`, `%${search}%`, `%${search}%`, `%${search}%`);
             }
 
             if (category) {
@@ -108,19 +106,12 @@ const getProducts = async (search = '', category = '', brand = '', supplier = ''
                 whereParams.push(brand);
             }
 
-            if (supplier) {
-                conditions.push('supplier_id = ?');
-                whereParams.push(supplier);
-            }
-
             whereClause = ' WHERE ' + conditions.join(' AND ');
         }
 
         // Lấy tổng số sản phẩm phù hợp với bộ lọc
         const totalCount = await new Promise((resolve, reject) => {
-            let countSql = `SELECT COUNT(DISTINCT p.custom_id) as count
-                            FROM products p
-                            LEFT JOIN suppliers s ON p.supplier_id = s.id`;
+            let countSql = `SELECT COUNT(DISTINCT p.custom_id) as count FROM products p`;
             if (whereClause) {
                 countSql += whereClause;
             }
@@ -135,16 +126,15 @@ const getProducts = async (search = '', category = '', brand = '', supplier = ''
 
         // Lấy danh sách sản phẩm với phân trang
         const products = await new Promise((resolve, reject) => {
-            // Query JOIN để lấy thông tin sản phẩm, nhà cung cấp và tổng tồn kho
-            let sql = `SELECT p.custom_id as id, p.custom_id, p.name, p.description, p.price, p.category, p.brand, p.supplier_id, p.created_at, s.name as supplier_name, COALESCE(SUM(i.quantity), 0) as quantity
+            // Query JOIN để lấy thông tin sản phẩm và tổng tồn kho
+            let sql = `SELECT p.custom_id as id, p.custom_id, p.name, p.description, p.price, p.category, p.brand, p.created_at, COALESCE(SUM(i.quantity), 0) as quantity
                        FROM products p
-                       LEFT JOIN suppliers s ON p.supplier_id = s.id
                        LEFT JOIN inventory i ON p.custom_id = i.product_id`;
             if (whereClause) {
                 sql += whereClause;
             }
             // Nhóm theo các trường và sắp xếp theo ngày tạo giảm dần
-            sql += ' GROUP BY p.custom_id, p.name, p.description, p.price, p.category, p.brand, p.supplier_id, p.created_at, s.name ORDER BY p.created_at DESC LIMIT ? OFFSET ?';
+            sql += ' GROUP BY p.custom_id, p.name, p.description, p.price, p.category, p.brand, p.created_at ORDER BY p.created_at DESC LIMIT ? OFFSET ?';
             const params = [...whereParams, limit, offset];
 
             db.all(sql, params, (err, rows) => {
@@ -172,11 +162,11 @@ const getProductById = async (id) => {
     try {
         return await new Promise((resolve, reject) => {
             // Query lấy thông tin sản phẩm và tổng tồn kho từ tất cả kho
-            db.get(`SELECT p.custom_id as id, p.custom_id, p.name, p.description, p.price, p.category, p.brand, p.supplier_id, p.created_at, COALESCE(SUM(i.quantity), 0) as quantity
+            db.get(`SELECT p.custom_id as id, p.custom_id, p.name, p.description, p.price, p.category, p.brand, p.created_at, COALESCE(SUM(i.quantity), 0) as quantity
                     FROM products p
                     LEFT JOIN inventory i ON p.custom_id = i.product_id
                     WHERE p.custom_id = ?
-                    GROUP BY p.custom_id, p.name, p.description, p.price, p.category, p.brand, p.supplier_id, p.created_at`, [id], (err, row) => {
+                    GROUP BY p.custom_id, p.name, p.description, p.price, p.category, p.brand, p.created_at`, [id], (err, row) => {
                 if (err) reject(err);
                 else resolve(row);
             });
@@ -191,7 +181,7 @@ const getProductById = async (id) => {
 // Trả về: Đối tượng sản phẩm sau khi cập nhật
 const updateProduct = async (id, updates) => {
     try {
-        const { name, description, price, category, brand, supplierId, customId } = updates;
+        const { name, description, price, category, brand, customId } = updates;
         
         // Xử lý customId để loại bỏ khoảng trắng thừa
         let processedCustomId = customId;
@@ -238,10 +228,6 @@ const updateProduct = async (id, updates) => {
         if (brand !== undefined) {
             setClause.push('brand = ?');
             values.push(brand);
-        }
-        if (supplierId !== undefined) {
-            setClause.push('supplier_id = ?');
-            values.push(supplierId);
         }
         if (processedCustomId !== undefined && processedCustomId !== id) {
             setClause.push('custom_id = ?');

@@ -172,26 +172,24 @@ async function checkSystemHealth() {
         const uptimeHours = Math.floor(serverStartTime / 3600);
         healthStatus.details.push(`Server uptime: ${uptimeHours} hours`);
 
-        // 6. Kiểm tra đơn hàng đang chờ xử lý cần chú ý
-        // Đếm số đơn hàng có trạng thái 'pending' và tạo từ hơn 1 ngày trước
-        const pendingOrders = await new Promise((resolve, reject) => {
+        // 6. Kiểm tra phiếu điều chuyển đang chờ xử lý cần chú ý
+        const pendingTransfers = await new Promise((resolve, reject) => {
             db.get(`
                 SELECT COUNT(*) as count
-                FROM orders
+                FROM transfers
                 WHERE status = 'pending' AND created_at < datetime('now', '-1 day')
             `, (err, row) => {
                 if (err) reject(err);
-                else resolve(row.count || 0);
+                else resolve(row ? row.count : 0);
             });
         });
 
-        if (pendingOrders > 0) {
-            // Nếu có đơn hàng chờ xử lý lâu, đặt trạng thái warning
+        if (pendingTransfers > 0) {
             if (healthStatus.status === 'healthy') {
                 healthStatus.status = 'warning';
-                healthStatus.message = 'Có đơn hàng đang chờ xử lý';
+                healthStatus.message = 'Có phiếu điều chuyển đang chờ xử lý';
             }
-            healthStatus.details.push(`${pendingOrders} orders pending for more than 1 day`);
+            healthStatus.details.push(`${pendingTransfers} transfers pending for more than 1 day`);
         }
 
     } catch (error) {
@@ -213,15 +211,15 @@ async function checkSystemHealth() {
  */
 router.get('/alerts', async (req, res) => {
     try {
-        // Đếm số đơn hàng mới: số đơn hàng pending trong 24 giờ qua
+        // Đếm số phiếu mới: số phiếu transfer/nhập xuất pending trong 24 giờ qua
         const newOrders = await new Promise((resolve, reject) => {
             db.all(`
                 SELECT COUNT(*) as count
-                FROM orders
+                FROM transfers
                 WHERE status = 'pending' AND created_at >= datetime('now', '-24 hours')
             `, (err, rows) => {
                 if (err) reject(err);
-                else resolve(rows[0].count);
+                else resolve(rows[0] ? rows[0].count : 0);
             });
         });
 

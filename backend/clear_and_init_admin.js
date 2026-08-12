@@ -15,8 +15,6 @@ const tables = [
     'sales_orders',
     'transfers',
     'inventory_transactions',
-    'order_items',
-    'orders',
     'inventory',
     'products',
     'suppliers',

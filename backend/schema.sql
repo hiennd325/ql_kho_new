@@ -13,15 +13,15 @@ CREATE TABLE IF NOT EXISTS products (
     name TEXT NOT NULL,
     description TEXT,
     price REAL NOT NULL,
+    category TEXT,
     brand TEXT,
-    supplier_id INTEGER,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (supplier_id) REFERENCES suppliers(id)
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS warehouses (
     custom_id TEXT PRIMARY KEY,
     name TEXT NOT NULL,
+    location TEXT,
     capacity INTEGER NOT NULL,
     current_usage INTEGER NOT NULL DEFAULT 0,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
@@ -45,27 +45,6 @@ CREATE TABLE IF NOT EXISTS inventory (
     quantity INTEGER NOT NULL DEFAULT 0,
     FOREIGN KEY (product_id) REFERENCES products(custom_id),
     FOREIGN KEY (warehouse_id) REFERENCES warehouses(custom_id)
-);
-
-CREATE TABLE IF NOT EXISTS orders (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL,
-    supplier_id INTEGER,
-    total_amount REAL NOT NULL,
-    status TEXT NOT NULL DEFAULT 'pending',
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (supplier_id) REFERENCES suppliers(id)
-);
-
-CREATE TABLE IF NOT EXISTS order_items (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    order_id INTEGER NOT NULL,
-    product_id TEXT NOT NULL,
-    quantity INTEGER NOT NULL,
-    price REAL NOT NULL,
-    FOREIGN KEY (order_id) REFERENCES orders(id),
-    FOREIGN KEY (product_id) REFERENCES products(custom_id)
 );
 
 CREATE TABLE IF NOT EXISTS inventory_transactions (

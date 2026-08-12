@@ -31,14 +31,15 @@ const createWarehouse = async (name, location, capacity, custom_id = null) => {
         }
 
         // Kiểm tra sức chứa phải là số nguyên lớn hơn 0
-        if (capacity === undefined || capacity === null || typeof capacity !== 'number' || !Number.isInteger(capacity) || capacity <= 0) {
+        const parsedCapacity = Number(capacity);
+        if (capacity === undefined || capacity === null || capacity === '' || isNaN(parsedCapacity) || !Number.isInteger(parsedCapacity) || parsedCapacity <= 0) {
             throw new Error('Sức chứa phải là số nguyên lớn hơn 0');
         }
 
         // Chèn kho mới vào CSDL. Nếu tên kho trống hoặc chỉ chứa khoảng trắng, truyền null để kích hoạt NOT NULL constraint
         const dbName = name && name.trim() !== '' ? name : null;
         const result = await new Promise((resolve, reject) => {
-            db.run('INSERT INTO warehouses (custom_id, name, location, capacity) VALUES (?, ?, ?, ?)', [custom_id, dbName, safeLocation, capacity], function(err) {
+            db.run('INSERT INTO warehouses (custom_id, name, location, capacity) VALUES (?, ?, ?, ?)', [custom_id, dbName, safeLocation, parsedCapacity], function(err) {
                 if (err) {
                     reject(err);
                 } else {
@@ -100,8 +101,12 @@ const updateWarehouse = async (custom_id, updates) => {
             values.push(location);
         }
         if (capacity !== undefined) {
+            const parsedCapacity = Number(capacity);
+            if (isNaN(parsedCapacity) || !Number.isInteger(parsedCapacity) || parsedCapacity <= 0) {
+                throw new Error('Sức chứa phải là số nguyên lớn hơn 0');
+            }
             setClause.push('capacity = ?');
-            values.push(capacity);
+            values.push(parsedCapacity);
         }
         if (setClause.length === 0) {
             throw new Error('No updates provided');

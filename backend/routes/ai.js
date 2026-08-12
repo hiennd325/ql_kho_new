@@ -46,29 +46,29 @@ async function gatherSystemData() {
             });
         });
 
-        // 3. Đơn hàng đang chờ
-        const orders = await new Promise((resolve, reject) => {
+        // 3. Phiếu điều chuyển đang chờ
+        const transfers = await new Promise((resolve, reject) => {
             db.get(`
                 SELECT
                     COUNT(*) as total_pending,
                     COUNT(CASE WHEN created_at < datetime('now', '-2 days') THEN 1 END) as overdue_pending
-                FROM orders
+                FROM transfers
                 WHERE status = 'pending'
             `, (err, row) => {
                 if (err) reject(err);
-                else resolve(row);
+                else resolve(row || { total_pending: 0, overdue_pending: 0 });
             });
         });
 
         return {
             inventory: stats,
             weekly_activity: recentTransactions,
-            orders: orders,
+            transfers: transfers,
             timestamp: new Date().toISOString()
         };
     } catch (err) {
         console.error('Error gathering system data:', err);
-        return null;
+        throw err;
     }
 }
 
@@ -91,21 +91,19 @@ router.post('/analyze-system', authenticate, aiLimiter, async (req, res) => {
         }
 
         const prompt = `
-            Bạn là một chuyên gia phân tích hệ thống quản lý kho.
-            Dưới đây là dữ liệu hiện tại của hệ thống:
-
+            Dữ liệu hệ thống kho hiện tại (${new Date().toLocaleDateString('vi-VN')}):
             1. Tồn kho:
-               - Tổng số sản phẩm: ${systemData.inventory.total_products}
-               - Sản phẩm hết hàng: ${systemData.inventory.out_of_stock}
+               - Tổng số sản phẩm trong hệ thống: ${systemData.inventory.total_products}
+               - Sản phẩm hết hàng (0): ${systemData.inventory.out_of_stock}
                - Sản phẩm sắp hết (<=10): ${systemData.inventory.low_stock}
                - Tổng giá trị kho: ${new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(systemData.inventory.total_inventory_value)}
 
             2. Hoạt động 7 ngày qua:
                ${systemData.weekly_activity.map(a => `- ${a.type === 'nhap' ? 'Nhập' : 'Xuất'}: ${a.total_qty} đơn vị (${a.tx_count} giao dịch)`).join('\n')}
 
-            3. Đơn hàng:
-               - Tổng đơn chờ xử lý: ${systemData.orders.total_pending}
-               - Đơn chờ quá hạn (>2 ngày): ${systemData.orders.overdue_pending}
+            3. Phiếu điều chuyển kho:
+               - Tổng phiếu chờ xử lý: ${systemData.transfers.total_pending}
+               - Phiếu chờ quá hạn (>2 ngày): ${systemData.transfers.overdue_pending}
 
             Hãy phân tích tình hình hiện tại, đánh giá rủi ro và đưa ra 3 khuyến nghị cụ thể để tối ưu hóa việc quản lý kho.
             Trả lời bằng tiếng Việt, ngắn gọn, súc tích, định dạng Markdown.
