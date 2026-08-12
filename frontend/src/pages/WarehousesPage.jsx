@@ -104,10 +104,14 @@ const WarehousesPage = () => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
+      const payload = {
+        ...formData,
+        capacity: Number(formData.capacity)
+      };
       if (selectedWarehouse) {
-        await api.put(`/warehouses/${selectedWarehouse.custom_id}`, formData);
+        await api.put(`/warehouses/${selectedWarehouse.custom_id}`, payload);
       } else {
-        await api.post('/warehouses', formData);
+        await api.post('/warehouses', payload);
       }
       setIsModalOpen(false);
       resetForm();

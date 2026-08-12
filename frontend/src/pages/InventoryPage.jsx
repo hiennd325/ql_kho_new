@@ -322,7 +322,7 @@ const InventoryPage = () => {
       </div>
 
       {/* Toolbar */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-white/85 dark:bg-slate-900/80 backdrop-blur-2xl shadow-2xl border dark:border-white/10 border-white/60 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+      <div className="relative z-20 flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-white/85 dark:bg-slate-900/80 backdrop-blur-2xl shadow-2xl border dark:border-white/10 border-white/60 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
         <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-lg w-full lg:w-fit overflow-x-auto scrollbar-hide">
           <button
             onClick={() => { setActiveTab('import'); setCurrentPage(1); }}
@@ -379,25 +379,28 @@ const InventoryPage = () => {
                 <ChevronDown size={16} />
               </button>
               {isDropdownOpen && (
-                <div className="absolute right-0 mt-3 w-56 bg-white/85 dark:bg-slate-800/80 backdrop-blur-2xl shadow-2xl border dark:border-white/10 border-white/60 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-700 py-3 z-30 animate-in fade-in slide-in-from-top-2 duration-200">
-                  <div className="px-4 py-2 mb-2 border-b border-slate-50 dark:border-slate-700">
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Loại giao dịch</p>
+                <>
+                  <div className="fixed inset-0 z-30" onClick={() => setIsDropdownOpen(false)} />
+                  <div className="absolute right-0 mt-3 w-56 bg-white dark:bg-slate-800 shadow-2xl border border-slate-200 dark:border-slate-700 rounded-2xl py-3 z-40 animate-in fade-in slide-in-from-top-2 duration-200">
+                    <div className="px-4 py-2 mb-2 border-b border-slate-100 dark:border-slate-700">
+                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Loại giao dịch</p>
+                    </div>
+                    <button
+                      onClick={() => { setIsImportModalOpen(true); setIsDropdownOpen(false); }}
+                      className="w-full text-left px-4 py-3 text-sm hover:bg-emerald-50 dark:hover:bg-emerald-900/20 flex items-center gap-3 text-emerald-600 dark:text-emerald-400 font-bold transition-colors"
+                    >
+                      <div className="bg-emerald-100 dark:bg-emerald-900/30 p-1.5 rounded-lg"><TrendingUp size={16} /></div>
+                      Nhập kho mới
+                    </button>
+                    <button
+                      onClick={() => { setIsExportModalOpen(true); setIsDropdownOpen(false); }}
+                      className="w-full text-left px-4 py-3 text-sm hover:bg-rose-50 dark:hover:bg-rose-900/20 flex items-center gap-3 text-rose-600 dark:text-rose-400 font-bold transition-colors"
+                    >
+                      <div className="bg-rose-100 dark:bg-rose-900/30 p-1.5 rounded-lg"><TrendingDown size={16} /></div>
+                      Xuất kho mới
+                    </button>
                   </div>
-                  <button
-                    onClick={() => { setIsImportModalOpen(true); setIsDropdownOpen(false); }}
-                    className="w-full text-left px-4 py-3 text-sm hover:bg-emerald-50 dark:hover:bg-emerald-900/20 flex items-center gap-3 text-emerald-600 dark:text-emerald-400 font-bold transition-colors"
-                  >
-                    <div className="bg-emerald-100 dark:bg-emerald-900/30 p-1.5 rounded-lg"><TrendingUp size={16} /></div>
-                    Nhập kho mới
-                  </button>
-                  <button
-                    onClick={() => { setIsExportModalOpen(true); setIsDropdownOpen(false); }}
-                    className="w-full text-left px-4 py-3 text-sm hover:bg-rose-50 dark:hover:bg-rose-900/20 flex items-center gap-3 text-rose-600 dark:text-rose-400 font-bold transition-colors"
-                  >
-                    <div className="bg-rose-100 dark:bg-rose-900/30 p-1.5 rounded-lg"><TrendingDown size={16} /></div>
-                    Xuất kho mới
-                  </button>
-                </div>
+                </>
               )}
             </div>
           </div>
@@ -405,7 +408,7 @@ const InventoryPage = () => {
       </div>
 
       {/* Content */}
-      <div className="bg-white/85 dark:bg-slate-900/80 backdrop-blur-2xl shadow-2xl border dark:border-white/10 border-white/60 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+      <div className="relative z-10 bg-white/85 dark:bg-slate-900/80 backdrop-blur-2xl shadow-2xl border dark:border-white/10 border-white/60 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>

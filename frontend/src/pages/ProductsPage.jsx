@@ -28,7 +28,6 @@ const ProductsPage = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [brands, setBrands] = useState([]);
-  const [suppliers, setSuppliers] = useState([]);
   const [brandFilter, setBrandFilter] = useState('all');
   const limit = 6;
 
@@ -45,8 +44,7 @@ const ProductsPage = () => {
     description: '',
     price: '',
     category: '',
-    brand: '',
-    supplierId: ''
+    brand: ''
   });
 
   const fetchProducts = useCallback(async () => {
@@ -79,12 +77,8 @@ const ProductsPage = () => {
 
   const fetchFilters = async () => {
     try {
-      const [brandsRes, suppliersRes] = await Promise.all([
-        api.get('/products/brands'),
-        api.get('/suppliers')
-      ]);
+      const brandsRes = await api.get('/products/brands');
       setBrands(brandsRes.data);
-      setSuppliers(suppliersRes.data);
     } catch (error) {
       console.error('Error fetching filters:', error);
     }
@@ -120,8 +114,7 @@ const ProductsPage = () => {
     try {
       await api.post('/products', {
         ...formData,
-        price: parseFloat(formData.price),
-        supplierId: formData.supplierId || null
+        price: parseFloat(formData.price)
       });
       setIsAddModalOpen(false);
       resetForm();
@@ -137,8 +130,7 @@ const ProductsPage = () => {
     try {
       await api.put(`/products/${selectedProduct.id}`, {
         ...formData,
-        price: parseFloat(formData.price),
-        supplierId: formData.supplierId || null
+        price: parseFloat(formData.price)
       });
       setIsEditModalOpen(false);
       resetForm();
@@ -157,8 +149,7 @@ const ProductsPage = () => {
       description: product.description || '',
       price: product.price,
       category: product.category || '',
-      brand: product.brand || '',
-      supplierId: product.supplier_id || ''
+      brand: product.brand || ''
     });
     setIsEditModalOpen(true);
   };
@@ -175,8 +166,7 @@ const ProductsPage = () => {
       description: '',
       price: '',
       category: '',
-      brand: '',
-      supplierId: ''
+      brand: ''
     });
     setSelectedProduct(null);
   };
@@ -425,28 +415,15 @@ const ProductsPage = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                <div>
-                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Danh mục</label>
-                  <input
-                    type="text"
-                    className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-[#000000]/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
-                    value={formData.category}
-                    onChange={(e) => setFormData({...formData, category: e.target.value})}
-                    placeholder="Vd: Điện thoại, Gia dụng..."
-                  />
-                </div>
-                <div>
-                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Nhà cung cấp</label>
-                  <select
-                    className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-[#000000]/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
-                    value={formData.supplierId}
-                    onChange={(e) => setFormData({...formData, supplierId: e.target.value})}
-                  >
-                    <option value="" className={isDarkMode ? 'bg-slate-900' : ''}>Chọn nhà cung cấp</option>
-                    {suppliers.map(s => <option key={s.id} value={s.id} className={isDarkMode ? 'bg-slate-900' : ''}>{s.name}</option>)}
-                  </select>
-                </div>
+              <div>
+                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Danh mục</label>
+                <input
+                  type="text"
+                  className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-[#000000]/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
+                  value={formData.category}
+                  onChange={(e) => setFormData({...formData, category: e.target.value})}
+                  placeholder="Vd: Điện thoại, Gia dụng..."
+                />
               </div>
 
               <div>
@@ -526,27 +503,14 @@ const ProductsPage = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Danh mục</label>
-                  <input
-                    type="text"
-                    className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-[#000000]/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
-                    value={formData.category}
-                    onChange={(e) => setFormData({...formData, category: e.target.value})}
-                  />
-                </div>
-                <div>
-                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Nhà cung cấp</label>
-                  <select
-                    className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-[#000000]/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
-                    value={formData.supplierId}
-                    onChange={(e) => setFormData({...formData, supplierId: e.target.value})}
-                  >
-                    <option value="" className={isDarkMode ? 'bg-slate-900' : ''}>Chọn nhà cung cấp</option>
-                    {suppliers.map(s => <option key={s.id} value={s.id} className={isDarkMode ? 'bg-slate-900' : ''}>{s.name}</option>)}
-                  </select>
-                </div>
+              <div>
+                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Danh mục</label>
+                <input
+                  type="text"
+                  className={`w-full px-4 py-3 border rounded-xl outline-none focus:ring-4 focus:ring-[#000000]/10 transition-all font-bold ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
+                  value={formData.category}
+                  onChange={(e) => setFormData({...formData, category: e.target.value})}
+                />
               </div>
 
               <div>
